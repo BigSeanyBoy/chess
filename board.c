@@ -19,40 +19,39 @@ void fenstr_placement(struct CBoard *position, char *fenstr)
         while ((c = *fenstr) != ' ') {
                 ++fenstr;
                 if (c >= 'A' && c <= 'Z') {
-                        position->bitboards[N_WHITE] += 1 << bit;
+                        position->bitboards[N_WHITE] += (1ull << bit);
                 } else if (c >= 'a' && c <= 'z') {
-                        position->bitboards[N_BLACK] += 1 << bit;
+                        position->bitboards[N_BLACK] += (1ull << bit);
                 } else {
                         if (c >= '0' && c <= '9')
-                                bit += c - '0';
-                        
+                                bit += (c - '0');
                         continue;
                 }
 
                 switch (c) {
                 case 'P':
                 case 'p':
-                        position->bitboards[N_PAWN] += 1 << bit;
+                        position->bitboards[N_PAWN] += (1ull << bit);
                         break;
                 case 'N':
                 case 'n':
-                        position->bitboards[N_KNIGHT] += 1 << bit;
+                        position->bitboards[N_KNIGHT] += (1ull << bit);
                         break;
                 case 'B':
                 case 'b':
-                        position->bitboards[N_BISHOP] += 1 << bit;
+                        position->bitboards[N_BISHOP] += (1ull << bit);
                         break;
                 case 'R':
                 case 'r':
-                        position->bitboards[N_ROOK] += 1 << bit;
+                        position->bitboards[N_ROOK] += (1ull << bit);
                         break;
                 case 'Q':
                 case 'q':
-                        position->bitboards[N_QUEEN] += 1 << bit;
+                        position->bitboards[N_QUEEN] += (1ull << bit);
                         break;
                 case 'K':
                 case 'k':
-                        position->bitboards[N_KING] += 1 << bit;
+                        position->bitboards[N_KING] += (1ull << bit);
                         break;
                 }
                 ++bit;
@@ -99,7 +98,7 @@ U32 fenstr_moves(struct CBoard *position, char *fenstr)
 {
         char c;
         U32 result;
-        while (*fenstr != ' ' || *fenstr != '\0') {
+        while (*fenstr != ' ' && *fenstr != '\0') {
                 c = *fenstr;
                 result = (result * 10) + (c - '0');
                 ++fenstr;
