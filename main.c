@@ -23,6 +23,35 @@ void display_piece(struct CBoard *position, U64 bit)
         }
 }
 
+void display_board_black(struct CBoard *position)
+{
+        printf("\n\n   h g f e d c b a   \n\n");
+        for (int i = 63; i >= 0; --i) {
+                if ((i + 1) % 8 == 0) {
+                        printf("%d  ", 8 - (i / 8));
+                }
+
+                if (position->bitboards[N_WHITE] & (1ull << i)) {
+                        printf("%s", BLUE);
+                        display_piece(position, 1ull << i);
+                }
+                else if (position->bitboards[N_BLACK] & (1ull << i)) {
+                        printf("%s", RED);
+                        display_piece(position, 1ull << i);
+                }
+                else {
+                        printf("x");
+                }
+
+                printf("%s ", DEFAULT);
+
+                if (i % 8 == 0) {
+                        printf(" %d\n", 8 - (i / 8));
+                }
+        }
+        printf("\n   h g f e d c b a   \n\n");   
+}
+
 void display_board_white(struct CBoard *position)
 {
         printf("\n\n   a b c d e f g h   \n\n");
@@ -58,17 +87,17 @@ int main()
         char *fenstr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\0";
         import_fenstr(&position, fenstr);
 
-        char engine;
-        printf("Are you playing for the engine? [y/n]: ");
-        engine = getchar();
-        while ((getchar()) != '\n');
+        // char engine;
+        // printf("Are you playing for the engine? [y/n]: ");
+        // engine = getchar();
+        // while ((getchar()) != '\n');
 
-        enum color side;
-        printf("Which color would you like to play as? [w/b]: ");
-        side = getchar() == 'w' ? WHITE : BLACK;
-        while ((getchar()) != '\n');
+        // enum color side;
+        // printf("Which color would you like to play as? [w/b]: ");
+        // side = getchar() == 'w' ? WHITE : BLACK;
+        // while ((getchar()) != '\n');
 
-        display_board_white(&position);
+        display_board_black(&position);
 
         return 0;
 }
