@@ -23,7 +23,7 @@ void display_piece(struct CBoard *position, U64 bit)
         }
 }
 
-void display(struct CBoard *position, U64 bit)
+void display_square(struct CBoard *position, U64 bit)
 {
         if (position->bitboards[N_WHITE] & bit) {
                 printf("%s", BLUE);
@@ -42,40 +42,48 @@ void display(struct CBoard *position, U64 bit)
 
 void black_display(struct CBoard *position)
 {
-        printf("\n\n   h g f e d c b a   \n\n");
+        printf("\n      h g f e d c b a\n\n");
         for (int i = 63; i >= 0; --i) {
                 if ((i + 1) % 8 == 0) {
-                        printf("%d  ", 8 - (i / 8));
+                        printf("   %d  ", 8 - (i / 8));
                 }
 
-                display(position, 1ull << i);
+                display_square(position, 1ull << i);
 
                 if (i % 8 == 0) {
                         printf(" %d\n", 8 - (i / 8));
                 }
         }
-        printf("\n   h g f e d c b a   \n\n");   
+        printf("\n      h g f e d c b a\n\f");   
 }
 
 void white_display(struct CBoard *position)
 {
-        printf("\n\n   a b c d e f g h   \n\n");
+        printf("\n      a b c d e f g h\n\n");
         for (int i = 0; i < 64; ++i) {
                 if (i % 8 == 0) {
-                        printf("%d  ", 8 - (i / 8));
+                        printf("   %d  ", 8 - (i / 8));
                 }
 
-                display(position, 1ull << i);
+                display_square(position, 1ull << i);
 
                 if ((i + 1) % 8 == 0) {
                         printf(" %d\n", 8 - (i / 8));
                 }
         }
-        printf("\n   a b c d e f g h   \n\n");
+        printf("\n      a b c d e f g h\n\n");
+}
+
+void display(struct CBoard *position, enum color side)
+{
+        printf("\033[4;0H");
+        side == WHITE ? white_display(position) : black_display(position);
 }
 
 int main() 
 {
+        printf("\033[0;0H\033[2J");
+        printf("Welcome to the \x1b[34;1mNeptune Chess Engine\x1b[0m!\n");
         struct CBoard position;
         char *fenstr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\0";
         import_fenstr(&position, fenstr);
@@ -86,11 +94,11 @@ int main()
         // while ((getchar()) != '\n');
 
         enum color side;
-        printf("\n\nWhich color would you like to play as? [w/b]: ");
+        printf("\nWhich side would you like to play as? [w/b]: ");
         side = getchar() == 'w' ? WHITE : BLACK;
         while ((getchar()) != '\n');
 
-        side == WHITE ? white_display(&position) : black_display(&position);
+        display(&position, side);
 
         return 0;
 }
