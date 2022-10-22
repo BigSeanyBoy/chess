@@ -3,24 +3,46 @@
 
 #include <stdint.h>
 
+typedef uint8_t U8;
+typedef uint32_t U32;
 typedef uint64_t U64;
 
-struct CBoard {
-        U64 wpieces;
-        U64 wpawns;
-        U64 wknights;
-        U64 wbishops;
-        U64 wrooks;
-        U64 wqueens;
-        U64 wking;
+enum piece {
+        N_WHITE,
+        N_BLACK,
+        N_PAWN,
+        N_KNIGHT,
+        N_BISHOP,
+        N_ROOK,
+        N_QUEEN,
+        N_KING
+};
 
-        U64 bpieces;
-        U64 bpawns;
-        U64 bknights;
-        U64 bbishops;
-        U64 brooks;
-        U64 bqueens;
-        U64 bking;
-}
+enum color {
+        WHITE,
+        BLACK
+};
+
+enum castle_bit {
+        WKS,
+        WQS,
+        BKS,
+        BQS
+};
+
+struct CBoard {
+        U64 bitboards[8];
+        U32 nbmoves;
+        U32 halfmove_clock;
+        enum color side;
+        U8 castling_rights;
+};
+
+void empty_bb(struct CBoard *position);
+void fenstr_placement(struct CBoard *position, char *fenstr);
+void fenstr_castling(struct CBoard *position, char *fenstr);
+void fenstr_enpassasnt(struct CBoard *position, char *fenstr);
+U32 fenstr_moves(struct CBoard *position, char *fenstr);
+void import_fenstr(struct CBoard *position, char *fenstr);
 
 #endif
