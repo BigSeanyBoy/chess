@@ -1,2 +1,5 @@
 *.dSYM/
 main
+obj/
+.DS_Store
+chess
