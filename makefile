@@ -6,10 +6,10 @@ endif
 
 CC = clang $(OPTS) $(CFLAGS)
 
-DEPS = board.h fen.h display.h
+DEPS = board.h movegen.h fen.h display.h
 
 ODIR = obj
-_OBJ = main.o board.o fen.o display.o
+_OBJ = main.o movegen.o fen.o display.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)

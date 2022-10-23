@@ -1,5 +1,8 @@
 #include "fen.h"
 
+/*
+ * Initialize all empty bitboards.
+ */
 void empty_bb(struct CBoard *position)
 {
         position->bitboards[N_WHITE] = 0;
@@ -12,6 +15,9 @@ void empty_bb(struct CBoard *position)
         position->bitboards[N_KING] = 0;
 }
 
+/*
+ * Add pieces to the proper bitboards based on FEN string description.
+ */
 void fenstr_placement(struct CBoard *position, char *fenstr)
 {
         int bit = 0;
@@ -59,6 +65,9 @@ void fenstr_placement(struct CBoard *position, char *fenstr)
         ++fenstr;
 }
 
+/*
+ * Determine castling rights for each side.
+ */
 void fenstr_castling(struct CBoard *position, char *fenstr)
 {
         position->castling_rights = 0;
@@ -83,6 +92,9 @@ void fenstr_castling(struct CBoard *position, char *fenstr)
         ++fenstr;
 }
 
+/*
+ * Determine en passant target square.
+ */
 void fenstr_enpassant(struct CBoard *position, char *fenstr)
 {
         char c = *fenstr;
@@ -94,6 +106,9 @@ void fenstr_enpassant(struct CBoard *position, char *fenstr)
         ++fenstr;
 }
 
+/*
+ * Convert moves from FEN string to U32 for halfmove clock and fullmove number.
+ */
 U32 fenstr_moves(struct CBoard *position, char *fenstr)
 {
         char c;
@@ -106,6 +121,9 @@ U32 fenstr_moves(struct CBoard *position, char *fenstr)
         return result;
 }
 
+/*
+ * Create a board position based on a FEN string.
+ */
 void import_fenstr(struct CBoard *position, char *fenstr)
 {
         for (int i = 0; i < 6; ++i) {
