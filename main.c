@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "board.h"
+#include "fen.h"
 
 #define DEFAULT "\x1b[0m"
 #define RED "\x1b[91m"
