@@ -1,5 +1,10 @@
-CC = clang
 CFLAGS = -I -Wall
+
+ifeq ($(DEBUG),1)
+	OTPS = -g
+endif
+
+CC = clang $(OPTS) $(CFLAGS)
 
 DEPS = board.h fen.h display.h
 
@@ -8,10 +13,10 @@ _OBJ = main.o board.o fen.o display.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $<
 
 chess: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^
 
 .PHONY: clean
 
