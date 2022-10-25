@@ -47,16 +47,12 @@ void display_square(struct CBoard *position, U64 bit)
 void black_display(struct CBoard *position)
 {
         printf("\n      h g f e d c b a\n\n");
-        for (int i = 63; i >= 0; --i) {
-                if ((i + 1) % 8 == 0) {
-                        printf("   %d  ", 8 - (i / 8));
+        for (int rank = 0; rank < 8; ++rank) {
+                printf("   %d  ", rank + 1);
+                for (int file = 7; file >= 0; --file) {
+                        display_square(position, 1ull << (rank * 8 + file));
                 }
-
-                display_square(position, 1ull << i);
-
-                if (i % 8 == 0) {
-                        printf(" %d\n", 8 - (i / 8));
-                }
+                printf(" %d\n", rank + 1);
         }
         printf("\n      h g f e d c b a\n\f");   
 }
@@ -67,16 +63,12 @@ void black_display(struct CBoard *position)
 void white_display(struct CBoard *position)
 {
         printf("\n      a b c d e f g h\n\n");
-        for (int i = 0; i < 64; ++i) {
-                if (i % 8 == 0) {
-                        printf("   %d  ", 8 - (i / 8));
+        for (int rank = 7; rank >= 0; --rank) {
+                printf("   %d  ", rank + 1);
+                for (int file = 0; file < 8; ++file) {
+                        display_square(position, 1ull << (rank * 8 + file));
                 }
-
-                display_square(position, 1ull << i);
-
-                if ((i + 1) % 8 == 0) {
-                        printf(" %d\n", 8 - (i / 8));
-                }
+                printf(" %d\n", rank + 1);
         }
         printf("\n      a b c d e f g h\n\n");
 }
