@@ -8,6 +8,27 @@ typedef uint16_t U16;
 typedef uint32_t U32;
 typedef uint64_t U64;
 
+enum move_type {
+        NORMAL,
+        PROMOTION = 1 << 14,
+        EN_PASSANT = 2 << 14,
+        CASTLING = 3 << 14
+};
+
+
+enum color {
+        WHITE,
+        BLACK
+};
+
+enum castling_rights {
+        NO_CASTLING,
+        WHITE_OO,
+        WHITE_OOO = WHITE_OO << 1,
+        BLACK_OO = WHITE_OO << 2,
+        BLACK_OOO = WHITE_OO << 3
+};
+
 enum square {
         A1, B1, C1, D1, E1, F1, G1, H1,
         A2, B2, C2, D2, E2, F2, G2, H2,
@@ -19,6 +40,18 @@ enum square {
         A8, B8, C8, D8, E8, F8, G8, H8
 };
 
+enum direction {
+        NORTH = 8,
+        EAST = 1,
+        SOUTH = -NORTH,
+        WEST = -EAST,
+
+        NORTH_EAST = NORTH + EAST,
+        SOUTH_EAST = SOUTH + EAST,
+        SOUTH_WEST = SOUTH + WEST,
+        NORTH_WEST = NORTH + WEST
+};
+
 enum piece {
         N_WHITE,
         N_BLACK,
@@ -28,18 +61,6 @@ enum piece {
         N_ROOK,
         N_QUEEN,
         N_KING
-};
-
-enum color {
-        WHITE,
-        BLACK
-};
-
-enum castle_bit {
-        WKS,
-        WQS,
-        BKS,
-        BQS
 };
 
 struct CBoard {

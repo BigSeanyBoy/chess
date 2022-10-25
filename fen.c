@@ -84,16 +84,16 @@ void fenstr_castling(struct CBoard *position, char *fenstr)
         while ((c = *fenstr) != ' ') {
                 switch (c) {
                 case 'K':
-                        position->castling_rights += (1 << WKS);
+                        position->castling_rights += (WHITE_OO);
                         break;
                 case 'Q':
-                        position->castling_rights += (1 << WQS);
+                        position->castling_rights += (WHITE_OOO);
                         break;
                 case 'k':
-                        position->castling_rights += (1 << BKS);
+                        position->castling_rights += (BLACK_OO);
                         break;
                 case 'q':
-                        position->castling_rights += (1 << BQS);
+                        position->castling_rights += (BLACK_OOO);
                         break;
                 }
                 ++fenstr;
