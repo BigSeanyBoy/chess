@@ -13,6 +13,7 @@ void empty_bb(struct CBoard *position)
         position->bitboards[N_ROOK] = 0;
         position->bitboards[N_QUEEN] = 0;
         position->bitboards[N_KING] = 0;
+        position->occupied = 0;
 }
 
 /*
@@ -31,8 +32,10 @@ void fenstr_placement(struct CBoard *position, char *fenstr)
                 bit = rank * 8 + file;
                 if (c >= 'A' && c <= 'Z') {
                         position->bitboards[N_WHITE] += (1ull << bit);
+                        position->occupied += (1ull << bit);
                 } else if (c >= 'a' && c <= 'z') {
                         position->bitboards[N_BLACK] += (1ull << bit);
+                        position->occupied += (1ull << bit);
                 } else {
                         if (c >= '0' && c <= '9') {
                                 file += (c - '0');
@@ -71,6 +74,7 @@ void fenstr_placement(struct CBoard *position, char *fenstr)
                 }
                 ++file;
         }
+        position->empty = ~position->occupied;
         ++fenstr;
 }
 

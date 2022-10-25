@@ -15,7 +15,6 @@ enum move_type {
         CASTLING = 3 << 14
 };
 
-
 enum color {
         WHITE,
         BLACK
@@ -65,9 +64,11 @@ enum piece {
 
 struct CBoard {
         U64 bitboards[8];
+        U64 empty;
+        U64 occupied;
         U32 nbmoves;
         U32 halfmove_clock;
-        enum color side;
+        U8 side;
         U8 castling_rights;
 };
 
