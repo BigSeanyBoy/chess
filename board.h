@@ -81,7 +81,11 @@ struct CBoard {
         U8 castling_rights;
 };
 
-U64 shift_north(U64 bitboard);
-U64 shift_south(U64 bitboard);
+U64 north(U64 bitboard);
+U64 north_east(U64 bitboard);
+U64 south_east(U64 bitboard);
+U64 south(U64 bitboard);
+U64 south_west(U64 bitboard);
+U64 north_west(U64 bitboard);
 
 #endif
