@@ -28,22 +28,45 @@ U64 b_double_push_targets(U64 pawns, U64 empty)
 /*
  * Pawn attacks.
  */
-U64 w_pawn_east_attacks(U64 pawns)
+U64 w_pawn_attack_east(U64 pawns)
 {
         return north_east(pawns);
 }
 
-U64 w_pawn_west_attacks(U64 pawns)
+U64 w_pawn_attack_west(U64 pawns)
 {
         return north_west(pawns);
 }
 
-U64 b_pawn_east_attacks(U64 pawns)
+U64 b_pawn_attack_east(U64 pawns)
 {
         return south_east(pawns);
 }
 
-U64 b_pawn_west_attacks(U64 pawns)
+U64 b_pawn_attack_west(U64 pawns)
 {
         return south_west(pawns);
+}
+
+/*
+ * Pawn captures.
+ */
+U64 w_pawn_capture_east(U64 pawns, U64 bpieces)
+{
+        return w_pawn_attack_east(pawns) & bpieces;
+}
+
+U64 w_pawn_capture_west(U64 pawns, U64 bpieces)
+{
+        return w_pawn_attack_west(pawns) & bpieces;
+}
+
+U64 b_pawn_capture_east(U64 pawns, U64 wpieces)
+{
+        return b_pawn_attack_east(pawns) & wpieces;
+}
+
+U64 b_pawn_capture_west(U64 pawns, U64 wpieces)
+{
+        return b_pawn_attack_west(pawns) & wpieces;
 }
