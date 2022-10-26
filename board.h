@@ -8,6 +8,15 @@ typedef uint16_t U16;
 typedef uint32_t U32;
 typedef uint64_t U64;
 
+const U64 FILEA = 0x0101010101010101;
+const U64 FILEB = FILEA << 1;
+const U64 FILEB = FILEA << 2;
+const U64 FILEB = FILEA << 3;
+const U64 FILEB = FILEA << 4;
+const U64 FILEB = FILEA << 5;
+const U64 FILEB = FILEA << 6;
+const U64 FILEB = FILEA << 7;
+
 const U64 RANK1 = 0xFF;
 const U64 RANK2 = RANK1 << (8 * 1);
 const U64 RANK3 = RANK1 << (8 * 2);
