@@ -8,23 +8,23 @@ typedef uint16_t U16;
 typedef uint32_t U32;
 typedef uint64_t U64;
 
-const U64 FILEA = 0x0101010101010101;
-const U64 FILEB = FILEA << 1;
-const U64 FILEB = FILEA << 2;
-const U64 FILEB = FILEA << 3;
-const U64 FILEB = FILEA << 4;
-const U64 FILEB = FILEA << 5;
-const U64 FILEB = FILEA << 6;
-const U64 FILEB = FILEA << 7;
+const U64 FILE_A = 0x0101010101010101;
+const U64 FILE_B = FILE_A << 1;
+const U64 FILE_C = FILE_A << 2;
+const U64 FILE_D = FILE_A << 3;
+const U64 FILE_E = FILE_A << 4;
+const U64 FILE_F = FILE_A << 5;
+const U64 FILE_G = FILE_A << 6;
+const U64 FILE_H = FILE_A << 7;
 
-const U64 RANK1 = 0xFF;
-const U64 RANK2 = RANK1 << (8 * 1);
-const U64 RANK3 = RANK1 << (8 * 2);
-const U64 RANK4 = RANK1 << (8 * 3);
-const U64 RANK5 = RANK1 << (8 * 4);
-const U64 RANK6 = RANK1 << (8 * 5);
-const U64 RANK7 = RANK1 << (8 * 6);
-const U64 RANK8 = RANK1 << (8 * 7);
+const U64 RANK_1 = 0xFF;
+const U64 RANK_2 = RANK_1 << (8 * 1);
+const U64 RANK_3 = RANK_1 << (8 * 2);
+const U64 RANK_4 = RANK_1 << (8 * 3);
+const U64 RANK_5 = RANK_1 << (8 * 4);
+const U64 RANK_6 = RANK_1 << (8 * 5);
+const U64 RANK_7 = RANK_1 << (8 * 6);
+const U64 RANK_8 = RANK_1 << (8 * 7);
 
 enum move_type {
         NORMAL,
