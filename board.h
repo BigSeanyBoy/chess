@@ -8,6 +8,15 @@ typedef uint16_t U16;
 typedef uint32_t U32;
 typedef uint64_t U64;
 
+const U64 RANK1 = 0xFF;
+const U64 RANK2 = RANK1 << (8 * 1);
+const U64 RANK3 = RANK1 << (8 * 2);
+const U64 RANK4 = RANK1 << (8 * 3);
+const U64 RANK5 = RANK1 << (8 * 4);
+const U64 RANK6 = RANK1 << (8 * 5);
+const U64 RANK7 = RANK1 << (8 * 6);
+const U64 RANK8 = RANK1 << (8 * 7);
+
 enum move_type {
         NORMAL,
         PROMOTION = 1 << 14,
