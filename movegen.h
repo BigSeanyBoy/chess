@@ -1,21 +1,21 @@
-#ifndef MOVEGEN
-#define MOVEGEN
+#ifndef MOVEGEN_H_
+#define MOVEGEN_H_
 
-#include "board.h"
+#include "./position.h"
 
-U64 w_single_push_targets(U64 pawns, U64 empty);
-U64 w_double_push_targets(U64 pawns, U64 empty);
-U64 b_single_push_targets(U64 pawns, U64 empty);
-U64 b_double_push_targets(U64 pawns, U64 empty);
+U64 WhiteSinglePushTargets(U64 pawns, U64 empty);
+U64 WhiteDoublePushTargets(U64 pawns, U64 empty);
+U64 BlackSinglePushTargets(U64 pawns, U64 empty);
+U64 BlackDoublePushTargets(U64 pawns, U64 empty);
 
-U64 w_pawn_attack_east(U64 pawns);
-U64 w_pawn_attack_west(U64 pawns);
-U64 b_pawn_attack_east(U64 pawns);
-U64 b_pawn_attack_west(U64 pawns);
+U64 WhitePawnAttackEast(U64 pawns);
+U64 WhitePawnAttackWest(U64 pawns);
+U64 BlackPawnAttackEast(U64 pawns);
+U64 BlackPawnAttackWest(U64 pawns);
 
-U64 w_pawn_capture_east(U64 pawns, U64 bpieces);
-U64 w_pawn_capture_west(U64 pawns, U64 bpieces);
-U64 b_pawn_capture_east(U64 pawns, U64 wpieces);
-U64 b_pawn_capture_west(U64 pawns, U64 wpieces);
+U64 WhitePawnCaptureEast(U64 pawns, U64 black_pieces);
+U64 WhitePawnCaptureWest(U64 pawns, U64 black_pieces);
+U64 BlackPawnCaptureEast(U64 pawns, U64 white_pieces);
+U64 BlackPawnCaptureWest(U64 pawns, U64 white_pieces);
 
-#endif
+#endif  // MOVEGEN_H_

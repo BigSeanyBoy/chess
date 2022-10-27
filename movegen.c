@@ -1,72 +1,54 @@
-#include "movegen.h"
+#include "./movegen.h"
 
-/*
- * Pawn pushes.
- */
-U64 w_single_push_targets(U64 pawns, U64 empty)
-{
+// Pawn Pushes.
+U64 WhiteSinglePushTargets(U64 pawns, U64 empty) {
         return north(pawns) & empty;
 }
 
-U64 w_double_push_targets(U64 pawns, U64 empty)
-{
+U64 WhiteDoublePushTargets(U64 pawns, U64 empty) {
         U64 single_push = w_single_push_targets(pawns, empty);
-        return north(single_push) & empty & RANK_4;
+        return north(single_push) & empty & kRank4;
 }
 
-U64 b_single_push_targets(U64 pawns, U64 empty)
-{
+U64 BlackSinglePushTargets(U64 pawns, U64 empty) {
         return south(pawns) & empty;
 }
 
-U64 b_double_push_targets(U64 pawns, U64 empty)
-{
+U64 BlackDoublePushTargets(U64 pawns, U64 empty) {
         U64 single_push = b_single_push_targets(pawns, empty);
-        return south(single_push) & empty & RANK_5;
+        return south(single_push) & empty & kRank5;
 }
 
-/*
- * Pawn attacks.
- */
-U64 w_pawn_attack_east(U64 pawns)
-{
-        return north_east(pawns) & (~FILE_A);
+// Pawn Attacks.
+U64 WhitePawnAttackEast(U64 pawns) {
+        return north_east(pawns) & (~kFileA);
 }
 
-U64 w_pawn_attack_west(U64 pawns)
-{
-        return north_west(pawns) & (~FILE_H);
+U64 WhitePawnAttackWest(U64 pawns) {
+        return north_west(pawns) & (~kFileH);
 }
 
-U64 b_pawn_attack_east(U64 pawns)
-{
-        return south_east(pawns) & (~FILE_A);
+U64 BlackPawnAttackEast(U64 pawns) {
+        return south_east(pawns) & (~kFileA);
 }
 
-U64 b_pawn_attack_west(U64 pawns)
-{
-        return south_west(pawns) & (~FILE_H);
+U64 BlackPawnAttackWest(U64 pawns) {
+        return south_west(pawns) & (~kFileH);
 }
 
-/*
- * Pawn captures.
- */
-U64 w_pawn_capture_east(U64 pawns, U64 bpieces)
-{
+// Pawn Captures.
+U64 WhitePawnCaptureEast(U64 pawns, U64 bpieces) {
         return w_pawn_attack_east(pawns) & bpieces;
 }
 
-U64 w_pawn_capture_west(U64 pawns, U64 bpieces)
-{
+U64 WhitePawnCaptureWest(U64 pawns, U64 bpieces) {
         return w_pawn_attack_west(pawns) & bpieces;
 }
 
-U64 b_pawn_capture_east(U64 pawns, U64 wpieces)
-{
+U64 BlackPawnCaptureEast(U64 pawns, U64 wpieces) {
         return b_pawn_attack_east(pawns) & wpieces;
 }
 
-U64 b_pawn_capture_west(U64 pawns, U64 wpieces)
-{
+U64 BlackPawnCaptureWest(U64 pawns, U64 wpieces) {
         return b_pawn_attack_west(pawns) & wpieces;
 }
