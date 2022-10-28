@@ -8,23 +8,27 @@ typedef uint16_t U16;
 typedef uint32_t U32;
 typedef uint64_t U64;
 
-const U64 kFileA = 0x0101010101010101;
-const U64 kFileB = kFileA << 1;
-const U64 kFileC = kFileA << 2;
-const U64 kFileD = kFileA << 3;
-const U64 kFileE = kFileA << 4;
-const U64 kFileF = kFileA << 5;
-const U64 kFileG = kFileA << 6;
-const U64 kFileH = kFileA << 7;
+enum File {
+  kFileA = 0x0101010101010101,
+  kFileB = kFileA << 1,
+  kFileC = kFileA << 2,
+  kFileD = kFileA << 3,
+  kFileE = kFileA << 4,
+  kFileF = kFileA << 5,
+  kFileG = kFileA << 6,
+  kFileH = kFileA << 7
+};
 
-const U64 kRank1 = 0xFF;
-const U64 kRank2 = kRank1 << (8 * 1);
-const U64 kRank3 = kRank1 << (8 * 2);
-const U64 kRank4 = kRank1 << (8 * 3);
-const U64 kRank5 = kRank1 << (8 * 4);
-const U64 kRank6 = kRank1 << (8 * 5);
-const U64 kRank7 = kRank1 << (8 * 6);
-const U64 kRank8 = kRank1 << (8 * 7);
+enum Rank {
+  kRank1 = 0xFF,
+  kRank2 = kRank1 << (8 * 1),
+  kRank3 = kRank1 << (8 * 2),
+  kRank4 = kRank1 << (8 * 3),
+  kRank5 = kRank1 << (8 * 4),
+  kRank6 = kRank1 << (8 * 5),
+  kRank7 = kRank1 << (8 * 6),
+  kRank8 = kRank1 << (8 * 7)
+};
 
 enum MoveType {
   kNormal,
@@ -57,18 +61,6 @@ enum Square {
   kA8, kB8, kC8, kD8, kE8, kF8, kG8, kH8
 };
 
-enum Direction {
-  kNorth = 8,
-  kEast = 1,
-  kSouth = -kNorth,
-  kWest = -kEast,
-
-  kNorthEast = kNorth + kEast,
-  kSouthEast = kSouth + kEast,
-  kSouthWest = kSouth + kWest,
-  kNorthWest = kNorth + kWest
-};
-
 enum Piece {
   kWhiteBB,
   kBlackBB,
@@ -89,5 +81,14 @@ struct CBoard {
   enum Color side;
   U8 castling_rights;
 };
+
+static inline U64 North(U64 bitboard) { return bitboard << 8; }
+static inline U64 NorthEast(U64 bitboard) { return bitboard << 9; }
+static inline U64 East(U64 bitboard) { return bitboard << 1; }
+static inline U64 SouthEast(U64 bitboard) { return bitboard >> 7; }
+static inline U64 South(U64 bitboard) { return bitboard >> 8; }
+static inline U64 SouthWest(U64 bitboard) { return bitboard >> 9; }
+static inline U64 West(U64 bitboard) { return bitboard >> 1; }
+static inline U64 NorthWest(U64 bitboard) { return bitboard << 7; }
 
 #endif  // POSITION_H_

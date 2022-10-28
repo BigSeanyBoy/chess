@@ -6,7 +6,7 @@ endif
 
 CC = clang $(OPTS) $(CFLAGS)
 
-DEPS = board.h movegen.h fen.h display.h
+DEPS = position.h movegen.h fen.h display.h
 
 ODIR = obj
 _OBJ = main.o movegen.o fen.o display.o

@@ -19,10 +19,10 @@ void DisplayPiece(struct CBoard *position, U64 bit) {
 void DisplaySquare(struct CBoard *position, U64 bit) {
   if (position->bitboards[kWhiteBB] & bit) {
     printf("%s", BLUE);
-    display_piece(position, bit);
+    DisplayPiece(position, bit);
   } else if (position->bitboards[kBlackBB] & bit) {
     printf("%s", RED);
-    display_piece(position, bit);
+    DisplayPiece(position, bit);
   } else {
     printf("x");
   }
@@ -35,7 +35,7 @@ void BlackDisplay(struct CBoard *position) {
   for (int rank = 0; rank < 8; ++rank) {
     printf("   %d  ", rank + 1);
     for (int file = 7; file >= 0; --file) {
-            display_square(position, 1ull << (rank * 8 + file));
+            DisplaySquare(position, 1ull << (rank * 8 + file));
     }
     printf(" %d\n", rank + 1);
   }
@@ -47,7 +47,7 @@ void WhiteDisplay(struct CBoard *position) {
   for (int rank = 7; rank >= 0; --rank) {
     printf("   %d  ", rank + 1);
     for (int file = 0; file < 8; ++file) {
-            display_square(position, 1ull << (rank * 8 + file));
+            DisplaySquare(position, 1ull << (rank * 8 + file));
     }
     printf(" %d\n", rank + 1);
   }
@@ -56,5 +56,5 @@ void WhiteDisplay(struct CBoard *position) {
 
 void Display(struct CBoard *position, enum Color side) {
   printf("\033[4;0H");
-  side == kWhite ? white_display(position) : black_display(position);
+  side == kWhite ? WhiteDisplay(position) : BlackDisplay(position);
 }

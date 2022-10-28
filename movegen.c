@@ -1,16 +1,20 @@
 #include "./movegen.h"
 
 void MoveGen(struct CBoard *position, U64 *moves) {
+  U64 enemies;
   switch (position->side) {
     case kWhite:
-      U64 enemies = position->bitboards[kBlackBB];
+      enemies = position->bitboards[kBlackBB];
       break;
     case kBlack:
-      U64 enemies = position->bitboards[kBlackBB];
+      enemies = position->bitboards[kBlackBB];
       break;
   }
 
-  for (U64 source = 1; source < (1ull << 64); source <<= 1) {
+  U64 source;
+  for (int shift = 0; shift < 63; ++shift) {
+    source = 1ull << shift;
+
     if (position->occupied & source) {
       if (position->bitboards[kPawnBB] & source) {
         PawnMoves(position, moves, source);
@@ -34,16 +38,36 @@ U64 PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
 
   switch (position->side) {
     case kWhite:
-      targets |= (source << kNorth) & position->empty;
-      targets |= (source << kNorth + kNorth) & position->empty & kRank4;
-      targets |= (source << kNorthEast) & position->bitboards[kBlackBB];
-      targets |= (source << kNorthWest) & position->bitboards[kBlackBB];
+      targets |= (North(source)) & position->empty;
+      targets |= (North(North(source))) & position->empty & kRank4;
+      targets |= (NorthEast(source)) & position->bitboards[kBlackBB];
+      targets |= (NorthWest(source)) & position->bitboards[kBlackBB];
     case kBlack:
-      targets |= (source << kSouth) & position->empty;
-      targets |= (source << kSouth + kSouth) & position->empty & kRank5;
-      targets |= (source << kSouthEast) & position->bitboards[kWhiteBB];
-      targets |= (source << kSouthWest) & position->bitboards[kWhiteBB];
+      targets |= (South(source)) & position->empty;
+      targets |= (South(South(source))) & position->empty & kRank5;
+      targets |= (SouthEast(source)) & position->bitboards[kWhiteBB];
+      targets |= (SouthWest(source)) & position->bitboards[kWhiteBB];
   }
 
   return targets;
+}
+
+U64 KnightMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return 0ull;
+}
+
+U64 BishopMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return 0ull;
+}
+
+U64 RookMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return 0ull;
+}
+
+U64 QueenMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return 0ull;
+}
+
+U64 KingMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return 0ull;
 }
