@@ -86,7 +86,7 @@ struct CBoard {
   U64 occupied;
   U32 nbmoves;
   U32 halfmove_clock;
-  U8 side;
+  enum Color side;
   U8 castling_rights;
 };
 
