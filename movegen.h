@@ -8,14 +8,24 @@ U64 WhiteDoublePushTargets(U64 pawns, U64 empty);
 U64 BlackSinglePushTargets(U64 pawns, U64 empty);
 U64 BlackDoublePushTargets(U64 pawns, U64 empty);
 
-U64 WhitePawnAttackEast(U64 pawns);
-U64 WhitePawnAttackWest(U64 pawns);
-U64 BlackPawnAttackEast(U64 pawns);
-U64 BlackPawnAttackWest(U64 pawns);
+U64 WhitePawnsAttackEast(U64 pawns);
+U64 WhitePawnsAttackWest(U64 pawns);
+U64 BlackPawnsAttackEast(U64 pawns);
+U64 BlackPawnsAttackWest(U64 pawns);
 
-U64 WhitePawnCaptureEast(U64 pawns, U64 black_pieces);
-U64 WhitePawnCaptureWest(U64 pawns, U64 black_pieces);
-U64 BlackPawnCaptureEast(U64 pawns, U64 white_pieces);
-U64 BlackPawnCaptureWest(U64 pawns, U64 white_pieces);
+U64 WhitePawnsCaptureEast(U64 pawns, U64 black_pieces);
+U64 WhitePawnsCaptureWest(U64 pawns, U64 black_pieces);
+U64 BlackPawnsCaptureEast(U64 pawns, U64 white_pieces);
+U64 BlackPawnsCaptureWest(U64 pawns, U64 white_pieces);
+
+U64 KnightsNoNoEa(U64 knights);
+U64 KnightsNoEaEa(U64 knights);
+U64 KnightsSoEaEa(U64 knights);
+U64 KnightsSoSoEa(U64 knights);
+U64 KnightsSoSoWe(U64 knights);
+U64 KnightsSoWeWe(U64 knights);
+U64 KnightsNoWeWe(U64 knights);
+U64 KnightsNoNoWe(U64 knights);
+
 
 #endif  // MOVEGEN_H_
