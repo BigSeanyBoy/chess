@@ -29,38 +29,21 @@ void MoveGen(struct CBoard *position, U64 *moves) {
   }
 }
 
-// Pawn Pushes.
-U64 WhiteSinglePushTargets(U64 pawn, U64 empty) {
-  return North(pawn) & empty;
-}
+U64 PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
+  U64 targets = 0;
 
-U64 WhiteDoublePushTargets(U64 pawn, U64 empty) {
-  U64 single_push = WhiteSinglePushTargets(pawn, empty);
-  return North(single_push) & empty & kRank4;
-}
+  switch (position->side) {
+    case kWhite:
+      targets |= (source << kNorth) & position->empty;
+      targets |= (source << kNorth + kNorth) & position->empty & kRank4;
+      targets |= (source << kNorthEast) & position->bitboards[kBlackBB];
+      targets |= (source << kNorthWest) & position->bitboards[kBlackBB];
+    case kBlack:
+      targets |= (source << kSouth) & position->empty;
+      targets |= (source << kSouth + kSouth) & position->empty & kRank5;
+      targets |= (source << kSouthEast) & position->bitboards[kWhiteBB];
+      targets |= (source << kSouthWest) & position->bitboards[kWhiteBB];
+  }
 
-U64 BlackSinglePushTargets(U64 pawn, U64 empty) {
-  return South(pawn) & empty;
-}
-
-U64 BlackDoublePushTargets(U64 pawn, U64 empty) {
-  U64 single_push = BlackSinglePushTargets(pawn, empty);
-  return South(single_push) & empty & kRank5;
-}
-
-// Pawn Captures.
-U64 WhitePawnCapturesEast(U64 pawn, U64 enemies) {
-  return NorthEast(pawn) & enemies & ~kFileA;
-}
-
-U64 WhitePawnCapturesWest(U64 pawn, U64 enemies) {
-  return NorthWest(pawn) & enemies & ~kFileH;
-}
-
-U64 BlackPawnCapturesEast(U64 pawn, U64 enemies) {
-  return SouthEast(pawn) & enemies & ~kFileA;
-}
-
-U64 BlackPawnCapturesWest(U64 pawn, U64 enemies) {
-  return SouthWest(pawn) & enemies & ~kFileH;
+  return targets;
 }
