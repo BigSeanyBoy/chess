@@ -110,3 +110,68 @@ U64 KnightsAttackNoWeWe(U64 knights, U64 empty) {
 U64 KnightsAttackNoNoWe(U64 knights, U64 empty) {
   return KnightsNoNoWe(knights) & empty;
 }
+
+// Knight Captures.
+U64 WhiteKnightsCaptureNoNoEa(U64 knights, U64 black_pieces) {
+  return KnightsNoNoEa(knights) & black_pieces;
+}
+
+U64 WhiteKnightsCaptureNoEaEa(U64 knights, U64 black_pieces) {
+  return KnightsNoEaEa(knights) & black_pieces;
+}
+
+U64 WhiteKnightsCaptureSoEaEa(U64 knights, U64 black_pieces) {
+  return KnightsSoEaEa(knights) & black_pieces;
+}
+
+U64 WhiteKnightsCaptureSoSoEa(U64 knights, U64 black_pieces) {
+  return KnightsSoSoEa(knights) & black_pieces;
+}
+
+U64 WhiteKnightsCaptureSoSoWe(U64 knights, U64 black_pieces) {
+  return KnightsSoSoWe(knights) & black_pieces;
+}
+
+U64 WhiteKnightsCaptureSoWeWe(U64 knights, U64 black_pieces) {
+  return KnightsSoWeWe(knights) & black_pieces;
+}
+
+U64 WhiteKnightsCaptureNoWeWe(U64 knights, U64 black_pieces) {
+  return KnightsNoWeWe(knights) & black_pieces;
+}
+
+U64 WhiteKnightsCaptureNoNoWe(U64 knights, U64 black_pieces) {
+  return KnightsNoNoWe(knights) & black_pieces;
+}
+
+U64 BlackKnightsCaptureNoNoEa(U64 knights, U64 white_pieces) {
+  return KnightsNoNoEa(knights) & white_pieces;
+}
+
+U64 BlackKnightsCaptureNoEaEa(U64 knights, U64 white_pieces) {
+  return KnightsNoEaEa(knights) & white_pieces;
+}
+
+U64 BlackKnightsCaptureSoEaEa(U64 knights, U64 white_pieces) {
+  return KnightsSoEaEa(knights) & white_pieces;
+}
+
+U64 BlackKnightsCaptureSoSoEa(U64 knights, U64 white_pieces) {
+  return KnightsSoSoEa(knights) & white_pieces;
+}
+
+U64 BlackKnightsCaptureSoSoWe(U64 knights, U64 white_pieces) {
+  return KnightsSoSoWe(knights) & white_pieces;
+}
+
+U64 BlackKnightsCaptureSoWeWe(U64 knights, U64 white_pieces) {
+  return KnightsSoWeWe(knights) & white_pieces;
+}
+
+U64 BlackKnightsCaptureNoWeWe(U64 knights, U64 white_pieces) {
+  return KnightsNoWeWe(knights) & white_pieces;
+}
+
+U64 BlackKnightsCaptureNoNoWe(U64 knights, U64 white_pieces) {
+  return KnightsNoNoWe(knights) & white_pieces;
+}
