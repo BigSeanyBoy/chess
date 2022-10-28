@@ -1,14 +1,14 @@
 #include "./fen.h"
 
 void EmptyBB(struct CBoard *position) {
-  position->bitboards[N_WHITE] = 0;
-  position->bitboards[N_BLACK] = 0;
-  position->bitboards[N_PAWN] = 0;
-  position->bitboards[N_KNIGHT] = 0;
-  position->bitboards[N_BISHOP] = 0;
-  position->bitboards[N_ROOK] = 0;
-  position->bitboards[N_QUEEN] = 0;
-  position->bitboards[N_KING] = 0;
+  position->bitboards[kWhiteBB] = 0;
+  position->bitboards[kBlackBB] = 0;
+  position->bitboards[kPawnBB] = 0;
+  position->bitboards[kKnightBB] = 0;
+  position->bitboards[kBishopBB] = 0;
+  position->bitboards[kRookBB] = 0;
+  position->bitboards[kQueenBB] = 0;
+  position->bitboards[kKingBB] = 0;
   position->occupied = 0;
 }
 
@@ -23,10 +23,10 @@ void FENPlacement(struct CBoard *position, char *fenstr) {
     ++fenstr;
     bit = rank * 8 + file;
     if (c >= 'A' && c <= 'Z') {
-      position->bitboards[N_WHITE] += (1ull << bit);
+      position->bitboards[kWhiteBB] += (1ull << bit);
       position->occupied += (1ull << bit);
     } else if (c >= 'a' && c <= 'z') {
-      position->bitboards[N_BLACK] += (1ull << bit);
+      position->bitboards[kBlackBB] += (1ull << bit);
       position->occupied += (1ull << bit);
     } else {
       if (c >= '0' && c <= '9') {
@@ -41,27 +41,27 @@ void FENPlacement(struct CBoard *position, char *fenstr) {
     switch (c) {
       case 'P':
       case 'p':
-        position->bitboards[N_PAWN] += (1ull << bit);
+        position->bitboards[kPawnBB] += (1ull << bit);
         break;
       case 'N':
       case 'n':
-        position->bitboards[N_KNIGHT] += (1ull << bit);
+        position->bitboards[kKnightBB] += (1ull << bit);
         break;
       case 'B':
       case 'b':
-        position->bitboards[N_BISHOP] += (1ull << bit);
+        position->bitboards[kBishopBB] += (1ull << bit);
         break;
       case 'R':
       case 'r':
-        position->bitboards[N_ROOK] += (1ull << bit);
+        position->bitboards[kRookBB] += (1ull << bit);
         break;
       case 'Q':
       case 'q':
-        position->bitboards[N_QUEEN] += (1ull << bit);
+        position->bitboards[kQueenBB] += (1ull << bit);
         break;
       case 'K':
       case 'k':
-        position->bitboards[N_KING] += (1ull << bit);
+        position->bitboards[kKingBB] += (1ull << bit);
         break;
     }
     ++file;
@@ -76,16 +76,16 @@ void FENCastling(struct CBoard *position, char *fenstr) {
   while ((c = *fenstr) != ' ') {
     switch (c) {
       case 'K':
-        position->castling_rights += (WHITE_OO);
+        position->castling_rights += (kWhiteOO);
         break;
       case 'Q':
-        position->castling_rights += (WHITE_OOO);
+        position->castling_rights += (kWhiteOOO);
         break;
       case 'k':
-        position->castling_rights += (BLACK_OO);
+        position->castling_rights += (kBlackOO);
         break;
       case 'q':
-        position->castling_rights += (BLACK_OOO);
+        position->castling_rights += (kBlackOOO);
         break;
     }
     ++fenstr;
@@ -122,7 +122,7 @@ void ImportFEN(struct CBoard *position, char *fenstr) {
         FENPlacement(position, fenstr);
         break;
       case 1:
-        position->side = *fenstr == 'w' ? WHITE : BLACK;
+        position->side = *fenstr == 'w' ? kWhite : kBlack;
         fenstr += 2;
         break;
       case 2:

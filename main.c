@@ -12,7 +12,7 @@ int main() {
 
   enum Color side;
   printf("\nWhich side would you like to play as? [w/b]: ");
-  side = getchar() == 'w' ? WHITE : BLACK;
+  side = getchar() == 'w' ? kWhite : kBlack;
   while ((getchar()) != '\n') {}
 
   Display(&position, side);

@@ -3,54 +3,23 @@
 
 #include "./position.h"
 
-U64 WhiteSinglePushTargets(U64 pawns, U64 empty);
-U64 WhiteDoublePushTargets(U64 pawns, U64 empty);
-U64 BlackSinglePushTargets(U64 pawns, U64 empty);
-U64 BlackDoublePushTargets(U64 pawns, U64 empty);
+void MoveGen(struct CBoard *position, U64 *moves);
 
-U64 WhitePawnsAttackEast(U64 pawns);
-U64 WhitePawnsAttackWest(U64 pawns);
-U64 BlackPawnsAttackEast(U64 pawns);
-U64 BlackPawnsAttackWest(U64 pawns);
+U64 PawnMoves(U64 pawn, U64 enemies, U64 empty);
+U64 KnightMoves(U64 knight, U64 enemies, U64 empty);
+U64 BishopMoves(U64 bishop, U64 enemies, U64 empty);
+U64 RookMoves(U64 rook, U64 enemies, U64 empty);
+U64 QueenMoves(U64 queen, U64 enemies, U64 empty);
+U64 KingMoves(U64 king, U64 enemies, U64 empty);
 
-U64 WhitePawnsCaptureEast(U64 pawns, U64 black_pieces);
-U64 WhitePawnsCaptureWest(U64 pawns, U64 black_pieces);
-U64 BlackPawnsCaptureEast(U64 pawns, U64 white_pieces);
-U64 BlackPawnsCaptureWest(U64 pawns, U64 white_pieces);
+U64 WhiteSinglePushTargets(U64 pawn, U64 empty);
+U64 WhiteDoublePushTargets(U64 pawn, U64 empty);
+U64 BlackSinglePushTargets(U64 pawn, U64 empty);
+U64 BlackDoublePushTargets(U64 pawn, U64 empty);
 
-U64 KnightsNoNoEa(U64 knights);
-U64 KnightsNoEaEa(U64 knights);
-U64 KnightsSoEaEa(U64 knights);
-U64 KnightsSoSoEa(U64 knights);
-U64 KnightsSoSoWe(U64 knights);
-U64 KnightsSoWeWe(U64 knights);
-U64 KnightsNoWeWe(U64 knights);
-U64 KnightsNoNoWe(U64 knights);
-
-U64 KnightsAttackNoNoEa(U64 knights, U64 empty);
-U64 KnightsAttackNoEaEa(U64 knights, U64 empty);
-U64 KnightsAttackSoEaEa(U64 knights, U64 empty);
-U64 KnightsAttackSoSoEa(U64 knights, U64 empty);
-U64 KnightsAttackSoSoWe(U64 knights, U64 empty);
-U64 KnightsAttackSoWeWe(U64 knights, U64 empty);
-U64 KnightsAttackNoWeWe(U64 knights, U64 empty);
-U64 KnightsAttackNoNoWe(U64 knights, U64 empty);
-
-U64 WhiteKnightsCaptureNoNoEa(U64 knights, U64 black_pieces);
-U64 WhiteKnightsCaptureNoEaEa(U64 knights, U64 black_pieces);
-U64 WhiteKnightsCaptureSoEaEa(U64 knights, U64 black_pieces);
-U64 WhiteKnightsCaptureSoSoEa(U64 knights, U64 black_pieces);
-U64 WhiteKnightsCaptureSoSoWe(U64 knights, U64 black_pieces);
-U64 WhiteKnightsCaptureSoWeWe(U64 knights, U64 black_pieces);
-U64 WhiteKnightsCaptureNoWeWe(U64 knights, U64 black_pieces);
-U64 WhiteKnightsCaptureNoNoWe(U64 knights, U64 black_pieces);
-U64 BlackKnightsCaptureNoNoEa(U64 knights, U64 white_pieces);
-U64 BlackKnightsCaptureNoEaEa(U64 knights, U64 white_pieces);
-U64 BlackKnightsCaptureSoEaEa(U64 knights, U64 white_pieces);
-U64 BlackKnightsCaptureSoSoEa(U64 knights, U64 white_pieces);
-U64 BlackKnightsCaptureSoSoWe(U64 knights, U64 white_pieces);
-U64 BlackKnightsCaptureSoWeWe(U64 knights, U64 white_pieces);
-U64 BlackKnightsCaptureNoWeWe(U64 knights, U64 white_pieces);
-U64 BlackKnightsCaptureNoNoWe(U64 knights, U64 white_pieces);
+U64 WhitePawnCapturesEast(U64 pawn, U64 enemies);
+U64 WhitePawnCapturesWest(U64 pawn, U64 enemies);
+U64 BlackPawnCapturesEast(U64 pawn, U64 enemies);
+U64 BlackPawnCapturesWest(U64 pawn, U64 enemies);
 
 #endif  // MOVEGEN_H_

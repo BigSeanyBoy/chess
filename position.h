@@ -27,57 +27,57 @@ const U64 kRank7 = kRank1 << (8 * 6);
 const U64 kRank8 = kRank1 << (8 * 7);
 
 enum MoveType {
-  NORMAL,
-  PROMOTION = 1 << 14,
-  EN_PASSANT = 2 << 14,
-  CASTLING = 3 << 14
+  kNormal,
+  kPromotion = 1 << 14,
+  kEnPassant = 2 << 14,
+  kCastling = 3 << 14
 };
 
 enum Color {
-  WHITE,
-  BLACK
+  kWhite,
+  kBlack
 };
 
 enum CastlingRights {
-  NO_CASTLING,
-  WHITE_OO,
-  WHITE_OOO = WHITE_OO << 1,
-  BLACK_OO = WHITE_OO << 2,
-  BLACK_OOO = WHITE_OO << 3
+  kNoCastling,
+  kWhiteOO,
+  kWhiteOOO = kWhiteOO << 1,
+  kBlackOO = kWhiteOO << 2,
+  kBlackOOO = kWhiteOO << 3
 };
 
 enum Square {
-  A1, B1, C1, D1, E1, F1, G1, H1,
-  A2, B2, C2, D2, E2, F2, G2, H2,
-  A3, B3, C3, D3, E3, F3, G3, H3,
-  A4, B4, C4, D4, E4, F4, G4, H4,
-  A5, B5, C5, D5, E5, F5, G5, H5,
-  A6, B6, C6, D6, E6, F6, G6, H6,
-  A7, B7, C7, D7, E7, F7, G7, H7,
-  A8, B8, C8, D8, E8, F8, G8, H8
+  kA1, kB1, kC1, kD1, kE1, kF1, kG1, kH1,
+  kA2, kB2, kC2, kD2, kE2, kF2, kG2, kH2,
+  kA3, kB3, kC3, kD3, kE3, kF3, kG3, kH3,
+  kA4, kB4, kC4, kD4, kE4, kF4, kG4, kH4,
+  kA5, kB5, kC5, kD5, kE5, kF5, kG5, kH5,
+  kA6, kB6, kC6, kD6, kE6, kF6, kG6, kH6,
+  kA7, kB7, kC7, kD7, kE7, kF7, kG7, kH7,
+  kA8, kB8, kC8, kD8, kE8, kF8, kG8, kH8
 };
 
 enum Direction {
-  NORTH = 8,
-  EAST = 1,
-  SOUTH = -NORTH,
-  WEST = -EAST,
+  kNorth = 8,
+  kEast = 1,
+  kSouth = -kNorth,
+  kWest = -kEast,
 
-  NORTH_EAST = NORTH + EAST,
-  SOUTH_EAST = SOUTH + EAST,
-  SOUTH_WEST = SOUTH + WEST,
-  NORTH_WEST = NORTH + WEST,
+  kNorthEast = kNorth + kEast,
+  kSouthEast = kSouth + kEast,
+  kSouthWest = kSouth + kWest,
+  kNorthWest = kNorth + kWest
 };
 
 enum Piece {
-  N_WHITE,
-  N_BLACK,
-  N_PAWN,
-  N_KNIGHT,
-  N_BISHOP,
-  N_ROOK,
-  N_QUEEN,
-  N_KING
+  kWhiteBB,
+  kBlackBB,
+  kPawnBB,
+  kKnightBB,
+  kBishopBB,
+  kRookBB,
+  kQueenBB,
+  kKingBB
 };
 
 struct CBoard {
@@ -92,9 +92,11 @@ struct CBoard {
 
 U64 North(U64 bitboard);
 U64 NorthEast(U64 bitboard);
+U64 East(U64 bitboard);
 U64 SouthEast(U64 bitboard);
 U64 South(U64 bitboard);
 U64 SouthWest(U64 bitboard);
+U64 West(U64 bitboard);
 U64 NorthWest(U64 bitboard);
 
 #endif  // POSITION_H_

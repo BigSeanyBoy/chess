@@ -1,26 +1,26 @@
 #include "./display.h"
 
 void DisplayPiece(struct CBoard *position, U64 bit) {
-  if (position->bitboards[N_PAWN] & bit) {
+  if (position->bitboards[kPawnBB] & bit) {
           printf("p");
-  } else if (position->bitboards[N_KNIGHT] & bit) {
+  } else if (position->bitboards[kKnightBB] & bit) {
           printf("N");
-  } else if (position->bitboards[N_BISHOP] & bit) {
+  } else if (position->bitboards[kBishopBB] & bit) {
           printf("B");
-  } else if (position->bitboards[N_ROOK] & bit) {
+  } else if (position->bitboards[kRookBB] & bit) {
           printf("R");
-  } else if (position->bitboards[N_QUEEN] & bit) {
+  } else if (position->bitboards[kQueenBB] & bit) {
           printf("Q");
-  } else if (position->bitboards[N_KING] & bit) {
+  } else if (position->bitboards[kKingBB] & bit) {
           printf("K");
   }
 }
 
 void DisplaySquare(struct CBoard *position, U64 bit) {
-  if (position->bitboards[N_WHITE] & bit) {
+  if (position->bitboards[kWhiteBB] & bit) {
     printf("%s", BLUE);
     display_piece(position, bit);
-  } else if (position->bitboards[N_BLACK] & bit) {
+  } else if (position->bitboards[kBlackBB] & bit) {
     printf("%s", RED);
     display_piece(position, bit);
   } else {
@@ -56,5 +56,5 @@ void WhiteDisplay(struct CBoard *position) {
 
 void Display(struct CBoard *position, enum Color side) {
   printf("\033[4;0H");
-  side == WHITE ? white_display(position) : black_display(position);
+  side == kWhite ? white_display(position) : black_display(position);
 }
