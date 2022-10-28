@@ -27,5 +27,13 @@ U64 KnightsSoWeWe(U64 knights);
 U64 KnightsNoWeWe(U64 knights);
 U64 KnightsNoNoWe(U64 knights);
 
+U64 KnightsAttackNoNoEa(U64 knights, U64 empty);
+U64 KnightsAttackNoEaEa(U64 knights, U64 empty);
+U64 KnightsAttackSoEaEa(U64 knights, U64 empty);
+U64 KnightsAttackSoSoEa(U64 knights, U64 empty);
+U64 KnightsAttackSoSoWe(U64 knights, U64 empty);
+U64 KnightsAttackSoWeWe(U64 knights, U64 empty);
+U64 KnightsAttackNoWeWe(U64 knights, U64 empty);
+U64 KnightsAttackNoNoWe(U64 knights, U64 empty);
 
 #endif  // MOVEGEN_H_

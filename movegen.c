@@ -45,35 +45,68 @@ U64 BlackPawnsCaptureWest(U64 pawns, U64 white_pieces) {
   return BlackPawnsAttackWest(pawns) & white_pieces;
 }
 
-// Knight Attacks.
-U64 WhiteKnightsNoNoEa(U64 knights) {
+// Knight Patterns.
+U64 KnightsNoNoEa(U64 knights) {
   return (knights << 17) & (~kFileA);
 }
 
-U64 WhiteKnightsNoEaEa(U64 knights) {
+U64 KnightsNoEaEa(U64 knights) {
   return (knights << 10) & (~kFileA) & (~kFileB);
 }
 
-U64 WhiteKnightsSoEaEa(U64 knights) {
+U64 KnightsSoEaEa(U64 knights) {
   return (knights >> 6) & (~kFileA) & (~kFileB);
 }
 
-U64 WhiteKnightsSoSoEa(U64 knights) {
+U64 KnightsSoSoEa(U64 knights) {
   return (knights >> 15) & (~kFileA);
 }
 
-U64 WhiteKnightsSoSoWe(U64 knights) {
+U64 KnightsSoSoWe(U64 knights) {
   return (knights >> 17) & (~kFileH);
 }
 
-U64 WhiteKnightsSoWeWe(U64 knights) {
+U64 KnightsSoWeWe(U64 knights) {
   return (knights >> 10) & (~kFileH) & (~kFileG);
 }
 
-U64 WhiteKnightsNoWeWe(U64 knights) {
+U64 KnightsNoWeWe(U64 knights) {
   return (knights << 6) & (~kFileH) & (~kFileG);
 }
 
-U64 WhiteKnightsNoNoWe(U64 knights) {
+U64 KnightsNoNoWe(U64 knights) {
   return (knights << 15) & (~kFileH);
+}
+
+// Knight Attacks.
+U64 KnightsAttackNoNoEa(U64 knights, U64 empty) {
+  return KnightsNoNoEa(knights) & empty;
+}
+
+U64 KnightsAttackNoEaEa(U64 knights, U64 empty) {
+  return KnightsNoEaEa(knights) & empty;
+}
+
+U64 KnightsAttackSoEaEa(U64 knights, U64 empty) {
+  return KnightsSoEaEa(knights) & empty;
+}
+
+U64 KnightsAttackSoSoEa(U64 knights, U64 empty) {
+  return KnightsSoSoEa(knights) & empty;
+}
+
+U64 KnightsAttackSoSoWe(U64 knights, U64 empty) {
+  return KnightsSoSoWe(knights) & empty;
+}
+
+U64 KnightsAttackSoWeWe(U64 knights, U64 empty) {
+  return KnightsSoWeWe(knights) & empty;
+}
+
+U64 KnightsAttackNoWeWe(U64 knights, U64 empty) {
+  return KnightsNoWeWe(knights) & empty;
+}
+
+U64 KnightsAttackNoNoWe(U64 knights, U64 empty) {
+  return KnightsNoNoWe(knights) & empty;
 }
