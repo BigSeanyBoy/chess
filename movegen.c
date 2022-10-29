@@ -1,27 +1,5 @@
 #include "./movegen.h"
 
-U64 RankMask(int source) {
-  return kRank1 << (source & 56);
-}
-
-U64 FileMask(int source) {
-  return kFileA << (source & 7);
-}
-
-U64 MainDiagMask(int source) {
-  int diag = 8 * (source & 7) - (source & 56);
-  int north = -diag & (diag >> 31);
-  int south = diag & (-diag >> 31);
-  return (kMainDiagonal >> south) << north;
-}
-
-U64 AntiDiagMask(int source) {
-  int diag = 7 - (source & 7) - (source & 56);
-  int north = -diag & (diag >> 31);
-  int south = diag & (-diag >> 31);
-  return (kMainDiagonal >> south) << north;
-}
-
 void PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
   U64 targets = 0;
 
