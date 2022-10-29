@@ -38,22 +38,44 @@ U64 PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
 
   switch (position->side) {
     case kWhite:
-      targets |= (North(source)) & position->empty;
-      targets |= (North(North(source))) & position->empty & kRank4;
-      targets |= (NorthEast(source)) & position->bitboards[kBlackBB];
-      targets |= (NorthWest(source)) & position->bitboards[kBlackBB];
+      targets |= North(source) & position->empty;
+      targets |= North(North(source)) & position->empty & kRank4;
+      targets |= NorthEast(source) & position->bitboards[kBlackBB] & ~kFileA;
+      targets |= NorthWest(source) & position->bitboards[kBlackBB] & ~kFileH;
+      break;
     case kBlack:
-      targets |= (South(source)) & position->empty;
-      targets |= (South(South(source))) & position->empty & kRank5;
-      targets |= (SouthEast(source)) & position->bitboards[kWhiteBB];
-      targets |= (SouthWest(source)) & position->bitboards[kWhiteBB];
+      targets |= South(source) & position->empty;
+      targets |= South(South(source)) & position->empty & kRank5;
+      targets |= SouthEast(source) & position->bitboards[kWhiteBB] & ~kFileA;
+      targets |= SouthWest(source) & position->bitboards[kWhiteBB] & ~kFileH;
+      break;
   }
 
   return targets;
 }
 
 U64 KnightMoves(struct CBoard *position, U64 *moves, U64 source) {
-  return 0ull;
+  U64 targets = 0;
+
+  targets |= North(NorthEast(source)) & ~kFileA;
+  targets |= East(NorthEast(source)) & ~kFileA & ~kFileB;
+  targets |= East(SouthEast(source))  & ~kFileA & ~kFileB;
+  targets |= South(SouthEast(source)) & ~kFileA;
+  targets |= South(SouthWest(source)) & ~kFileH;
+  targets |= West(SouthWest(source)) & ~kFileG & ~kFileH;
+  targets |= West(NorthWest(source)) & ~kFileG & ~kFileH;
+  targets |= North(NorthWest(source)) & ~kFileH;
+
+  switch (position->side) {
+    case kWhite:
+      targets &= ~(position->bitboards[kWhiteBB]);
+      break;
+    case kBlack:
+      targets &= ~(position->bitboards[kBlackBB]);
+      break;
+  }
+
+  return targets;
 }
 
 U64 BishopMoves(struct CBoard *position, U64 *moves, U64 source) {
