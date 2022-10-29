@@ -33,7 +33,7 @@ void MoveGen(struct CBoard *position, U64 *moves) {
   }
 }
 
-U64 PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
+void PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
   U64 targets = 0;
 
   switch (position->side) {
@@ -51,10 +51,10 @@ U64 PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
       break;
   }
 
-  return targets;
+  moves[source] = targets;
 }
 
-U64 KnightMoves(struct CBoard *position, U64 *moves, U64 source) {
+void KnightMoves(struct CBoard *position, U64 *moves, U64 source) {
   U64 targets = 0;
 
   targets |= North(NorthEast(source)) & ~kFileA;
@@ -75,21 +75,21 @@ U64 KnightMoves(struct CBoard *position, U64 *moves, U64 source) {
       break;
   }
 
-  return targets;
+  moves[source] = targets;
 }
 
-U64 BishopMoves(struct CBoard *position, U64 *moves, U64 source) {
-  return 0ull;
+void BishopMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return;
 }
 
-U64 RookMoves(struct CBoard *position, U64 *moves, U64 source) {
-  return 0ull;
+void RookMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return;
 }
 
-U64 QueenMoves(struct CBoard *position, U64 *moves, U64 source) {
-  return 0ull;
+void QueenMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return;
 }
 
-U64 KingMoves(struct CBoard *position, U64 *moves, U64 source) {
-  return 0ull;
+void KingMoves(struct CBoard *position, U64 *moves, U64 source) {
+  return;
 }
