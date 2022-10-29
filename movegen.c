@@ -1,38 +1,5 @@
 #include "./movegen.h"
 
-void MoveGen(struct CBoard *position, U64 *moves) {
-  U64 enemies;
-  switch (position->side) {
-    case kWhite:
-      enemies = position->bitboards[kBlackBB];
-      break;
-    case kBlack:
-      enemies = position->bitboards[kBlackBB];
-      break;
-  }
-
-  U64 source;
-  for (int shift = 0; shift < 63; ++shift) {
-    source = 1ull << shift;
-
-    if (position->occupied & source) {
-      if (position->bitboards[kPawnBB] & source) {
-        PawnMoves(position, moves, source);
-      } else if (position->bitboards[kKnightBB] & source) {
-        KnightMoves(position, moves, source);
-      } else if (position->bitboards[kBishopBB] & source) {
-        BishopMoves(position, moves, source);
-      } else if (position->bitboards[kRookBB] & source) {
-        RookMoves(position, moves, source);
-      } else if (position->bitboards[kQueenBB] & source) {
-        QueenMoves(position, moves, source);
-      } else if (position->bitboards[kKingBB] & source) {
-        KingMoves(position, moves, source);
-      }
-    }
-  }
-}
-
 void PawnMoves(struct CBoard *position, U64 *moves, U64 source) {
   U64 targets = 0;
 
@@ -98,4 +65,38 @@ void KingMoves(struct CBoard *position, U64 *moves, U64 source) {
   targets |= North(king_set) | South(king_set);
 
   moves[source] = targets;
+}
+
+void MoveGen(struct CBoard *position, U64 *moves) {
+  U64 enemies;
+  switch (position->side) {
+    case kWhite:
+      enemies = position->bitboards[kBlackBB];
+      break;
+    case kBlack:
+      enemies = position->bitboards[kBlackBB];
+      break;
+  }
+
+  for (int source = 0; source < 63; ++source) {
+    U64 shift = 1ull << source;
+
+    if (position->occupied & source) {
+      if (position->bitboards[kPawnBB] & shift) {
+        PawnMoves(position, moves, source);
+      } else if (position->bitboards[kKnightBB] & shift) {
+        KnightMoves(position, moves, source);
+      } else if (position->bitboards[kBishopBB] & shift) {
+        BishopMoves(position, moves, source);
+      } else if (position->bitboards[kRookBB] & shift) {
+        RookMoves(position, moves, source);
+      } else if (position->bitboards[kQueenBB] & shift) {
+        QueenMoves(position, moves, source);
+      } else if (position->bitboards[kKingBB] & shift) {
+        KingMoves(position, moves, source);
+      }
+    } else {
+      moves[source] = 0;
+    }
+  }
 }
