@@ -91,5 +91,11 @@ void QueenMoves(struct CBoard *position, U64 *moves, U64 source) {
 }
 
 void KingMoves(struct CBoard *position, U64 *moves, U64 source) {
-  return;
+  U64 targets = 0;
+
+  targets |= East(source) | West(source);
+  U64 king_set = targets | source;
+  targets |= North(king_set) | South(king_set);
+
+  moves[source] = targets;
 }
