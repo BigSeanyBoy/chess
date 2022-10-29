@@ -8,6 +8,11 @@ typedef uint16_t U16;
 typedef uint32_t U32;
 typedef uint64_t U64;
 
+enum Diagonal {
+  kMainDiagonal = 0x8040201008040201,
+  kAntiDiagonal = 0x0102040810204080
+};
+
 enum File {
   kFileA = 0x0101010101010101,
   kFileB = kFileA << 1,
