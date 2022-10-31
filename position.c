@@ -1,7 +1,7 @@
 #include "./position.h"
 
 void ImportFEN(struct CBoard *position, char *fenstr) {
-  for (int i = 0; i < 63; ++i) { position->pieces[i] = 0; }
+  for (int i = 0; i < 64; ++i) { position->pieces[i] = 0; }
 
   int rank = 7;
   int file = 0;
