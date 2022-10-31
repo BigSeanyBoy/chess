@@ -11,6 +11,6 @@
 void SquareDisplay(U8 piece);
 void BlackDisplay(struct CBoard *position);
 void WhiteDisplay(struct CBoard *position);
-void Display(struct CBoard *position);
+void Display(struct CBoard *position, enum Color side);
 
 #endif  // DISPLAY_H_

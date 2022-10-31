@@ -1,7 +1,7 @@
 CFLAGS = -I -Wall
 
-ifeq ($(DEBUG),1)
-	OTPS = -g
+ifeq ($(DEBUG), 1)
+	OPTS = -g
 endif
 
 CC = clang $(OPTS) $(CFLAGS)
@@ -9,7 +9,7 @@ CC = clang $(OPTS) $(CFLAGS)
 DEPS = position.h display.h
 
 ODIR = obj
-_OBJ = main.o display.o
+_OBJ = main.o position.o display.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)

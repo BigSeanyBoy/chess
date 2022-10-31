@@ -36,4 +36,6 @@ struct CBoard {
   enum Color side;
 };
 
+void ImportFEN(struct CBoard *position, char *fenstr);
+
 #endif  // POSITION_H_

@@ -1,16 +1,15 @@
+#include "./position.h"
 #include "./display.h"
 
 int main() {
   printf("\033[2J");
 
   struct CBoard position;
-  
-  for (int i = 0; i < 63; ++i) {
-    position.pieces[i] = 0;
-  }
-  position.side = kWhite;
+  char *fenstr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-  Display(&position);
+  ImportFEN(&position, fenstr);
+
+  Display(&position, kWhite);
 
   return 0;
 }

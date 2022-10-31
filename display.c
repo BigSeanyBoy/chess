@@ -6,7 +6,7 @@ void SquareDisplay(U8 piece) {
     return;
   }
 
-  (piece >> 3) == kWhite ? printf("%s", DEFAULT) : printf("%s", RED);
+  (piece & kWhite) ? printf("%s", DEFAULT) : printf("%s", RED);
 
   switch (piece & 7) {
     case kPawn:
@@ -56,7 +56,7 @@ void WhiteDisplay(struct CBoard *position) {
   printf("\n      a b c d e f g h\n\n");
 }
 
-void Display(struct CBoard *position) {
+void Display(struct CBoard *position, enum Color side) {
   printf("\033[1;0H");
-  position->side == kWhite ? WhiteDisplay(position) : BlackDisplay(position);
+  side == kWhite ? WhiteDisplay(position) : BlackDisplay(position);
 }
