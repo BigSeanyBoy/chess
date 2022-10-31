@@ -32,8 +32,8 @@ enum Square {
 };
 
 struct CBoard {
-  U8 board[64];
-  U8 side;
+  U8 pieces[64];
+  enum Color side;
 };
 
 #endif  // POSITION_H_
