@@ -6,13 +6,13 @@ endif
 
 CC = clang $(OPTS) $(CFLAGS)
 
-# DEPS = 
+DEPS = position.h
 
 ODIR = obj
 _OBJ = main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-$(ODIR)/%.o: %.c # $(DEPS)
+$(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $<
 
 chess: $(OBJ)
