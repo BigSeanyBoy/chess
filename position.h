@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 typedef uint8_t U8;
+typedef uint16_t U16;
 
 enum Color {
   kWhite = 8,
@@ -45,6 +46,7 @@ enum Square {
 };
 
 struct CBoard {
+  U16 move_list[256];
   U8 pieces[64];
   enum Color side;
   enum CastlingRights castling_rights;
