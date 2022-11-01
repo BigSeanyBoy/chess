@@ -10,6 +10,14 @@ enum Color {
   kBlack = 16
 };
 
+enum CastlingRights {
+  kNoCastling,
+  kWhiteOO,
+  kWhiteOOO,
+  kBlackOO,
+  kBlackOOO
+};
+
 enum Piece {
   kNoPiece,
   kPawn,
@@ -34,6 +42,7 @@ enum Square {
 struct CBoard {
   U8 pieces[64];
   enum Color side;
+  enum CastlingRights castling_rights;
 };
 
 void ImportFEN(struct CBoard *position, char *fenstr);

@@ -9,6 +9,7 @@ void TestFENEmpty() {
     assert(position.pieces[i] == 0);
   }
   assert(position.side == kWhite);
+  assert(position.castling_rights == 0);
 }
 
 void TestFENStart() {
@@ -29,6 +30,7 @@ void TestFENStart() {
     assert(position.pieces[i] == testpos[i]);
   }
   assert(position.side == kWhite);
+  assert(position.castling_rights == 15);
 }
 
 void TestFENRandom() {
@@ -49,6 +51,7 @@ void TestFENRandom() {
     assert(position.pieces[i] == testpos[i]);
   }
   assert(position.side == kBlack);
+  assert(position.castling_rights == 12);
 }
 
 void TestFEN() {
