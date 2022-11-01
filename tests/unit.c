@@ -1,4 +1,4 @@
-#include "./unit.h"
+#include "../tests/unit.h"
 
 void TestFENEmpty() {
   char *fenstr = "8/8/8/8/8/8/8/8 w - - 0 1";
@@ -64,9 +64,9 @@ void TestFENRandom() {
                      0, 19, 0, 0, 22, 0, 19, 21,
                     20,  0, 0, 0,  0, 0,  0, 20};
 
- char *fenstr = "r6r/1b2k1bq/8/8/7B/8/8/R3K2R b KQ - 3 2";
- struct CBoard position;
- ImportFEN(&position, fenstr);
+  char *fenstr = "r6r/1b2k1bq/8/8/7B/8/8/R3K2R b KQ - 3 2";
+  struct CBoard position;
+  ImportFEN(&position, fenstr);
 
   for (int i = 0; i < 64; ++i) {
     assert(position.pieces[i] == testpos[i]);

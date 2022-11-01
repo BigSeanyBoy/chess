@@ -1,5 +1,5 @@
-#ifndef UNIT_H_
-#define UNIT_H_
+#ifndef TESTS_UNIT_H_
+#define TESTS_UNIT_H_
 
 #include <assert.h>
 #include <stdio.h>
@@ -11,10 +11,11 @@
 
 void TestFENEmpty();
 void TestFENStart();
+void TestFENFirstMove();
 void TestFENMidGame();
 
 void TestFEN();
 
 void TestingSuite();
 
-#endif  // UNIT_H_
+#endif  // TESTS_UNIT_H_
