@@ -45,6 +45,18 @@ enum Square {
   kA8, kB8, kC8, kD8, kE8, kF8, kG8, kH8
 };
 
+enum Direction {
+  kNorth = 8,
+  kEast = 1,
+  kSouth = -kNorth,
+  kWest = -kEast,
+
+  kNorthEast = kNorth + kEast,
+  kSouthEast = kSouth + kEast,
+  kSouthWest = kSouth + kWest,
+  kNorthWest = kNorth + kWest
+};
+
 struct CBoard {
   U16 move_list[256];
   U8 pieces[64];
