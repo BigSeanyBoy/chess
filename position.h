@@ -13,9 +13,14 @@ enum Color {
 enum CastlingRights {
   kNoCastling,
   kWhiteOO,
-  kWhiteOOO,
-  kBlackOO,
-  kBlackOOO
+  kWhiteOOO = kWhiteOO << 1,
+  kBlackOO = kWhiteOO << 2,
+  kBlackOOO = kWhiteOO << 3,
+
+  kWhiteCastling = kWhiteOO | kWhiteOOO,
+  kBlackCastling = kBlackOO | kBlackOOO,
+
+  kAnyCastling = kWhiteCastling | kBlackCastling
 };
 
 enum Piece {

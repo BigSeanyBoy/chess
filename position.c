@@ -46,4 +46,23 @@ void ImportFEN(struct CBoard *position, char *fenstr) {
   }
 
   position->side = *(++fenstr) == 'w' ? kWhite : kBlack;
+  ++fenstr;
+
+  position->castling_rights = 0;
+  while (*(++fenstr) != ' ') {
+    switch (*fenstr) {
+      case 'K':
+        position->castling_rights += kWhiteOO;
+        break;
+      case 'Q':
+        position->castling_rights += kWhiteOOO;
+        break;
+      case 'k':
+        position->castling_rights += kBlackOO;
+        break;
+      case 'q':
+        position->castling_rights += kBlackOOO;
+        break;
+    }
+  }
 }
