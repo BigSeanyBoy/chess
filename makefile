@@ -1,25 +1,25 @@
-CFLAGS = -I./ -I./tests/ -Wall
+TARGET = chess
 
-ifeq ($(DEBUG), 1)
-	OPTS = -g
-endif
-
-CC = clang $(OPTS) $(CFLAGS)
-
-DEPS = position.h display.h tests/unit.h
+CFLAGS = -I./ -I./tests -Wall
+CC = clang $(CFLAGS)
 
 ODIR = obj
-_OBJ = main.o position.o display.o
-_TOBJ = tests/unit.o
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ)) $(patsubst ../%,(ODIR)/%,$(_TOBJ))
+_OBJ = main.o position.o display.o unit.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-$(ODIR)/%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $<
+all: main.o position.o display.o unit.o $(TARGET)
 
-chess: $(OBJ)
-	$(CC) -o $@ $^
+$(TARGET): $(OBJ)
+	$(CC) -o $(TARGET) $(OBJ)
 
-.PHONY: clean
+main.o:
+	$(CC) -c -o obj/main.o main.c
 
-clean:
-	rm -f $(ODIR)/*.o *- core $(INCDIR)/*-
+position.o:
+	$(CC) -c -o obj/position.o position.c
+
+display.o:
+	$(CC) -c -o obj/display.o display.c
+
+unit.o:
+	$(CC) -c -o obj/unit.o tests/unit.c
