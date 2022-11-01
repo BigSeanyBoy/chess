@@ -1,4 +1,4 @@
-#include "./test.h"
+#include "./unit.h"
 
 void TestFENEmpty() {
   char *fenstr = "8/8/8/8/8/8/8/8 w - - 0 1";

@@ -2,7 +2,7 @@
 
 #include "./position.h"
 #include "./display.h"
-#include "./test.h"
+#include "./tests/unit.h"
 
 int main(int argc, char *argv[]) {
   if (argc == 1) {

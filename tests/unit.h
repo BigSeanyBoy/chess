@@ -1,10 +1,10 @@
-#ifndef TEST_H_
-#define TEST_H_
+#ifndef UNIT_H_
+#define UNIT_H_
 
 #include <assert.h>
 #include <stdio.h>
 
-#include "./position.h"
+#include "../position.h"
 
 #define DEFAULT "\x1b[0m"
 #define GREEN "\x1b[32m"
@@ -17,4 +17,4 @@ void TestFEN();
 
 void TestingSuite();
 
-#endif  // TEST_H_
+#endif  // UNIT_H_
