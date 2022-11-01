@@ -1,6 +1,6 @@
 TARGET = chess
 
-CFLAGS = -I./ -I./tests -Wall
+CFLAGS = -g -I./ -I./tests -Wall
 CC = clang $(CFLAGS)
 
 ODIR = obj

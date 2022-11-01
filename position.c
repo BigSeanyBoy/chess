@@ -3,8 +3,8 @@
 void ImportFEN(struct CBoard *position, char *fenstr) {
   for (int i = 0; i < 64; ++i) { position->pieces[i] = 0; }
 
-  int rank = 7;
-  int file = 0;
+  U8 rank = 7;
+  U8 file = 0;
   while (*fenstr != ' ') {
     if (*fenstr == '/') {
       --rank;
@@ -65,4 +65,15 @@ void ImportFEN(struct CBoard *position, char *fenstr) {
         break;
     }
   }
+
+  if (*(++fenstr) != '-') {
+    file = *fenstr - 'a';
+    rank = *(++fenstr) - '1';
+    U8 square = 8 * rank + file;
+
+    position->en_passant_target = square;
+  } else {
+    position->en_passant_target = kNullSquare;
+  }
+  ++fenstr;
 }
