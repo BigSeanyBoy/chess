@@ -9,4 +9,6 @@ struct MovementArrays {
 
 void InitDistances(struct MovementArrays *lookup);
 
+void InitMovementArrays(struct MovementArrays *lookup);
+
 #endif  // MOVEGEN_H_

@@ -19,3 +19,7 @@ void InitDistances(struct MovementArrays *lookup) {
     lookup->distance_from_edge[kNorthWest][i] = min(north, west);
   }
 }
+
+void InitMovementArrays(struct MovementArrays *lookup) {
+  InitDistances(lookup);
+}

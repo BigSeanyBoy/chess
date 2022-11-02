@@ -13,14 +13,14 @@ void TestFENStart();
 void TestFENFirstMove();
 void TestFENMidGame();
 
-void TestDistanceFromEdge();
-void TestWhitePawnMovement();
-void TestBlackPawnMovement();
-void TestKnightMovement();
-void TestBishopMovement();
-void TestRookMovement();
-void TestQueenMovement();
-void TestKingMovement();
+void TestDistanceFromEdge(struct MovementArrays *lookup);
+void TestWhitePawnMovement(struct MovementArrays *lookup);
+void TestBlackPawnMovement(struct MovementArrays *lookup);
+void TestKnightMovement(struct MovementArrays *lookup);
+void TestBishopMovement(struct MovementArrays *lookup);
+void TestRookMovement(struct MovementArrays *lookup);
+void TestQueenMovement(struct MovementArrays *lookup);
+void TestKingMovement(struct MovementArrays *lookup);
 
 void TestFEN();
 void TestMovement();

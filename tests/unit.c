@@ -87,10 +87,7 @@ void TestFENRandom() {
   assert(position.move_number == 2);
 }
 
-void TestDistanceFromEdge() {
-  struct MovementArrays lookup;
-  InitDistances(&lookup);
-
+void TestDistanceFromEdge(struct MovementArrays *lookup) {
   U8 north, east, south, west;
   for (int i = 0; i < 64; ++i) {
     north = 7 - (i / 8);
@@ -98,15 +95,15 @@ void TestDistanceFromEdge() {
     south = i / 8;
     west = i % 8;
 
-    assert(lookup.distance_from_edge[kNorth][i] == north);
-    assert(lookup.distance_from_edge[kEast][i] == east);
-    assert(lookup.distance_from_edge[kSouth][i] == south);
-    assert(lookup.distance_from_edge[kWest][i] == west);
+    assert(lookup->distance_from_edge[kNorth][i] == north);
+    assert(lookup->distance_from_edge[kEast][i] == east);
+    assert(lookup->distance_from_edge[kSouth][i] == south);
+    assert(lookup->distance_from_edge[kWest][i] == west);
 
-    assert(lookup.distance_from_edge[kNorthEast][i] == min(north, east));
-    assert(lookup.distance_from_edge[kSouthEast][i] == min(south, east));
-    assert(lookup.distance_from_edge[kSouthWest][i] == min(south, west));
-    assert(lookup.distance_from_edge[kNorthWest][i] == min(north, west));
+    assert(lookup->distance_from_edge[kNorthEast][i] == min(north, east));
+    assert(lookup->distance_from_edge[kSouthEast][i] == min(south, east));
+    assert(lookup->distance_from_edge[kSouthWest][i] == min(south, west));
+    assert(lookup->distance_from_edge[kNorthWest][i] == min(north, west));
   }
 }
 
@@ -118,7 +115,10 @@ void TestFEN() {
 }
 
 void TestMovement() {
-  TestDistanceFromEdge();
+  struct MovementArrays lookup;
+  InitMovementArrays(&lookup);
+
+  TestDistanceFromEdge(&lookup);
 }
 
 void TestingSuite() {
