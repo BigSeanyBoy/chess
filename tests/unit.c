@@ -91,11 +91,12 @@ void TestDistanceFromEdge() {
   struct MovementArrays lookup;
   InitDistances(&lookup);
 
+  U8 north, east, south, west;
   for (int i = 0; i < 64; ++i) {
-    U8 north = 7 - (i / 8);
-    U8 east = 7 - (i % 8);
-    U8 south = i / 8;
-    U8 west = i % 8;
+    north = 7 - (i / 8);
+    east = 7 - (i % 8);
+    south = i / 8;
+    west = i % 8;
 
     assert(lookup.distance_from_edge[kNorth][i] == north);
     assert(lookup.distance_from_edge[kEast][i] == east);
