@@ -20,6 +20,26 @@ void InitDistances(struct MovementArrays *lookup) {
   }
 }
 
+void InitWhitePawnMovement(struct MovementArrays *lookup) {
+  for (int i = 0; i < 64; ++i) {
+    lookup->white_pawns[i] = 0;
+    if (i / 8 == 0 || i / 8 == 7) {
+      continue;
+    } else if (i / 8 == 1) {
+      lookup->white_pawns[i] += (1ull << (i + kOffsetN + kOffsetN));
+    }
+
+    if (lookup->edge_dist[kNorthWest][i]) {
+      lookup->white_pawns[i] += 1ull << (i + kOffsetNW);
+    }
+    if (lookup->edge_dist[kNorthEast][i]) {
+      lookup->white_pawns[i] += 1ull << (i + kOffsetNE);
+    }
+    lookup->white_pawns[i] += 1ull << (i + kOffsetN);
+  }
+}
+
 void InitMovementArrays(struct MovementArrays *lookup) {
   InitDistances(lookup);
+  InitWhitePawnMovement(lookup);
 }
