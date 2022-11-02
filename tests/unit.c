@@ -87,6 +87,28 @@ void TestFENRandom() {
   assert(position.move_number == 2);
 }
 
+void TestDistanceFromEdge() {
+  struct MovementArrays lookup;
+  InitDistances(&lookup);
+
+  for (int i = 0; i < 64; ++i) {
+    U8 north = 7 - (i / 8);
+    U8 east = 7 - (i % 8);
+    U8 south = i / 8;
+    U8 west = i % 8;
+
+    assert(lookup.distance_from_edge[kNorth][i] == north);
+    assert(lookup.distance_from_edge[kEast][i] == east);
+    assert(lookup.distance_from_edge[kSouth][i] == south);
+    assert(lookup.distance_from_edge[kWest][i] == west);
+
+    assert(lookup.distance_from_edge[kNorthEast][i] == min(north, east));
+    assert(lookup.distance_from_edge[kSouthEast][i] == min(south, east));
+    assert(lookup.distance_from_edge[kSouthWest][i] == min(south, west));
+    assert(lookup.distance_from_edge[kNorthWest][i] == min(north, west));
+  }
+}
+
 void TestFEN() {
   TestFENEmpty();
   TestFENStart();
@@ -94,7 +116,14 @@ void TestFEN() {
   TestFENRandom();
 }
 
+void TestMovement() {
+  TestDistanceFromEdge();
+}
+
 void TestingSuite() {
   TestFEN();
   printf("%s[PASSED]%s FEN Import Tests\n", GREEN, DEFAULT);
+
+  TestMovement();
+  printf("%s[PASSED]%s Movement Lookup Tests\n", GREEN, DEFAULT);
 }

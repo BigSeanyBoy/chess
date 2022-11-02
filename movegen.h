@@ -14,7 +14,7 @@ enum Direction {
   kNorthEast,
   kSouthEast,
   kSouthWest,
-  kNorthEast
+  kNorthWest
 };
 
 struct MovementArrays {
