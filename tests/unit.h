@@ -14,7 +14,8 @@ void TestFENFirstMove();
 void TestFENMidGame();
 
 void TestDistanceFromEdge();
-void TestPawnMovement();
+void TestWhitePawnMovement();
+void TestBlackPawnMovement();
 void TestKnightMovement();
 void TestBishopMovement();
 void TestRookMovement();
