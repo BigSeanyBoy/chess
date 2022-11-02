@@ -69,6 +69,7 @@ struct CBoard {
   // available during move generation.
   enum CastlingRights castling_rights;
   enum Square en_passant_target;
+  U8 halfmove_clock;
 };
 
 void ImportFEN(struct CBoard *position, char *fenstr);
