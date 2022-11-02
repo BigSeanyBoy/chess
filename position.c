@@ -82,4 +82,10 @@ void ImportFEN(struct CBoard *position, char *fenstr) {
     halfmove_clock = (halfmove_clock * 10) + (*fenstr - '0');
   }
   position->halfmove_clock = halfmove_clock;
+
+  U16 move_number = 0;
+  while (*(++fenstr) != '\0') {
+    move_number = (move_number * 10) + (*fenstr - '0');
+  }
+  position->move_number = move_number;
 }
