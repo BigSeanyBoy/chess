@@ -76,4 +76,10 @@ void ImportFEN(struct CBoard *position, char *fenstr) {
     position->en_passant_target = kNullSquare;
   }
   ++fenstr;
+
+  U8 halfmove_clock = 0;
+  while (*(++fenstr) != ' ') {
+    halfmove_clock = (halfmove_clock * 10) + (*fenstr - '0');
+  }
+  position->halfmove_clock = halfmove_clock;
 }
