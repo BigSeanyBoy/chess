@@ -69,6 +69,7 @@ struct CBoard {
   // available during move generation.
   enum CastlingRights castling_rights;
   enum Square en_passant_target;
+  U16 move_number;
   U8 halfmove_clock;
 };
 

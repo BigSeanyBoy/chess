@@ -12,6 +12,7 @@ void TestFENEmpty() {
   assert(position.castling_rights == kNoCastling);
   assert(position.en_passant_target == kNullSquare);
   assert(position.halfmove_clock == 0);
+  assert(position.move_number == 1);
 }
 
 void TestFENStart() {
@@ -35,6 +36,7 @@ void TestFENStart() {
   assert(position.castling_rights == kAnyCastling);
   assert(position.en_passant_target == kNullSquare);
   assert(position.halfmove_clock == 0);
+  assert(position.move_number == 1);
 }
 
 void TestFENFirstMove() {
@@ -58,6 +60,7 @@ void TestFENFirstMove() {
   assert(position.castling_rights == kAnyCastling);
   assert(position.en_passant_target == kE3);
   assert(position.halfmove_clock == 0);
+  assert(position.move_number == 1);
 }
 
 void TestFENRandom() {
@@ -81,6 +84,7 @@ void TestFENRandom() {
   assert(position.castling_rights == kWhiteCastling);
   assert(position.en_passant_target == kNullSquare);
   assert(position.halfmove_clock == 3);
+  assert(position.move_number == 2);
 }
 
 void TestFEN() {
