@@ -95,15 +95,38 @@ void TestDistanceFromEdge(struct MovementArrays *lookup) {
     south = i / 8;
     west = i % 8;
 
-    assert(lookup->distance_from_edge[kNorth][i] == north);
-    assert(lookup->distance_from_edge[kEast][i] == east);
-    assert(lookup->distance_from_edge[kSouth][i] == south);
-    assert(lookup->distance_from_edge[kWest][i] == west);
+    assert(lookup->edge_dist[kNorth][i] == north);
+    assert(lookup->edge_dist[kEast][i] == east);
+    assert(lookup->edge_dist[kSouth][i] == south);
+    assert(lookup->edge_dist[kWest][i] == west);
 
-    assert(lookup->distance_from_edge[kNorthEast][i] == min(north, east));
-    assert(lookup->distance_from_edge[kSouthEast][i] == min(south, east));
-    assert(lookup->distance_from_edge[kSouthWest][i] == min(south, west));
-    assert(lookup->distance_from_edge[kNorthWest][i] == min(north, west));
+    assert(lookup->edge_dist[kNorthEast][i] == min(north, east));
+    assert(lookup->edge_dist[kSouthEast][i] == min(south, east));
+    assert(lookup->edge_dist[kSouthWest][i] == min(south, west));
+    assert(lookup->edge_dist[kNorthWest][i] == min(north, west));
+  }
+}
+
+void TestWhitePawnMovement(struct MovementArrays *lookup) {
+  U64 movement[64];
+  for (int i = 0; i < 64; ++i) {
+    movement[i] = 0;
+    if (i / 8 == 0 || i / 8 == 7) {
+      assert(lookup->white_pawns[i] == 0);
+      continue;
+    } else if (i / 8 == 1) {
+      movement[i] += (1ull << (i + kOffsetN + kOffsetN));
+    }
+
+    if (lookup->edge_dist[kNorthWest][i]) {
+      movement[i] += 1ull << (i + kOffsetNW);
+    }
+    if (lookup->edge_dist[kNorthEast][i]) {
+      movement[i] += 1ull << (i + kOffsetNE);
+    }
+    movement[i] += 1ull << (i + kOffsetN);
+
+    assert(lookup->white_pawns[i] == movement[i]);
   }
 }
 
@@ -119,6 +142,7 @@ void TestMovement() {
   InitMovementArrays(&lookup);
 
   TestDistanceFromEdge(&lookup);
+  TestWhitePawnMovement(&lookup);
 }
 
 void TestingSuite() {

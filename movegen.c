@@ -8,15 +8,15 @@ void InitDistances(struct MovementArrays *lookup) {
     south = i / 8;
     west = i % 8;
 
-    lookup->distance_from_edge[kNorth][i] = north;
-    lookup->distance_from_edge[kEast][i] = east;
-    lookup->distance_from_edge[kSouth][i] = south;
-    lookup->distance_from_edge[kWest][i] = west;
+    lookup->edge_dist[kNorth][i] = north;
+    lookup->edge_dist[kEast][i] = east;
+    lookup->edge_dist[kSouth][i] = south;
+    lookup->edge_dist[kWest][i] = west;
 
-    lookup->distance_from_edge[kNorthEast][i] = min(north, east);
-    lookup->distance_from_edge[kSouthEast][i] = min(south, east);
-    lookup->distance_from_edge[kSouthWest][i] = min(south, west);
-    lookup->distance_from_edge[kNorthWest][i] = min(north, west);
+    lookup->edge_dist[kNorthEast][i] = min(north, east);
+    lookup->edge_dist[kSouthEast][i] = min(south, east);
+    lookup->edge_dist[kSouthWest][i] = min(south, west);
+    lookup->edge_dist[kNorthWest][i] = min(north, west);
   }
 }
 

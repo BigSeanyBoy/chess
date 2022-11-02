@@ -10,6 +10,7 @@
 
 typedef uint8_t U8;
 typedef uint16_t U16;
+typedef uint64_t U64;
 
 enum Color {
   kWhite = 8,
@@ -65,15 +66,15 @@ enum Direction {
 };
 
 enum Offset {
-  kNorthOffset = 8,
-  kEastOffset = 1,
-  kSouthOffset = -kNorthOffset,
-  kWestOffset = -kEastOffset,
+  kOffsetN = 8,
+  kOffsetE = 1,
+  kOffsetS = -kOffsetN,
+  kOffsetW = -kOffsetE,
 
-  kNorthEastOffset = kNorthOffset + kEastOffset,
-  kSouthEastOffset = kSouthOffset + kEastOffset,
-  kSouthWestOffset = kSouthOffset + kWestOffset,
-  kNorthWestOffset = kNorthOffset + kWestOffset
+  kOffsetNE = kOffsetN + kOffsetE,
+  kOffsetSE = kOffsetS + kOffsetE,
+  kOffsetSW = kOffsetS + kOffsetW,
+  kOffsetNW = kOffsetN + kOffsetW
 };
 
 #endif  // TYPES_H_
