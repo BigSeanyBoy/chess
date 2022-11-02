@@ -47,16 +47,16 @@ enum Square {
   kNullSquare
 };
 
-enum Direction {
-  kNorth = 8,
-  kEast = 1,
-  kSouth = -kNorth,
-  kWest = -kEast,
+enum Offset {
+  kNorthOffset = 8,
+  kEastOffset = 1,
+  kSouthOffset = -kNorthOffset,
+  kWestOffset = -kEastOffset,
 
-  kNorthEast = kNorth + kEast,
-  kSouthEast = kSouth + kEast,
-  kSouthWest = kSouth + kWest,
-  kNorthWest = kNorth + kWest
+  kNorthEastOffset = kNorthOffset + kEastOffset,
+  kSouthEastOffset = kSouthOffset + kEastOffset,
+  kSouthWestOffset = kSouthOffset + kWestOffset,
+  kNorthWestOffset = kNorthOffset + kWestOffset
 };
 
 struct CBoard {
