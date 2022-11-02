@@ -1,21 +1,7 @@
 #ifndef MOVEGEN_H_
 #define MOVEGEN_H_
 
-#include <stdint.h>
-
-typedef uint8_t U8;
-
-enum Direction {
-  kNorth,
-  kEast,
-  kSouth,
-  kWest,
-
-  kNorthEast,
-  kSouthEast,
-  kSouthWest,
-  kNorthWest
-};
+#include "./types.h"
 
 struct MovementArrays {
   U8 distance_from_edge[8][64];

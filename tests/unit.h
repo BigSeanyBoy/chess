@@ -6,11 +6,7 @@
 
 #include "../position.h"
 #include "../movegen.h"
-
-#define DEFAULT "\x1b[0m"
-#define GREEN "\x1b[32m"
-
-#define min(A, B) ((A) < (B) ? (A) : (B))
+#include "../types.h"
 
 void TestFENEmpty();
 void TestFENStart();
