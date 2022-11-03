@@ -130,6 +130,29 @@ void TestWhitePawnMovement(struct MovementArrays *lookup) {
   }
 }
 
+void TestBlackPawnMovement(struct MovementArrays *lookup) {
+  U64 movement[64];
+  for (int i = 0; i < 64; ++i) {
+    movement[i] = 0;
+    if (i / 8 == 0 || i / 8 == 7) {
+      // assert(lookup->black_pawns[i] == 0);
+      continue;
+    } else if (i / 8 == 6) {
+      movement[i] += (1ull << (i + kOffsetS + kOffsetS));
+    }
+
+    if (lookup->edge_dist[kSouthWest][i]) {
+      movement[i] += 1ull << (i + kOffsetSW);
+    }
+    if (lookup->edge_dist[kSouthEast][i]) {
+      movement[i] += 1ull << (i + kOffsetSE);
+    }
+    movement[i] += 1ull << (i + kOffsetS);
+
+    // assert(lookup->black_pawns[i] == movement[i]);
+  }
+}
+
 void TestFEN() {
   TestFENEmpty();
   TestFENStart();
@@ -143,6 +166,7 @@ void TestMovement() {
 
   TestDistanceFromEdge(&lookup);
   TestWhitePawnMovement(&lookup);
+  TestBlackPawnMovement(&lookup);
 }
 
 void TestingSuite() {
