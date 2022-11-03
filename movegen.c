@@ -39,7 +39,27 @@ void InitWhitePawnMovement(struct MovementArrays *lookup) {
   }
 }
 
+void InitBlackPawnMovement(struct MovementArrays *lookup) {
+  for (int i = 0; i < 64; ++i) {
+    lookup->black_pawns[i] = 0;
+    if (i / 8 == 0 || i / 8 == 7) {
+      continue;
+    } else if (i / 8 == 6) {
+      lookup->black_pawns[i] += (1ull << (i + kOffsetS + kOffsetS));
+    }
+
+    if (lookup->edge_dist[kNorthWest][i]) {
+      lookup->black_pawns[i] += 1ull << (i + kOffsetSW);
+    }
+    if (lookup->edge_dist[kNorthEast][i]) {
+      lookup->black_pawns[i] += 1ull << (i + kOffsetSE);
+    }
+    lookup->black_pawns[i] += 1ull << (i + kOffsetS);
+  }
+}
+
 void InitMovementArrays(struct MovementArrays *lookup) {
   InitDistances(lookup);
   InitWhitePawnMovement(lookup);
+  InitBlackPawnMovement(lookup);
 }

@@ -135,7 +135,7 @@ void TestBlackPawnMovement(struct MovementArrays *lookup) {
   for (int i = 0; i < 64; ++i) {
     movement[i] = 0;
     if (i / 8 == 0 || i / 8 == 7) {
-      // assert(lookup->black_pawns[i] == 0);
+      assert(lookup->black_pawns[i] == 0);
       continue;
     } else if (i / 8 == 6) {
       movement[i] += (1ull << (i + kOffsetS + kOffsetS));
@@ -149,7 +149,7 @@ void TestBlackPawnMovement(struct MovementArrays *lookup) {
     }
     movement[i] += 1ull << (i + kOffsetS);
 
-    // assert(lookup->black_pawns[i] == movement[i]);
+    assert(lookup->black_pawns[i] == movement[i]);
   }
 }
 
