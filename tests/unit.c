@@ -153,6 +153,24 @@ void TestBlackPawnMovement(struct MovementArrays *lookup) {
   }
 }
 
+void TestKnightMovement(struct MovementArrays *lookup) {
+  U64 movement[64];
+  for (int i = 0; i < 64; ++i) {
+    U64 square = 1ull << i;
+    movement[i] = 0;
+    movement[i] |= (square << 17) & (~kFileA);
+    movement[i] |= (square << 10) & (~(kFileA | kFileB));
+    movement[i] |= (square >> 6) & (~(kFileA | kFileB));
+    movement[i] |= (square >> 15) & (~kFileA);
+    movement[i] |= (square << 15) & (~kFileH);
+    movement[i] |= (square << 6) & (~(kFileG | kFileH));
+    movement[i] |= (square >> 10) & (~(kFileG | kFileH));
+    movement[i] |= (square >> 17) & (~kFileH);
+
+    assert(lookup->knights[i] == movement[i]);
+  }
+}
+
 void TestFEN() {
   TestFENEmpty();
   TestFENStart();
@@ -167,6 +185,7 @@ void TestMovement() {
   TestDistanceFromEdge(&lookup);
   TestWhitePawnMovement(&lookup);
   TestBlackPawnMovement(&lookup);
+  TestKnightMovement(&lookup);
 }
 
 void TestingSuite() {

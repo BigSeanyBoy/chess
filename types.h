@@ -12,6 +12,15 @@ typedef uint8_t U8;
 typedef uint16_t U16;
 typedef uint64_t U64;
 
+static const U64 kFileA = 0x0101010101010101;
+static const U64 kFileB = kFileA << 1;
+static const U64 kFileC = kFileA << 2;
+static const U64 kFileD = kFileA << 3;
+static const U64 kFileE = kFileA << 4;
+static const U64 kFileF = kFileA << 5;
+static const U64 kFileG = kFileA << 6;
+static const U64 kFileH = kFileA << 7;
+
 enum Color {
   kWhite = 8,
   kBlack = 16
