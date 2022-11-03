@@ -8,6 +8,7 @@ struct MovementArrays {
   U64 white_pawns[64];
   U64 black_pawns[64];
   U64 knights[64];
+  U64 bishops[64];
 };
 
 void InitDistances(struct MovementArrays *lookup);

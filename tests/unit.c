@@ -171,6 +171,27 @@ void TestKnightMovement(struct MovementArrays *lookup) {
   }
 }
 
+void TestBishopMovement(struct MovementArrays *lookup) {
+  U64 movement[64];
+  for (int i = 0; i < 64; ++i) {
+    movement[i] = 0;
+    for (int ne = 1; ne <= lookup->edge_dist[kNorthEast][i]; ++ne) {
+      movement[i] |= ((1ull << i) << (9 * ne));
+    }
+    for (int se = 1; se <= lookup->edge_dist[kSouthEast][i]; ++se) {
+      movement[i] |= ((1ull << i) >> (7 * se));
+    }
+    for (int sw = 1; sw <= lookup->edge_dist[kSouthWest][i]; ++sw) {
+      movement[i] |= ((1ull << i) >> (9 * sw));
+    }
+    for (int nw = 1; nw <= lookup->edge_dist[kNorthWest][i]; ++nw) {
+      movement[i] |= ((1ull << i) << (7 * nw));
+    }
+
+    // assert(lookup->bishops[i] == movement[i]);
+  }
+}
+
 void TestFEN() {
   TestFENEmpty();
   TestFENStart();
@@ -186,6 +207,7 @@ void TestMovement() {
   TestWhitePawnMovement(&lookup);
   TestBlackPawnMovement(&lookup);
   TestKnightMovement(&lookup);
+  TestBishopMovement(&lookup);
 }
 
 void TestingSuite() {
