@@ -58,8 +58,24 @@ void InitBlackPawnMovement(struct MovementArrays *lookup) {
   }
 }
 
+void InitKnightMovement(struct MovementArrays *lookup) {
+  for (int i = 0; i < 64; ++i) {
+    U64 square = 1ull << i;
+    lookup->knights[i] = 0;
+    lookup->knights[i] |= (square << 17) & (~kFileA);
+    lookup->knights[i] |= (square << 10) & (~(kFileA | kFileB));
+    lookup->knights[i] |= (square >> 6) & (~(kFileA | kFileB));
+    lookup->knights[i] |= (square >> 15) & (~kFileA);
+    lookup->knights[i] |= (square << 15) & (~kFileH);
+    lookup->knights[i] |= (square << 6) & (~(kFileG | kFileH));
+    lookup->knights[i] |= (square >> 10) & (~(kFileG | kFileH));
+    lookup->knights[i] |= (square >> 17) & (~kFileH);
+  }
+}
+
 void InitMovementArrays(struct MovementArrays *lookup) {
   InitDistances(lookup);
   InitWhitePawnMovement(lookup);
   InitBlackPawnMovement(lookup);
+  InitKnightMovement(lookup);
 }

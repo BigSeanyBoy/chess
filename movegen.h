@@ -13,6 +13,7 @@ struct MovementArrays {
 void InitDistances(struct MovementArrays *lookup);
 void InitWhitePawnMovement(struct MovementArrays *lookup);
 void InitBlackPawnMovement(struct MovementArrays *lookup);
+void InitKnightMovement(struct MovementArrays *lookup);
 
 void InitMovementArrays(struct MovementArrays *lookup);
 
