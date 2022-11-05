@@ -51,5 +51,6 @@ U64 dblpush(U64 pawns, U64 empty, enum color side);
 U64 pattack(U64 pawns, U64 enemies, enum color side);
 
 U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side);
+U64 nmoves(U64 knights, U64 allies);
 
 #endif /* BITBOARD_H_ */
