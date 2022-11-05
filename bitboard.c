@@ -45,18 +45,18 @@ U64 dblpush(U64 pawns, U64 empty, enum color side) {
  * DESCRIPTION:
  *      Calculate pawn attack targets.
  */
-U64 pattack(U64 pawns, U64 enemybb, enum color side) {
+U64 pattack(U64 pawns, U64 enemies, enum color side) {
         U64 targets = 0;
         if (side == WHITE) {
-                targets |= northeast(pawns) & enemybb & (~FILE_A);
-                assert((targets & ((~enemybb) | FILE_A)) == 0);
-                targets |= northwest(pawns) & enemybb & (~FILE_H);
-                assert((targets & ((~enemybb) | FILE_H)) == 0);
+                targets |= northeast(pawns) & enemies;
+                assert((targets & ((~enemies) | FILE_A)) == 0);
+                targets |= northwest(pawns) & enemies;
+                assert((targets & ((~enemies) | FILE_H)) == 0);
         } else {
-                targets |= southeast(pawns) & enemybb & (~FILE_A);
-                assert((targets & ((~enemybb) | FILE_A)) == 0);
-                targets |= southwest(pawns) & enemybb & (~FILE_H);
-                assert((targets & ((~enemybb) | FILE_H)) == 0);
+                targets |= southeast(pawns) & enemies;
+                assert((targets & ((~enemies) | FILE_A)) == 0);
+                targets |= southwest(pawns) & enemies;
+                assert((targets & ((~enemies) | FILE_H)) == 0);
         }
         return targets;
 }
@@ -67,10 +67,10 @@ U64 pattack(U64 pawns, U64 enemybb, enum color side) {
  * DESCRIPTION:
  *      Calculate all pawn targets in a given position.
  */
-U64 pmoves(U64 pawns, U64 enemybb, U64 empty, enum color side) {
+U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side) {
         U64 targets = 0;
         targets |= push(pawns, empty, side);
         targets |= dblpush(pawns, empty, side);
-        targets |= pattack(pawns, enemybb, side);
+        targets |= pattack(pawns, enemies, side);
         return targets;
 }

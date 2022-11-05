@@ -34,10 +34,22 @@
 #define FILE_G 0x4040404040404040
 #define FILE_H 0x8080808080808080
 
+/* cardinal bitboard shifts */
+#define north(BB) (BB << 8)
+#define east(BB) ((BB << 1) & (~FILE_A))
+#define south(BB) (BB >> 8)
+#define west(BB) ((BB >> 1) & (~FILE_H))
+
+/* ordinal bitboard shifts */
+#define northeast(BB) ((BB << 9) & (~FILE_A))
+#define southeast(BB) ((BB >> 7) & (~FILE_A))
+#define southwest(BB) ((BB >> 9) & (~FILE_H))
+#define northwest(BB) ((BB << 7) & (~FILE_H))
+
 U64 push(U64 pawns, U64 empty, enum color side);
 U64 dblpush(U64 pawns, U64 empty, enum color side);
-U64 pattack(U64 pawns, U64 enemybb, enum color side);
+U64 pattack(U64 pawns, U64 enemies, enum color side);
 
-U64 pmoves(U64 pawns, U64 enemybb, U64 empty, enum color side);
+U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side);
 
 #endif /* BITBOARD_H_ */
