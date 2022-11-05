@@ -53,4 +53,16 @@ U64 pattack(U64 pawns, U64 enemies, enum color side);
 U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side);
 U64 nmoves(U64 knights, U64 allies);
 
+struct ray {
+        U64 north[64];
+        U64 east[64];
+        U64 south[64];
+        U64 west[64];
+
+        U64 northeast[64];
+        U64 southeast[64];
+        U64 southwest[64];
+        U64 northwest[64];
+};
+
 #endif /* BITBOARD_H_ */
