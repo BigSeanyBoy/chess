@@ -46,14 +46,14 @@
 #define southwest(BB) ((BB >> 9) & (~FILE_H))
 #define northwest(BB) ((BB << 7) & (~FILE_H))
 
+#define min(A, B) ((A) < (B) ? (A) : (B))
+
 U64 push(U64 pawns, U64 empty, enum color side);
 U64 dblpush(U64 pawns, U64 empty, enum color side);
 U64 pattack(U64 pawns, U64 enemies, enum color side);
 
 U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side);
 U64 nmoves(U64 knights, U64 allies);
-
-void initrays(struct raylookup *rays);
 
 struct raylookup {
         U64 north[64];
@@ -66,5 +66,8 @@ struct raylookup {
         U64 southwest[64];
         U64 northwest[64];
 };
+
+void edgedist(int edgedist[], int sq);
+void initrays(struct raylookup *rays);
 
 #endif /* BITBOARD_H_ */
