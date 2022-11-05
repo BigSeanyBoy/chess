@@ -10,6 +10,8 @@
 #ifndef BITBOARD_H_
 #define BITBOARD_H_
 
+#include <assert.h>
+
 #include "types.h"
 
 /* rank constants */
