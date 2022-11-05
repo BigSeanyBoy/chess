@@ -13,24 +13,24 @@
 #include "types.h"
 
 /* rank constants */
-static const U64 rank1 = 0xFF;
-static const U64 rank2 = rank1 << 8;
-static const U64 rank3 = rank1 << 16;
-static const U64 rank4 = rank1 << 24;
-static const U64 rank5 = rank1 << 32;
-static const U64 rank6 = rank1 << 40;
-static const U64 rank7 = rank1 << 48;
-static const U64 rank8 = rank1 << 56;
+#define RANK_1 0x00000000000000FF
+#define RANK_2 0x000000000000FF00
+#define RANK_3 0x0000000000FF0000
+#define RANK_4 0x00000000FF000000
+#define RANK_5 0x000000FF00000000
+#define RANK_6 0x0000FF0000000000
+#define RANK_7 0x00FF000000000000
+#define RANK_8 0xFF00000000000000
 
 /* file constants */
-static const U64 afile = 0x101010101010101;
-static const U64 bfile = afile << 1;
-static const U64 cfile = afile << 2;
-static const U64 dfile = afile << 3;
-static const U64 efile = afile << 4;
-static const U64 ffile = afile << 5;
-static const U64 gfile = afile << 6;
-static const U64 hfile = afile << 7;
+#define FILE_A 0x0101010101010101
+#define FILE_B 0x0202020202020202
+#define FILE_C 0x0404040404040404
+#define FILE_D 0x0808080808080808
+#define FILE_E 0x1010101010101010
+#define FILE_F 0x2020202020202020
+#define FILE_G 0x4040404040404040
+#define FILE_H 0x8080808080808080
 
 U64 push(U64 pawns, U64 empty, enum color side);
 U64 dblpush(U64 pawns, U64 empty, enum color side);

@@ -14,7 +14,7 @@ U64 push(U64 pawns, U64 empty, enum color side) {
 U64 dblpush(U64 pawns, U64 empty, enum color side) {
         U64 dblshift = push(pawns, empty, side);
         dblshift = push(dblshift, empty, side);
-        return side == WHITE ? (dblshift & rank4) : (dblshift & rank5);
+        return side == WHITE ? (dblshift & RANK_4) : (dblshift & RANK_5);
 }
 
 /* 
@@ -23,12 +23,12 @@ U64 dblpush(U64 pawns, U64 empty, enum color side) {
 U64 pattack(U64 pawns, U64 enemybb, enum color side) {
         U64 targets = 0;
         if (side == WHITE) {
-                targets |= northeast(pawns) & enemybb & (~afile);
-                targets |= northwest(pawns) & enemybb & (~hfile);
+                targets |= northeast(pawns) & enemybb & (~FILE_A);
+                targets |= northwest(pawns) & enemybb & (~FILE_H);
         } else {
 
-                targets |= southeast(pawns) & enemybb & (~afile);
-                targets |= southwest(pawns) & enemybb & (~hfile);
+                targets |= southeast(pawns) & enemybb & (~FILE_A);
+                targets |= southwest(pawns) & enemybb & (~FILE_H);
         }
         return targets;
 }
