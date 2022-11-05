@@ -98,3 +98,15 @@ U64 nmoves(U64 knights, U64 allies) {
         assert((targets & allies) == 0);
         return targets;
 }
+
+/*
+ * Initialize Ray Struct
+ *
+ * DESCRIPTION:
+ *      Calculate rays by direction and square. This function should be called
+ *      once on program startup so the same instance may be used and rays are
+ *      not recalculated each time sliding piece attacks are generated.
+ */
+void initrays(struct raylookup *rays) {
+        return;
+}
