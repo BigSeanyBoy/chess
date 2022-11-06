@@ -70,4 +70,6 @@ struct raylookup {
 void edgedist(int edgedist[], int sq);
 void initrays(struct raylookup *rays);
 
+U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays);
+
 #endif /* BITBOARD_H_ */

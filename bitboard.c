@@ -131,7 +131,7 @@ void edgedist(int edges[], int sq) {
  */
 void initrays(struct raylookup *rays) {
         for (int sq = 0; sq < 64; ++sq) {
-                U64 pos = 1 << sq;
+                U64 pos = 1ull << sq;
                 int rankmask = RANK_1 << (8 * (sq / 8));
 
                 rays->north[sq] = (FILE_A << sq) & ~pos;
@@ -166,4 +166,70 @@ void initrays(struct raylookup *rays) {
                         rays->northwest[sq] |= pos << (7 * i);
                 }
         }
+}
+
+/*
+ * Bishop Moves
+ *
+ * DESCRIPTION:
+ *      Calculate all bishop targets in a given position.
+ */
+U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
+        U64 attack;
+        U64 blockers;
+        U64 targets = 0;
+
+        attack = rays->northeast[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = __builtin_ctzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq -= 9; }
+                attack ^= rays->northeast[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        attack = rays->southeast[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = __builtin_ctzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq += 7; }
+                attack ^= rays->southeast[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        attack = rays->southwest[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = __builtin_ctzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq += 9; }
+                attack ^= rays->southwest[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        attack = rays->northwest[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = __builtin_ctzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq -= 7; }
+                attack ^= rays->northwest[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        return targets;
 }
