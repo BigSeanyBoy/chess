@@ -7,16 +7,18 @@
  *      Calculate pawn single push targets.
  */
 U64 push(U64 pawns, U64 empty, enum color side) {
-        U64 shift;
+        U64 shift = 0;
+
         if (side == WHITE) {
-                shift = north(pawns) & empty;
+                shift |= north(pawns) & empty;
                 assert(shift == ((pawns << 8) & empty));
                 assert((shift & RANK_2) == 0);
         } else {
-                shift = south(pawns) & empty;
+                shift |= south(pawns) & empty;
                 assert(shift == ((pawns >> 8) & empty));
                 assert((shift & RANK_7) == 0);
         }
+
         return shift;
 }
 
@@ -29,6 +31,7 @@ U64 push(U64 pawns, U64 empty, enum color side) {
 U64 dblpush(U64 pawns, U64 empty, enum color side) {
         U64 dblshift = push(pawns, empty, side);
         dblshift = push(dblshift, empty, side);
+
         if (side == WHITE) {
                 dblshift &= RANK_4;
                 assert((dblshift & (~RANK_4)) == 0);
@@ -36,6 +39,7 @@ U64 dblpush(U64 pawns, U64 empty, enum color side) {
                 dblshift &= RANK_5;
                 assert((dblshift & (~RANK_5)) == 0);
         }
+
         return dblshift;
 }
 
@@ -47,6 +51,7 @@ U64 dblpush(U64 pawns, U64 empty, enum color side) {
  */
 U64 pattack(U64 pawns, U64 enemies, enum color side) {
         U64 targets = 0;
+
         if (side == WHITE) {
                 targets |= northeast(pawns) & enemies;
                 assert((targets & ((~enemies) | FILE_A)) == 0);
@@ -58,6 +63,7 @@ U64 pattack(U64 pawns, U64 enemies, enum color side) {
                 targets |= southwest(pawns) & enemies;
                 assert((targets & ((~enemies) | FILE_H)) == 0);
         }
+
         return targets;
 }
 
@@ -69,9 +75,11 @@ U64 pattack(U64 pawns, U64 enemies, enum color side) {
  */
 U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side) {
         U64 targets = 0;
+
         targets |= push(pawns, empty, side);
         targets |= dblpush(pawns, empty, side);
         targets |= pattack(pawns, enemies, side);
+
         return targets;
 }
 
@@ -83,12 +91,14 @@ U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side) {
  */
 U64 nmoves(U64 knights, U64 allies) {
         U64 targets = 0;
+
         U64 eshift = east(knights);
         U64 wshift = west(knights);
         targets |= ((eshift | wshift) << 16) & (~allies);
         assert(targets == ((knights << 15 | knights << 17) & (~allies)));
         targets |= ((eshift | wshift) >> 16) & (~allies);
         assert(targets == ((knights >> 15 | knights >> 17) & (~allies)));
+
         eshift = east(eshift);
         wshift = west(wshift);
         targets |= ((eshift | wshift) << 8) & (~allies);
@@ -96,6 +106,7 @@ U64 nmoves(U64 knights, U64 allies) {
         targets |= ((eshift | wshift) >> 8) & (~allies);
         assert(targets == ((knights >> 6 | knights >> 10) & (~allies)));
         assert((targets & allies) == 0);
+
         return targets;
 }
 
@@ -206,7 +217,6 @@ U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->northeast[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         attack = rays->southeast[sq];
@@ -219,7 +229,6 @@ U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->southeast[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         attack = rays->southwest[sq];
@@ -232,7 +241,6 @@ U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->southwest[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         attack = rays->northwest[sq];
@@ -245,7 +253,6 @@ U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->northwest[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         return targets;
@@ -272,7 +279,6 @@ U64 rmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->north[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         attack = rays->east[sq];
@@ -285,7 +291,6 @@ U64 rmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->east[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         attack = rays->south[sq];
@@ -298,7 +303,6 @@ U64 rmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->south[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         attack = rays->west[sq];
@@ -311,7 +315,6 @@ U64 rmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
                 attack ^= rays->west[bsq];
                 assert((attack & (occupied ^ enemies)) == 0);
         }
-
         targets |= attack;
 
         return targets;
