@@ -15,6 +15,14 @@ enum color {
 	BLACK
 };
 
+enum castling {
+	NO_CASTLING,
+	WHITE_OO,
+	WHITE_OOO,
+	BLACK_OO,
+	BLACK_OOO
+};
+
 enum square {
 	A1, B1, C1, D1, E1, F1, G1, H1,
 	A2, B2, C2, D2, E2, F2, G2, H2,
