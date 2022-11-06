@@ -100,6 +100,23 @@ U64 nmoves(U64 knights, U64 allies) {
 }
 
 /*
+ * King Moves
+ *
+ * DESCRIPTION:
+ *      Calculate all king targets in a given position.
+ */
+U64 kmoves(U64 king, U64 allies) {
+        U64 targets = 0;
+
+        targets |= west(king) | king | east(king);
+        assert((targets & (~((king >> 1) | king | (king << 1)))) == 0);
+        targets |= north(targets) | south(targets);
+        targets ^= allies;
+
+        return targets ^ king;
+}
+
+/*
  * Distance to the Edge
  *
  * DESCRIPTION:

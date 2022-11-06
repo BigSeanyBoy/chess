@@ -54,6 +54,7 @@ U64 pattack(U64 pawns, U64 enemies, enum color side);
 
 U64 pmoves(U64 pawns, U64 enemies, U64 empty, enum color side);
 U64 nmoves(U64 knights, U64 allies);
+U64 kmoves(U64 king, U64 allies);
 
 struct raylookup {
         U64 north[64];
