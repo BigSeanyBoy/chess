@@ -233,3 +233,69 @@ U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
 
         return targets;
 }
+
+/*
+ * Rook Moves
+ *
+ * DESCRIPTION:
+ *      Calculate all rook targets in a given position.
+ */
+U64 rmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
+        U64 attack;
+        U64 blockers;
+        U64 targets = 0;
+
+        attack = rays->north[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = __builtin_ctzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq -= 8; }
+                attack ^= rays->north[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        attack = rays->east[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = __builtin_ctzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq -= 1; }
+                attack ^= rays->east[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        attack = rays->south[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = 63 - __builtin_clzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq += 8; }
+                attack ^= rays->south[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        attack = rays->west[sq];
+        blockers = attack & occupied;
+        if(blockers) {
+                int bsq = 63 - __builtin_clzll(blockers);
+                blockers = 1ull << bsq;
+                assert((blockers & occupied) != 0);
+                if (blockers & (occupied ^ enemies)) { bsq += 1; }
+                attack ^= rays->west[bsq];
+                assert((attack & (occupied ^ enemies)) == 0);
+        }
+
+        targets |= attack;
+
+        return targets;
+}
