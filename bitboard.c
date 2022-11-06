@@ -299,3 +299,18 @@ U64 rmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
 
         return targets;
 }
+
+/*
+ * Queen Moves
+ *
+ * DESCRIPTION:
+ *      Calculate all queen moves in a given position.
+ */
+U64 qmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
+        U64 targets = 0;
+
+        targets |= bmoves(sq, occupied, enemies, rays);
+        targets |= rmoves(sq, occupied, enemies, rays);
+
+        return targets;
+}

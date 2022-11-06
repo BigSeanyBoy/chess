@@ -72,5 +72,6 @@ void initrays(struct raylookup *rays);
 
 U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays);
 U64 rmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays);
+U64 qmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays);
 
 #endif /* BITBOARD_H_ */
