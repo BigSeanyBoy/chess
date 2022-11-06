@@ -1,6 +1,6 @@
 /* 
  * DESCRIPTION:
- *      Bitboards use a 64-bit usigned integer to represent the state of
+ * 	Bitboards use a 64-bit usigned integer to represent the state of
  * 	pieces on a chess board. Because bits may only be 1 or 0, we use
  * 	multiple bitboards to represent the board as a whole: white pieces,
  * 	black pieces, pawns, knights, bishops, rooks, queens, and kings.
@@ -57,15 +57,15 @@ U64 nmoves(U64 knights, U64 allies);
 U64 kmoves(U64 king, U64 allies);
 
 struct raylookup {
-        U64 north[64];
-        U64 east[64];
-        U64 south[64];
-        U64 west[64];
+	U64 north[64];
+	U64 east[64];
+	U64 south[64];
+	U64 west[64];
 
-        U64 northeast[64];
-        U64 southeast[64];
-        U64 southwest[64];
-        U64 northwest[64];
+	U64 northeast[64];
+	U64 southeast[64];
+	U64 southwest[64];
+	U64 northwest[64];
 };
 
 void edgedist(int edgedist[], int sq);
