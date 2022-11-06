@@ -195,7 +195,7 @@ U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
         attack = rays->southeast[sq];
         blockers = attack & occupied;
         if(blockers) {
-                int bsq = __builtin_ctzll(blockers);
+                int bsq = 63 - __builtin_clzll(blockers);
                 blockers = 1ull << bsq;
                 assert((blockers & occupied) != 0);
                 if (blockers & (occupied ^ enemies)) { bsq += 7; }
@@ -208,7 +208,7 @@ U64 bmoves(enum square sq, U64 occupied, U64 enemies, struct raylookup *rays) {
         attack = rays->southwest[sq];
         blockers = attack & occupied;
         if(blockers) {
-                int bsq = __builtin_ctzll(blockers);
+                int bsq = 63 - __builtin_clzll(blockers);
                 blockers = 1ull << bsq;
                 assert((blockers & occupied) != 0);
                 if (blockers & (occupied ^ enemies)) { bsq += 9; }
