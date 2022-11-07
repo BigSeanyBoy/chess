@@ -8,8 +8,12 @@
 #ifndef POSITION_H_
 #define POSITION_H_
 
+#include <assert.h>
+
 #include "types.h"
 #include "bitboard.h"
+
+#define isupper(C) (((C) >= 'A' && (C) <= 'Z') ? 1 : 0)
 
 struct position {
 	U64 boards[10];
@@ -19,5 +23,9 @@ struct position {
 	int rule50;
 	int plynb;
 };
+
+void putpiece(struct position *state, char c, U64 sq);
+
+void setpos(struct position *state, char *fenstr);
 
 #endif /* POSITION_H_ */
