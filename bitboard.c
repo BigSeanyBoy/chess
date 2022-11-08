@@ -95,16 +95,12 @@ U64 nmoves(U64 knights, U64 allies) {
 	U64 eshift = east(knights);
 	U64 wshift = west(knights);
 	targets |= ((eshift | wshift) << 16) & (~allies);
-	assert(targets == ((knights << 15 | knights << 17) & (~allies)));
 	targets |= ((eshift | wshift) >> 16) & (~allies);
-	assert(targets == ((knights >> 15 | knights >> 17) & (~allies)));
 
 	eshift = east(eshift);
 	wshift = west(wshift);
 	targets |= ((eshift | wshift) << 8) & (~allies);
-	assert(targets == ((knights << 6 | knights << 10) & (~allies)));
 	targets |= ((eshift | wshift) >> 8) & (~allies);
-	assert(targets == ((knights >> 6 | knights >> 10) & (~allies)));
 	assert((targets & allies) == 0);
 
 	return targets;

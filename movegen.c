@@ -118,10 +118,10 @@ void genpawns(struct position *state, U16 *movelist, int *count) {
         if (pawns == 0) { return; }
 
         assert(pawns == (state->boards[N_PAWN] & ~enemies));
-        assert((pawns & enemies) == 0);
         assert((empty & pawns & enemies) == 0);
 
         if (state->eptarget != NULL_SQ) {
+                /* if legal(move) */
                 enpassant(state, movelist, count);
         }
 
@@ -135,12 +135,51 @@ void genpawns(struct position *state, U16 *movelist, int *count) {
                         U16 move = dest | (source << 6);
                         assert((move & dest) == dest);
                         assert(((move >> 6) & source) == source);
-                        //if (!legal(move)) { continue; }
+                        /* if legal(move) */
                         if (promo) {
                                 pawnpromo(move, movelist, count);
                         } else {
                                 append(move, movelist, count);
                         }
+                }
+        }
+}
+
+/*
+ * Generate Knight Moves
+ *
+ * DESCRIPTION:
+ *      Generate all knight moves in a given position.
+ */
+void genknights(struct position *state, U16 *movelist, int *count) {
+        U64 knights = state->boards[N_KNIGHT];
+        U64 allies;
+        switch(state->side) {
+        case WHITE:
+                knights &= state->boards[N_WHITE];
+                allies = state->boards[N_WHITE];
+                break;
+        case BLACK:
+                knights &= state->boards[N_BLACK];
+                allies = state->boards[N_BLACK];
+                break;
+        }
+
+        if (knights == 0) { return; }
+
+        assert(knights == (state->boards[N_KNIGHT] & allies));
+
+        while (knights != 0) {
+                int source = bitscanreset(&knights);
+                U64 n = 1ull << source;
+                U64 targets = nmoves(n, allies);
+                while (targets != 0) {
+                        int dest = bitscanreset(&targets);
+                        U16 move = dest | (source << 6);
+                        assert((move & dest) == dest);
+                        assert(((move >> 6) & source) == source);
+                        /* if legal(move) */
+                        append(move, movelist, count);
                 }
         }
 }
@@ -154,5 +193,6 @@ void genpawns(struct position *state, U16 *movelist, int *count) {
 int movegen(struct position *state, U16 *movelist) {
         int count = 0;
         genpawns(state, movelist, &count);
+        genknights(state, movelist, &count);
         return count;
 }
