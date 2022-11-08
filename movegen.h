@@ -23,6 +23,7 @@ void genpawns(struct position *state, int *count);
 void genknights(struct position *state, int *count);
 void genbishops(struct position *state, int *count);
 void genrooks(struct position *state, int *count);
+void genqueens(struct position *state, int *count);
 
 int movegen(struct position *state);
 
