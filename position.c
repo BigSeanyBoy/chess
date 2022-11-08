@@ -55,7 +55,7 @@ void setpos(struct position *state, char *fenstr) {
                         --rank;
                         file = 0;
                 } else if (c > '0' && c <= '9') {
-                        file += (c - '1');
+                        file += (c - '0');
                 } else {
                         U64 sq = 1ull << ((8 * rank) + file);
                         putpiece(state, c, sq);
@@ -97,8 +97,9 @@ void setpos(struct position *state, char *fenstr) {
         if (*fenstr != '-') {
                 assert(*fenstr >= 'a' && *fenstr <= 'z');
                 rank = *fenstr - 'a';
+                ++fenstr;
                 assert(*fenstr >= '1' && *fenstr <= '9');
-                file = *(++fenstr) - '1';
+                file = *fenstr - '1';
                 state->eptarget = (8 * rank) + file;
         }
         fenstr += 2;
