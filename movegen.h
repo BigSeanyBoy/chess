@@ -15,6 +15,9 @@
 
 int bitscanreset(U64 *bb);
 
-int movegen(struct position *state, U16 *moves);
+void pawnpromo(U16 move, U16 *movelist, int *count);
+void genpawn(struct position *state, U16 *movelist, int *count);
+
+int movegen(struct position *state, U16 *movelist);
 
 #endif /* MOVEGEN_H_ */
