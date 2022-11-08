@@ -156,7 +156,7 @@ void edgedist(int edges[], int sq) {
 void initrays(struct raylookup *rays) {
 	for (int sq = 0; sq < 64; ++sq) {
 		U64 pos = 1ull << sq;
-		int rankmask = RANK_1 << (8 * (sq / 8));
+		U64 rankmask = RANK_1 << (8 * (sq / 8));
 
 		rays->north[sq] = (FILE_A << sq) & ~pos;
 		assert((rays->north[sq] & ~(FILE_A << (sq % 8))) == 0);
@@ -165,7 +165,7 @@ void initrays(struct raylookup *rays) {
 		rays->south[sq] = (FILE_H >> (63 - sq)) & ~pos;
 		assert((rays->south[sq] & ~(FILE_H >> ((63 - sq) % 8))) == 0);
 		rays->west[sq] = (RANK_8 >> (63 - sq)) & rankmask & ~pos;
-		assert((rays->east[sq] & (~rankmask)) == 0);
+		assert((rays->west[sq] & (~rankmask)) == 0);
 
 		int edges[4];
 		edgedist(edges, sq);

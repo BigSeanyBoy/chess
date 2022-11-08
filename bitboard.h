@@ -15,24 +15,24 @@
 #include "types.h"
 
 /* rank constants */
-#define RANK_1 0x00000000000000FF
-#define RANK_2 0x000000000000FF00
-#define RANK_3 0x0000000000FF0000
-#define RANK_4 0x00000000FF000000
-#define RANK_5 0x000000FF00000000
-#define RANK_6 0x0000FF0000000000
-#define RANK_7 0x00FF000000000000
-#define RANK_8 0xFF00000000000000
+#define RANK_1 0xFFull
+#define RANK_2 (RANK_1 << 8)
+#define RANK_3 (RANK_1 << 16)
+#define RANK_4 (RANK_1 << 24)
+#define RANK_5 (RANK_1 << 32)
+#define RANK_6 (RANK_1 << 40)
+#define RANK_7 (RANK_1 << 48)
+#define RANK_8 (RANK_1 << 56)
 
 /* file constants */
-#define FILE_A 0x0101010101010101
-#define FILE_B 0x0202020202020202
-#define FILE_C 0x0404040404040404
-#define FILE_D 0x0808080808080808
-#define FILE_E 0x1010101010101010
-#define FILE_F 0x2020202020202020
-#define FILE_G 0x4040404040404040
-#define FILE_H 0x8080808080808080
+#define FILE_A 0x0101010101010101ull
+#define FILE_B (FILE_A << 1)
+#define FILE_C (FILE_A << 2)
+#define FILE_D (FILE_A << 3)
+#define FILE_E (FILE_A << 4)
+#define FILE_F (FILE_A << 5)
+#define FILE_G (FILE_A << 6)
+#define FILE_H (FILE_A << 7)
 
 /* cardinal bitboard shifts */
 #define north(BB) (BB << 8)

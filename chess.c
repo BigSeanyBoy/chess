@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[]) {
 	struct position state;
-	char *fenstr = "8/3k4/3pp3/8/5B2/8/1B1p4/1K6 w - - 0 1";
+	char *fenstr = "2k5/1p6/8/4p1R1/8/8/K7/1R6 w - - 0 1";
 	setpos(&state, fenstr);
 
 	int nbmoves = movegen(&state);

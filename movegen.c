@@ -224,6 +224,45 @@ void genbishops(struct position *state, int *count) {
 }
 
 /*
+ * Generate Rook Moves
+ *
+ * DESCRIPTION:
+ *      Generate all rook moves in a given position.
+ */
+void genrooks(struct position *state, int *count) {
+        U64 rooks = state->boards[N_ROOK];
+        U64 enemies;
+        switch(state->side) {
+        case WHITE:
+                rooks &= state->boards[N_WHITE];
+                enemies = state->boards[N_BLACK];
+                break;
+        case BLACK:
+                rooks &= state->boards[N_BLACK];
+                enemies = state->boards[N_WHITE];
+                break;
+        }
+        U64 occupied = state->boards[N_OCCUPIED];
+
+        if (rooks == 0) { return; }
+
+        assert(rooks == (state->boards[N_ROOK] & (~enemies)));
+
+        while (rooks != 0) {
+                int source = bitscanreset(&rooks);
+                U64 targets = rmoves(source, occupied, enemies, &state->rays);
+                while (targets != 0) {
+                        int dest = bitscanreset(&targets);
+                        U16 move = dest | (source << 6);
+                        assert((move & dest) == dest);
+                        assert(((move >> 6) & source) == source);
+                        /* if legal(move) */
+                        append(move, state->movelist, count);
+                }
+        }
+}
+
+/*
  * Move Generation
  *
  * DESCRIPTION:
@@ -234,5 +273,6 @@ int movegen(struct position *state) {
         genpawns(state, &count);
         genknights(state, &count);
         genbishops(state, &count);
+        genrooks(state, &count);
         return count;
 }
