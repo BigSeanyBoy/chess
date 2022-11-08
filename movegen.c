@@ -185,6 +185,45 @@ void genknights(struct position *state, int *count) {
 }
 
 /*
+ * Generate Bishop Moves
+ *
+ * DESCRIPTION:
+ *      Generate all bishop moves in a given position.
+ */
+void genbishops(struct position *state, int *count) {
+        U64 bishops = state->boards[N_BISHOP];
+        U64 enemies;
+        switch(state->side) {
+        case WHITE:
+                bishops &= state->boards[N_WHITE];
+                enemies = state->boards[N_BLACK];
+                break;
+        case BLACK:
+                bishops &= state->boards[N_BLACK];
+                enemies = state->boards[N_WHITE];
+                break;
+        }
+        U64 occupied = state->boards[N_OCCUPIED];
+
+        if (bishops == 0) { return; }
+
+        assert(bishops == (state->boards[N_BISHOP] & (~enemies)));
+
+        while (bishops != 0) {
+                int source = bitscanreset(&bishops);
+                U64 targets = bmoves(source, occupied, enemies, &state->rays);
+                while (targets != 0) {
+                        int dest = bitscanreset(&targets);
+                        U16 move = dest | (source << 6);
+                        assert((move & dest) == dest);
+                        assert(((move >> 6) & source) == source);
+                        /* if legal(move) */
+                        append(move, state->movelist, count);
+                }
+        }
+}
+
+/*
  * Move Generation
  *
  * DESCRIPTION:
@@ -194,5 +233,6 @@ int movegen(struct position *state) {
         int count = 0;
         genpawns(state, &count);
         genknights(state, &count);
+        genbishops(state, &count);
         return count;
 }

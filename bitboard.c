@@ -140,7 +140,7 @@ void edgedist(int edges[], int sq) {
 	assert((east + west) == 7);
 
 	edges[0] = min(north, east);
-	edges[1] = min(south, west);
+	edges[1] = min(south, east);
 	edges[2] = min(south, west);
 	edges[3] = min(north, west);
 }
