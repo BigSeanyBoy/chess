@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 
+typedef uint16_t U16;
 typedef uint64_t U64;
 
 enum color {

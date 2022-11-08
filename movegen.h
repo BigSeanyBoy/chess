@@ -7,10 +7,14 @@
 #ifndef MOVEGEN_H_
 #define MOVEGEN_H_
 
+#include <assert.h>
+
 #include "types.h"
 #include "bitboard.h"
 #include "position.h"
 
 int bitscanreset(U64 *bb);
+
+int movegen(struct position *state, U16 *moves);
 
 #endif /* MOVEGEN_H_ */
