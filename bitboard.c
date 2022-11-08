@@ -154,42 +154,42 @@ void edgedist(int edges[], int sq) {
  * 	not recalculated each time sliding piece attacks are generated.
  */
 void initrays(struct raylookup *rays) {
-for (int sq = 0; sq < 64; ++sq) {
-	U64 pos = 1ull << sq;
-	int rankmask = RANK_1 << (8 * (sq / 8));
+	for (int sq = 0; sq < 64; ++sq) {
+		U64 pos = 1ull << sq;
+		int rankmask = RANK_1 << (8 * (sq / 8));
 
-	rays->north[sq] = (FILE_A << sq) & ~pos;
-	assert((rays->north[sq] & ~(FILE_A << (sq % 8))) == 0);
-	rays->east[sq] = (RANK_1 << sq) & rankmask & ~pos;
-	assert((rays->east[sq] & (~rankmask)) == 0);
-	rays->south[sq] = (FILE_H >> (63 - sq)) & ~pos;
-	assert((rays->south[sq] & ~(FILE_H >> ((63 - sq) % 8))) == 0);
-	rays->west[sq] = (RANK_8 >> (63 - sq)) & rankmask & ~pos;
-	assert((rays->east[sq] & (~rankmask)) == 0);
+		rays->north[sq] = (FILE_A << sq) & ~pos;
+		assert((rays->north[sq] & ~(FILE_A << (sq % 8))) == 0);
+		rays->east[sq] = (RANK_1 << sq) & rankmask & ~pos;
+		assert((rays->east[sq] & (~rankmask)) == 0);
+		rays->south[sq] = (FILE_H >> (63 - sq)) & ~pos;
+		assert((rays->south[sq] & ~(FILE_H >> ((63 - sq) % 8))) == 0);
+		rays->west[sq] = (RANK_8 >> (63 - sq)) & rankmask & ~pos;
+		assert((rays->east[sq] & (~rankmask)) == 0);
 
-	int edges[4];
-	edgedist(edges, sq);
+		int edges[4];
+		edgedist(edges, sq);
 
-	rays->northeast[sq] = 0;
-	for (int i = 1; i <= edges[0]; ++i) {
-		rays->northeast[sq] |= pos << (9 * i);
+		rays->northeast[sq] = 0;
+		for (int i = 1; i <= edges[0]; ++i) {
+			rays->northeast[sq] |= pos << (9 * i);
+		}
+
+		rays->southeast[sq] = 0;
+		for (int i = 1; i <= edges[1]; ++i) {
+			rays->southeast[sq] |= pos >> (7 * i);
+		}
+
+		rays->southwest[sq] = 0;
+		for (int i = 1; i <= edges[2]; ++i) {
+			rays->southwest[sq] |= pos >> (9 * i);
+		}
+
+		rays->northwest[sq] = 0;
+		for (int i = 1; i <= edges[3]; ++i) {
+			rays->northwest[sq] |= pos << (7 * i);
+		}
 	}
-
-	rays->southeast[sq] = 0;
-	for (int i = 1; i <= edges[1]; ++i) {
-		rays->southeast[sq] |= pos >> (7 * i);
-	}
-
-	rays->southwest[sq] = 0;
-	for (int i = 1; i <= edges[2]; ++i) {
-		rays->southwest[sq] |= pos >> (9 * i);
-	}
-
-	rays->northwest[sq] = 0;
-	for (int i = 1; i <= edges[3]; ++i) {
-		rays->northwest[sq] |= pos << (7 * i);
-	}
-}
 }
 
 /*

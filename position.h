@@ -16,6 +16,7 @@
 #define isupper(C) (((C) >= 'A' && (C) <= 'Z') ? 1 : 0)
 
 struct position {
+	struct raylookup rays;
 	U64 boards[10];
 	enum color side;
 	enum castling rights;

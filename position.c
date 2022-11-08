@@ -45,6 +45,8 @@ void putpiece(struct position *state, char c, U64 sq) {
  *      Initialize a position described by the provided FEN string.
  */
 void setpos(struct position *state, char *fenstr) {
+        initrays(&(state->rays));
+
         int rank = 7;
         int file = 0;
         
