@@ -11,6 +11,13 @@
 typedef uint16_t U16;
 typedef uint64_t U64;
 
+enum movetype {
+	NORMAL,
+	PROMOTION = 1 << 14,
+	EN_PASSANT = 2 << 14,
+	CASTLING = 3 << 14
+};
+
 enum color {
 	WHITE,
 	BLACK

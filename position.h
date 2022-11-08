@@ -28,4 +28,6 @@ void putpiece(struct position *state, char c, U64 sq);
 
 void setpos(struct position *state, char *fenstr);
 
+int legal(U16 move);
+
 #endif /* POSITION_H_ */
