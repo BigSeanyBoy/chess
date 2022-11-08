@@ -120,7 +120,7 @@ U64 kmoves(U64 king, U64 allies) {
 	targets |= north(targets) | south(targets);
 	targets ^= allies;
 
-	return targets ^ king;
+	return targets;
 }
 
 /*
