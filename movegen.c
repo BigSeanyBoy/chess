@@ -49,7 +49,7 @@ void pawnpromo(U16 move, U16 *movelist, int *count) {
  *      This function should only be called with a valid en passant target
  *      square.
  */
-void enpassant(struct position *state, U16 *movelist, int *count) {
+void enpassant(struct position *state, int *count) {
         enum square ept = state->eptarget;
         assert((ept >= A1) && (ept <= H8));
 
@@ -65,13 +65,13 @@ void enpassant(struct position *state, U16 *movelist, int *count) {
                         source = ept - 7;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, movelist, count);
+                        append(move, state->movelist, count);
                 }
                 if (southwest(eptbb) & pawns) {
                         source = ept - 9;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, movelist, count);
+                        append(move, state->movelist, count);
                 }
                 break;
         case BLACK:
@@ -80,13 +80,13 @@ void enpassant(struct position *state, U16 *movelist, int *count) {
                         source = ept + 9;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, movelist, count);
+                        append(move, state->movelist, count);
                 }
                 if (northeast(eptbb) & pawns) {
                         source = ept + 7;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, movelist, count);
+                        append(move, state->movelist, count);
                 }
                 break;
         }
@@ -99,7 +99,7 @@ void enpassant(struct position *state, U16 *movelist, int *count) {
  *      Generate all pawn moves in a given position. This includes pushes,
  *      captures, en passant, and promotions.
  */
-void genpawns(struct position *state, U16 *movelist, int *count) {
+void genpawns(struct position *state, int *count) {
         enum color side = state->side;
         U64 pawns = state->boards[N_PAWN];
         U64 enemies;
@@ -122,7 +122,7 @@ void genpawns(struct position *state, U16 *movelist, int *count) {
 
         if (state->eptarget != NULL_SQ) {
                 /* if legal(move) */
-                enpassant(state, movelist, count);
+                enpassant(state, count);
         }
 
         while (pawns != 0) {
@@ -137,9 +137,9 @@ void genpawns(struct position *state, U16 *movelist, int *count) {
                         assert(((move >> 6) & source) == source);
                         /* if legal(move) */
                         if (promo) {
-                                pawnpromo(move, movelist, count);
+                                pawnpromo(move, state->movelist, count);
                         } else {
-                                append(move, movelist, count);
+                                append(move, state->movelist, count);
                         }
                 }
         }
@@ -151,7 +151,7 @@ void genpawns(struct position *state, U16 *movelist, int *count) {
  * DESCRIPTION:
  *      Generate all knight moves in a given position.
  */
-void genknights(struct position *state, U16 *movelist, int *count) {
+void genknights(struct position *state, int *count) {
         U64 knights = state->boards[N_KNIGHT];
         U64 allies;
         switch(state->side) {
@@ -179,7 +179,7 @@ void genknights(struct position *state, U16 *movelist, int *count) {
                         assert((move & dest) == dest);
                         assert(((move >> 6) & source) == source);
                         /* if legal(move) */
-                        append(move, movelist, count);
+                        append(move, state->movelist, count);
                 }
         }
 }
@@ -190,9 +190,9 @@ void genknights(struct position *state, U16 *movelist, int *count) {
  * DESCRIPTION:
  *      Generate all possible moves in a given position and return the count.
  */
-int movegen(struct position *state, U16 *movelist) {
+int movegen(struct position *state) {
         int count = 0;
-        genpawns(state, movelist, &count);
-        genknights(state, movelist, &count);
+        genpawns(state, &count);
+        genknights(state, &count);
         return count;
 }

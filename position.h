@@ -17,6 +17,7 @@
 
 struct position {
 	struct raylookup rays;
+	U16 movelist[256];
 	U64 boards[10];
 	enum color side;
 	enum castling rights;
