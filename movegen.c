@@ -43,6 +43,7 @@ void genpawn(struct position *state, U16 *movelist, int *count) {
                 while (targets != 0) {
                         int dest = bitscanreset(&targets);
                         U16 move = dest | (source << 6);
+                        if (!legal(move)) { continue; }
                         if (targets & RANK_1 || targets & RANK_8) {
                                 pawnpromo(move, movelist, count);
                         }
