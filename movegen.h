@@ -14,8 +14,10 @@
 #include "position.h"
 
 int bitscanreset(U64 *bb);
+void append(U16 move, U16 *movelist, int *count);
 
 void pawnpromo(U16 move, U16 *movelist, int *count);
+void enpassant(struct position *state, U16 *movelist, int *count);
 void genpawns(struct position *state, U16 *movelist, int *count);
 
 int movegen(struct position *state, U16 *movelist);
