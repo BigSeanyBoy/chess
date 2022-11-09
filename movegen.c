@@ -99,7 +99,7 @@ void enpassant(struct position *state, int *count) {
  *      Generate all pawn moves in a given position. This includes pushes,
  *      captures, en passant, and promotions.
  */
-void genpawns(struct position *state, int *count) {
+void pawngen(struct position *state, int *count) {
         enum color side = state->side;
         U64 pawns = state->boards[PAWN];
         U64 enemies;
@@ -146,191 +146,51 @@ void genpawns(struct position *state, int *count) {
 }
 
 /*
- * Generate Knight Moves
- *
- * DESCRIPTION:
- *      Generate all knight moves in a given position.
- */
-void genknights(struct position *state, int *count) {
-        U64 knights = state->boards[KNIGHT];
-        switch(state->side) {
-        case WHITE:
-                knights &= state->boards[WHITE];
-                break;
-        case BLACK:
-                knights &= state->boards[BLACK];
-                break;
-        }
-
-        if (knights == 0) { return; }
-
-        /* assert(knights == (state->boards[KNIGHT] & allies)); */
-
-        while (knights != 0) {
-                int source = bitscanreset(&knights);
-                U64 targets = ntargets(source, state);
-                while (targets != 0) {
-                        int dest = bitscanreset(&targets);
-                        U16 move = dest | (source << 6);
-                        assert((move & dest) == dest);
-                        assert(((move >> 6) & source) == source);
-                        /* if legal(move) */
-                        append(move, state->movelist, count);
-                }
-        }
-}
-
-/*
- * Generate Bishop Moves
- *
- * DESCRIPTION:
- *      Generate all bishop moves in a given position.
- */
-void genbishops(struct position *state, int *count) {
-        U64 bishops = state->boards[BISHOP];
-        switch(state->side) {
-        case WHITE:
-                bishops &= state->boards[WHITE];
-                break;
-        case BLACK:
-                bishops &= state->boards[BLACK];
-                break;
-        }
-
-        if (bishops == 0) { return; }
-
-        /* assert(bishops == (state->boards[BISHOP] & (~enemies))); */
-
-        while (bishops != 0) {
-                int source = bitscanreset(&bishops);
-                U64 targets = btargets(source, state);
-                while (targets != 0) {
-                        int dest = bitscanreset(&targets);
-                        U16 move = dest | (source << 6);
-                        assert((move & dest) == dest);
-                        assert(((move >> 6) & source) == source);
-                        /* if legal(move) */
-                        append(move, state->movelist, count);
-                }
-        }
-}
-
-/*
- * Generate Rook Moves
- *
- * DESCRIPTION:
- *      Generate all rook moves in a given position.
- */
-void genrooks(struct position *state, int *count) {
-        U64 rooks = state->boards[ROOK];
-        switch(state->side) {
-        case WHITE:
-                rooks &= state->boards[WHITE];
-                break;
-        case BLACK:
-                rooks &= state->boards[BLACK];
-                break;
-        }
-
-        if (rooks == 0) { return; }
-
-        /* assert(rooks == (state->boards[ROOK] & (~enemies))); */
-
-        while (rooks != 0) {
-                int source = bitscanreset(&rooks);
-                U64 targets = rtargets(source, state);
-                while (targets != 0) {
-                        int dest = bitscanreset(&targets);
-                        U16 move = dest | (source << 6);
-                        assert((move & dest) == dest);
-                        assert(((move >> 6) & source) == source);
-                        /* if legal(move) */
-                        append(move, state->movelist, count);
-                }
-        }
-}
-
-/*
- * Generate Queen Moves
- *
- * DESCRIPTION:
- *      Generate all queen moves in a given position.
- */
-void genqueens(struct position *state, int *count) {
-        U64 queens = state->boards[QUEEN];
-        switch(state->side) {
-        case WHITE:
-                queens &= state->boards[WHITE];
-                break;
-        case BLACK:
-                queens &= state->boards[BLACK];
-                break;
-        }
-
-        if (queens == 0) { return; }
-
-        /* assert(queens == (state->boards[QUEEN] & (~enemies))); */
-
-        while (queens != 0) {
-                int source = bitscanreset(&queens);
-                U64 targets = qtargets(source, state);
-                while (targets != 0) {
-                        int dest = bitscanreset(&targets);
-                        U16 move = dest | (source << 6);
-                        assert((move & dest) == dest);
-                        assert(((move >> 6) & source) == source);
-                        /* if legal(move) */
-                        append(move, state->movelist, count);
-                }
-        }
-}
-
-/*
- * Generate King Moves
- *
- * DESCRIPTION:
- *      Generate all king moves in a given position.
- */
-void genking(struct position *state, int *count) {
-        U64 king = state->boards[KING];
-        switch(state->side) {
-        case WHITE:
-                king &= state->boards[WHITE];
-                break;
-        case BLACK:
-                king &= state->boards[BLACK];
-                break;
-        }
-
-        if (king == 0) { return; }
-
-        /* assert(king == (state->boards[KING] & allies)); */
-
-        int source = bitscanreset(&king);
-        U64 targets = ktargets(source, state);
-        while (targets != 0) {
-                int dest = bitscanreset(&targets);
-                U16 move = dest | (source << 6);
-                assert((move & dest) == dest);
-                assert(((move >> 6) & source) == source);
-                /* if legal(move) */
-                append(move, state->movelist, count);
-        }
-}
-
-/*
  * Move Generation
  *
  * DESCRIPTION:
  *      Generate all possible moves in a given position and return the count.
+ *      This function is generalized for all pieces except pawns, taking the
+ *      piece type and respective target function for all necessary move
+ *      generation.
  */
-int movegen(struct position *state) {
+void movegen(enum piece ptype,
+            U64 (*targets)(enum square, struct position *),
+            struct position *state,
+            int *count) {
+        U64 piecebb = state->boards[ptype];
+        switch(state->side) {
+        case WHITE:
+                piecebb &= state->boards[WHITE];
+                break;
+        case BLACK:
+                piecebb &= state->boards[BLACK];
+                break;
+        }
+
+        if (piecebb == 0) { return; }
+
+        while (piecebb != 0) {
+                int source = bitscanreset(&piecebb);
+                U64 targetbb = targets(source, state);
+                while (targetbb != 0) {
+                        int dest = bitscanreset(&targetbb);
+                        U16 move = dest | (source << 6);
+                        assert((move & dest) == dest);
+                        assert(((move >> 6) & source) == source);
+                        /* if legal(move) */
+                        append(move, state->movelist, count);
+                }
+        }
+}
+
+int gendriver(struct position *state) {
         int count = 0;
-        genpawns(state, &count);
-        genknights(state, &count);
-        genbishops(state, &count);
-        genrooks(state, &count);
-        genqueens(state, &count);
-        genking(state, &count);
+        pawngen(state, &count);
+        movegen(KNIGHT, &ntargets, state, &count);
+        movegen(BISHOP, &btargets, state, &count);
+        movegen(ROOK, &rtargets, state, &count);
+        movegen(QUEEN, &qtargets, state, &count);
+        movegen(KING, &ktargets, state, &count);
         return count;
 }

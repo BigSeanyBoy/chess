@@ -19,13 +19,12 @@ void append(U16 move, U16 *movelist, int *count);
 void pawnpromo(U16 move, U16 *movelist, int *count);
 void enpassant(struct position *state, int *count);
 
-void genpawns(struct position *state, int *count);
-void genknights(struct position *state, int *count);
-void genbishops(struct position *state, int *count);
-void genrooks(struct position *state, int *count);
-void genqueens(struct position *state, int *count);
-void genkings(struct position *state, int *count);
+void pawngen(struct position *state, int *count);
+void movegen(enum piece ptype,
+            U64 (*targets)(enum square, struct position *),
+            struct position *state,
+            int *count);
 
-int movegen(struct position *state);
+int gendriver(struct position *state);
 
 #endif /* MOVEGEN_H_ */
