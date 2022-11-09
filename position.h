@@ -30,9 +30,14 @@ struct raylookup {
 void edgedist(int edgedist[], int sq);
 void initrays(struct raylookup *rays);
 
+struct movelist {
+	U16 list[256];
+	int count;
+};
+
 struct position {
 	struct raylookup rays;
-	U16 movelist[256];
+	struct movelist moves;
 	U64 boards[10];
 	enum color side;
 	enum castling rights;

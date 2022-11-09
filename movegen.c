@@ -22,9 +22,9 @@ int bitscanreset(U64 *bb) {
  * DESCRIPTION:
  *      Append a move to the move list and increment the count.
  */
-void append(U16 move, U16 *movelist, int *count) {
-        movelist[*count] = move;
-        ++(*count);
+void append(U16 move, struct movelist *moves) {
+        moves->list[moves->count] = move;
+        ++(moves->count);
 }
 
 /*
@@ -33,11 +33,11 @@ void append(U16 move, U16 *movelist, int *count) {
  * DESCRIPTION:
  *      Generate all possible pawn promotions.
  */
-void pawnpromo(U16 move, U16 *movelist, int *count) {
+void pawnpromo(U16 move, struct movelist *moves) {
         assert(move != 0);
         for (U16 piece = KNIGHT - 3; piece < QUEEN - 3; ++piece) {
                 move |= (piece << 12);
-                append(move, movelist, count);
+                append(move, moves);
         }
 }
 
@@ -49,7 +49,7 @@ void pawnpromo(U16 move, U16 *movelist, int *count) {
  *      This function should only be called with a valid en passant target
  *      square.
  */
-void enpassant(struct position *state, int *count) {
+void enpassant(struct position *state) {
         enum square ept = state->eptarget;
         assert((ept >= A1) && (ept <= H8));
 
@@ -65,13 +65,13 @@ void enpassant(struct position *state, int *count) {
                         source = ept - 7;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, state->movelist, count);
+                        append(move, &(state->moves));
                 }
                 if (southwest(eptbb) & pawns) {
                         source = ept - 9;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, state->movelist, count);
+                        append(move, &(state->moves));
                 }
                 break;
         case BLACK:
@@ -80,13 +80,13 @@ void enpassant(struct position *state, int *count) {
                         source = ept + 9;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, state->movelist, count);
+                        append(move, &(state->moves));
                 }
                 if (northeast(eptbb) & pawns) {
                         source = ept + 7;
                         assert(pawns & (1ull << source));
                         move |= (source << 6);
-                        append(move, state->movelist, count);
+                        append(move, &(state->moves));
                 }
                 break;
         }
@@ -99,7 +99,7 @@ void enpassant(struct position *state, int *count) {
  *      Generate all pawn moves in a given position. This includes pushes,
  *      captures, en passant, and promotions.
  */
-void pawngen(struct position *state, int *count) {
+void pawngen(struct position *state) {
         enum color side = state->side;
         U64 pawns = state->boards[PAWN];
         U64 enemies;
@@ -122,7 +122,7 @@ void pawngen(struct position *state, int *count) {
 
         if (state->eptarget != NULL_SQ) {
                 /* if legal(move) */
-                enpassant(state, count);
+                enpassant(state);
         }
 
         while (pawns != 0) {
@@ -137,9 +137,9 @@ void pawngen(struct position *state, int *count) {
                         assert(((move >> 6) & source) == source);
                         /* if legal(move) */
                         if (promo) {
-                                pawnpromo(move, state->movelist, count);
+                                pawnpromo(move, &(state->moves));
                         } else {
-                                append(move, state->movelist, count);
+                                append(move, &(state->moves));
                         }
                 }
         }
@@ -156,8 +156,7 @@ void pawngen(struct position *state, int *count) {
  */
 void movegen(enum piece ptype,
             U64 (*targets)(enum square, struct position *),
-            struct position *state,
-            int *count) {
+            struct position *state) {
         U64 piecebb = state->boards[ptype];
         switch(state->side) {
         case WHITE:
@@ -179,18 +178,16 @@ void movegen(enum piece ptype,
                         assert((move & dest) == dest);
                         assert(((move >> 6) & source) == source);
                         /* if legal(move) */
-                        append(move, state->movelist, count);
+                        append(move, &(state->moves));
                 }
         }
 }
 
-int gendriver(struct position *state) {
-        int count = 0;
-        pawngen(state, &count);
-        movegen(KNIGHT, &ntargets, state, &count);
-        movegen(BISHOP, &btargets, state, &count);
-        movegen(ROOK, &rtargets, state, &count);
-        movegen(QUEEN, &qtargets, state, &count);
-        movegen(KING, &ktargets, state, &count);
-        return count;
+void gendriver(struct position *state) {
+        pawngen(state);
+        movegen(KNIGHT, &ntargets, state);
+        movegen(BISHOP, &btargets, state);
+        movegen(ROOK, &rtargets, state);
+        movegen(QUEEN, &qtargets, state);
+        movegen(KING, &ktargets, state);
 }

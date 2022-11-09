@@ -115,7 +115,8 @@ void putpiece(struct position *state, char c, U64 sq) {
  */
 void setpos(struct position *state, char *fenstr) {
         initrays(&(state->rays));
-        for (int i = 0; i < 256; ++i) { (state->movelist)[i] = 0; }
+        state->moves.count = 0;
+        for (int i = 0; i < 256; ++i) { (state->moves.list)[i] = 0; }
 
         int rank = 7;
         int file = 0;
