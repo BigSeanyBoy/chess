@@ -1,6 +1,75 @@
 #include "position.h"
 
 /*
+ * Distance to the Edge
+ *
+ * DESCRIPTION:
+ * 	Calculate the distance to the edge from the specified square in all
+ * 	directions.
+ */
+void edgedist(int edges[], int sq) {
+	int north = 7 - (sq / 8);
+	int east = 7 - (sq % 8);
+	int south = sq / 8;
+	int west = sq % 8;
+
+	assert((north + south) == 7);
+	assert((east + west) == 7);
+
+	edges[0] = min(north, east);
+	edges[1] = min(south, east);
+	edges[2] = min(south, west);
+	edges[3] = min(north, west);
+}
+
+/*
+ * Initialize Ray Struct
+ *
+ * DESCRIPTION:
+ * 	Calculate rays by direction and square. This function should be called
+ * 	once on program startup so the same instance may be used and rays are
+ * 	not recalculated each time sliding piece attacks are generated.
+ */
+void initrays(struct raylookup *rays) {
+	for (int sq = 0; sq < 64; ++sq) {
+		U64 pos = 1ull << sq;
+		U64 rankmask = RANK_1 << (8 * (sq / 8));
+
+		rays->north[sq] = (FILE_A << sq) & ~pos;
+		assert((rays->north[sq] & ~(FILE_A << (sq % 8))) == 0);
+		rays->east[sq] = (RANK_1 << sq) & rankmask & ~pos;
+		assert((rays->east[sq] & (~rankmask)) == 0);
+		rays->south[sq] = (FILE_H >> (63 - sq)) & ~pos;
+		assert((rays->south[sq] & ~(FILE_H >> ((63 - sq) % 8))) == 0);
+		rays->west[sq] = (RANK_8 >> (63 - sq)) & rankmask & ~pos;
+		assert((rays->west[sq] & (~rankmask)) == 0);
+
+		int edges[4];
+		edgedist(edges, sq);
+
+		rays->northeast[sq] = 0;
+		for (int i = 1; i <= edges[0]; ++i) {
+			rays->northeast[sq] |= pos << (9 * i);
+		}
+
+		rays->southeast[sq] = 0;
+		for (int i = 1; i <= edges[1]; ++i) {
+			rays->southeast[sq] |= pos >> (7 * i);
+		}
+
+		rays->southwest[sq] = 0;
+		for (int i = 1; i <= edges[2]; ++i) {
+			rays->southwest[sq] |= pos >> (9 * i);
+		}
+
+		rays->northwest[sq] = 0;
+		for (int i = 1; i <= edges[3]; ++i) {
+			rays->northwest[sq] |= pos << (7 * i);
+		}
+        }
+}
+
+/*
  * Put Piece
  *
  * DESCRIPTION:
@@ -8,34 +77,34 @@
  *      provided character descriptor and square.
  */
 void putpiece(struct position *state, char c, U64 sq) {
-        state->boards[isupper(c) ? N_WHITE : N_BLACK] |= sq;
+        state->boards[isupper(c) ? WHITE : BLACK] |= sq;
         switch (c) {
         case 'p':
         case 'P':
-                state->boards[N_PAWN] |= sq;
+                state->boards[PAWN] |= sq;
                 break;
         case 'n':
         case 'N':
-                state->boards[N_KNIGHT] |= sq;
+                state->boards[KNIGHT] |= sq;
                 break;
         case 'b':
         case 'B':
-                state->boards[N_BISHOP] |= sq;
+                state->boards[BISHOP] |= sq;
                 break;
         case 'r':
         case 'R':
-                state->boards[N_ROOK] |= sq;
+                state->boards[ROOK] |= sq;
                 break;
         case 'q':
         case 'Q':
-                state->boards[N_QUEEN] |= sq;
+                state->boards[QUEEN] |= sq;
                 break;
         case 'k':
         case 'K':
-                state->boards[N_KING] |= sq;
+                state->boards[KING] |= sq;
                 break;
         }
-        state->boards[N_OCCUPIED] |= sq;
+        state->boards[OCCUPIED] |= sq;
 }
 
 /*
@@ -66,8 +135,8 @@ void setpos(struct position *state, char *fenstr) {
                 }
                 ++fenstr;
         }
-        state->boards[N_EMPTY] = (~state->boards[N_OCCUPIED]);
-        assert((state->boards[N_OCCUPIED] & state->boards[N_EMPTY]) == 0);
+        state->boards[EMPTY] = (~state->boards[OCCUPIED]);
+        assert((state->boards[OCCUPIED] & state->boards[EMPTY]) == 0);
         ++fenstr;
 
         state->side = *fenstr == 'w' ? WHITE : BLACK;

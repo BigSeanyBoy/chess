@@ -35,7 +35,7 @@ void append(U16 move, U16 *movelist, int *count) {
  */
 void pawnpromo(U16 move, U16 *movelist, int *count) {
         assert(move != 0);
-        for (U16 piece = N_KNIGHT - 3; piece < N_QUEEN - 3; ++piece) {
+        for (U16 piece = KNIGHT - 3; piece < QUEEN - 3; ++piece) {
                 move |= (piece << 12);
                 append(move, movelist, count);
         }
@@ -53,14 +53,14 @@ void enpassant(struct position *state, int *count) {
         enum square ept = state->eptarget;
         assert((ept >= A1) && (ept <= H8));
 
-        U64 pawns = state->boards[N_PAWN];
+        U64 pawns = state->boards[PAWN];
         U64 eptbb = 1ull << ept;
         U16 move = ept;
         int source;
 
         switch (state->side) {
         case WHITE:
-                pawns &= state->boards[N_WHITE];
+                pawns &= state->boards[WHITE];
                 if (southeast(eptbb) & pawns) {
                         source = ept - 7;
                         assert(pawns & (1ull << source));
@@ -75,7 +75,7 @@ void enpassant(struct position *state, int *count) {
                 }
                 break;
         case BLACK:
-                pawns &= state->boards[N_BLACK];
+                pawns &= state->boards[BLACK];
                 if (northwest(eptbb) & pawns) {
                         source = ept + 9;
                         assert(pawns & (1ull << source));
@@ -101,23 +101,23 @@ void enpassant(struct position *state, int *count) {
  */
 void genpawns(struct position *state, int *count) {
         enum color side = state->side;
-        U64 pawns = state->boards[N_PAWN];
+        U64 pawns = state->boards[PAWN];
         U64 enemies;
         switch (side) {
         case WHITE:
-                pawns &= state->boards[N_WHITE];
-                enemies = state->boards[N_BLACK];
+                pawns &= state->boards[WHITE];
+                enemies = state->boards[BLACK];
                 break;
         case BLACK:
-                pawns &= state->boards[N_BLACK];
-                enemies = state->boards[N_WHITE];
+                pawns &= state->boards[BLACK];
+                enemies = state->boards[WHITE];
                 break;
         }
-        U64 empty = state->boards[N_EMPTY];
+        U64 empty = state->boards[EMPTY];
 
         if (pawns == 0) { return; }
 
-        assert(pawns == (state->boards[N_PAWN] & ~enemies));
+        assert(pawns == (state->boards[PAWN] & ~enemies));
         assert((empty & pawns & enemies) == 0);
 
         if (state->eptarget != NULL_SQ) {
@@ -128,7 +128,7 @@ void genpawns(struct position *state, int *count) {
         while (pawns != 0) {
                 int source = bitscanreset(&pawns);
                 U64 p = 1ull << source;
-                U64 targets = pmoves(p, enemies, empty, side);
+                U64 targets = ptargets(p, enemies, empty, side);
                 while (targets != 0) {
                         int promo = targets & RANK_1 || targets & RANK_8;
                         int dest = bitscanreset(&targets);
@@ -152,27 +152,23 @@ void genpawns(struct position *state, int *count) {
  *      Generate all knight moves in a given position.
  */
 void genknights(struct position *state, int *count) {
-        U64 knights = state->boards[N_KNIGHT];
-        U64 allies;
+        U64 knights = state->boards[KNIGHT];
         switch(state->side) {
         case WHITE:
-                knights &= state->boards[N_WHITE];
-                allies = state->boards[N_WHITE];
+                knights &= state->boards[WHITE];
                 break;
         case BLACK:
-                knights &= state->boards[N_BLACK];
-                allies = state->boards[N_BLACK];
+                knights &= state->boards[BLACK];
                 break;
         }
 
         if (knights == 0) { return; }
 
-        assert(knights == (state->boards[N_KNIGHT] & allies));
+        /* assert(knights == (state->boards[KNIGHT] & allies)); */
 
         while (knights != 0) {
                 int source = bitscanreset(&knights);
-                U64 n = 1ull << source;
-                U64 targets = nmoves(n, allies);
+                U64 targets = ntargets(source, state);
                 while (targets != 0) {
                         int dest = bitscanreset(&targets);
                         U16 move = dest | (source << 6);
@@ -191,27 +187,23 @@ void genknights(struct position *state, int *count) {
  *      Generate all bishop moves in a given position.
  */
 void genbishops(struct position *state, int *count) {
-        U64 bishops = state->boards[N_BISHOP];
-        U64 enemies;
+        U64 bishops = state->boards[BISHOP];
         switch(state->side) {
         case WHITE:
-                bishops &= state->boards[N_WHITE];
-                enemies = state->boards[N_BLACK];
+                bishops &= state->boards[WHITE];
                 break;
         case BLACK:
-                bishops &= state->boards[N_BLACK];
-                enemies = state->boards[N_WHITE];
+                bishops &= state->boards[BLACK];
                 break;
         }
-        U64 occupied = state->boards[N_OCCUPIED];
 
         if (bishops == 0) { return; }
 
-        assert(bishops == (state->boards[N_BISHOP] & (~enemies)));
+        /* assert(bishops == (state->boards[BISHOP] & (~enemies))); */
 
         while (bishops != 0) {
                 int source = bitscanreset(&bishops);
-                U64 targets = bmoves(source, occupied, enemies, &state->rays);
+                U64 targets = btargets(source, state);
                 while (targets != 0) {
                         int dest = bitscanreset(&targets);
                         U16 move = dest | (source << 6);
@@ -230,27 +222,23 @@ void genbishops(struct position *state, int *count) {
  *      Generate all rook moves in a given position.
  */
 void genrooks(struct position *state, int *count) {
-        U64 rooks = state->boards[N_ROOK];
-        U64 enemies;
+        U64 rooks = state->boards[ROOK];
         switch(state->side) {
         case WHITE:
-                rooks &= state->boards[N_WHITE];
-                enemies = state->boards[N_BLACK];
+                rooks &= state->boards[WHITE];
                 break;
         case BLACK:
-                rooks &= state->boards[N_BLACK];
-                enemies = state->boards[N_WHITE];
+                rooks &= state->boards[BLACK];
                 break;
         }
-        U64 occupied = state->boards[N_OCCUPIED];
 
         if (rooks == 0) { return; }
 
-        assert(rooks == (state->boards[N_ROOK] & (~enemies)));
+        /* assert(rooks == (state->boards[ROOK] & (~enemies))); */
 
         while (rooks != 0) {
                 int source = bitscanreset(&rooks);
-                U64 targets = rmoves(source, occupied, enemies, &state->rays);
+                U64 targets = rtargets(source, state);
                 while (targets != 0) {
                         int dest = bitscanreset(&targets);
                         U16 move = dest | (source << 6);
@@ -269,27 +257,23 @@ void genrooks(struct position *state, int *count) {
  *      Generate all queen moves in a given position.
  */
 void genqueens(struct position *state, int *count) {
-        U64 queens = state->boards[N_QUEEN];
-        U64 enemies;
+        U64 queens = state->boards[QUEEN];
         switch(state->side) {
         case WHITE:
-                queens &= state->boards[N_WHITE];
-                enemies = state->boards[N_BLACK];
+                queens &= state->boards[WHITE];
                 break;
         case BLACK:
-                queens &= state->boards[N_BLACK];
-                enemies = state->boards[N_WHITE];
+                queens &= state->boards[BLACK];
                 break;
         }
-        U64 occupied = state->boards[N_OCCUPIED];
 
         if (queens == 0) { return; }
 
-        assert(queens == (state->boards[N_QUEEN] & (~enemies)));
+        /* assert(queens == (state->boards[QUEEN] & (~enemies))); */
 
         while (queens != 0) {
                 int source = bitscanreset(&queens);
-                U64 targets = qmoves(source, occupied, enemies, &state->rays);
+                U64 targets = qtargets(source, state);
                 while (targets != 0) {
                         int dest = bitscanreset(&targets);
                         U16 move = dest | (source << 6);
@@ -308,26 +292,22 @@ void genqueens(struct position *state, int *count) {
  *      Generate all king moves in a given position.
  */
 void genking(struct position *state, int *count) {
-        U64 king = state->boards[N_KING];
-        U64 allies;
+        U64 king = state->boards[KING];
         switch(state->side) {
         case WHITE:
-                king &= state->boards[N_WHITE];
-                allies = state->boards[N_WHITE];
+                king &= state->boards[WHITE];
                 break;
         case BLACK:
-                king &= state->boards[N_BLACK];
-                allies = state->boards[N_BLACK];
+                king &= state->boards[BLACK];
                 break;
         }
 
         if (king == 0) { return; }
 
-        assert(king == (state->boards[N_KING] & allies));
+        /* assert(king == (state->boards[KING] & allies)); */
 
         int source = bitscanreset(&king);
-        U64 n = 1ull << source;
-        U64 targets = kmoves(n, allies);
+        U64 targets = ktargets(source, state);
         while (targets != 0) {
                 int dest = bitscanreset(&targets);
                 U16 move = dest | (source << 6);
