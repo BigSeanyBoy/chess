@@ -12,6 +12,8 @@
 
 #include "types.h"
 
+#define abs(A) ((A) < 0 ? (-A) : (A))
+#define mid(A, B) (((A) + (B)) / 2)
 #define isupper(C) (((C) >= 'A' && (C) <= 'Z') ? 1 : 0)
 #define flip(S) ((S) == WHITE ? BLACK : WHITE)
 
@@ -30,6 +32,11 @@ struct raylookup {
 void edgedist(int edgedist[], int sq);
 void initrays(struct raylookup *rays);
 
+struct gamelist {
+	U16 list[1024];
+	int idx;
+};
+
 struct movelist {
 	U16 list[256];
 	int count;
@@ -37,7 +44,9 @@ struct movelist {
 
 struct position {
 	struct raylookup rays;
+	struct gamelist history;
 	struct movelist moves;
+	enum piece piecelist[64];
 	U64 boards[10];
 	enum color side;
 	enum castling rights;
@@ -46,7 +55,9 @@ struct position {
 	int plynb;
 };
 
-void putpiece(struct position *state, char c, U64 sq);
+void putpiece(struct position *state, char c, int sq, U64 sqbb);
 void setpos(struct position *state, char *fenstr);
+
+void make(U16 move, struct position *state);
 
 #endif /* POSITION_H_ */

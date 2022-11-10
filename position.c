@@ -76,35 +76,41 @@ void initrays(struct raylookup *rays) {
  *      Insert the specified piece into the proper bitboards based on the
  *      provided character descriptor and square.
  */
-void putpiece(struct position *state, char c, U64 sq) {
-        state->boards[isupper(c) ? WHITE : BLACK] |= sq;
+void putpiece(struct position *state, char c, int sq, U64 sqbb) {
+        state->boards[isupper(c) ? WHITE : BLACK] |= sqbb;
         switch (c) {
         case 'p':
         case 'P':
-                state->boards[PAWN] |= sq;
+                state->boards[PAWN] |= sqbb;
+                state->piecelist[sq] = PAWN;
                 break;
         case 'n':
         case 'N':
-                state->boards[KNIGHT] |= sq;
+                state->boards[KNIGHT] |= sqbb;
+                state->piecelist[sq] = KNIGHT;
                 break;
         case 'b':
         case 'B':
-                state->boards[BISHOP] |= sq;
+                state->boards[BISHOP] |= sqbb;
+                state->piecelist[sq] = BISHOP;
                 break;
         case 'r':
         case 'R':
-                state->boards[ROOK] |= sq;
+                state->boards[ROOK] |= sqbb;
+                state->piecelist[sq] = ROOK;
                 break;
         case 'q':
         case 'Q':
-                state->boards[QUEEN] |= sq;
+                state->boards[QUEEN] |= sqbb;
+                state->piecelist[sq] = QUEEN;
                 break;
         case 'k':
         case 'K':
-                state->boards[KING] |= sq;
+                state->boards[KING] |= sqbb;
+                state->piecelist[sq] = KING;
                 break;
         }
-        state->boards[OCCUPIED] |= sq;
+        state->boards[OCCUPIED] |= sqbb;
 }
 
 /*
@@ -115,8 +121,14 @@ void putpiece(struct position *state, char c, U64 sq) {
  */
 void setpos(struct position *state, char *fenstr) {
         initrays(&(state->rays));
+
+        state->history.idx = 0;
+        for (int i = 0; i < 1024; ++i) { (state->history.list)[i] = 0; }
+
         state->moves.count = 0;
         for (int i = 0; i < 256; ++i) { (state->moves.list)[i] = 0; }
+
+        for (int i = 0; i < 64; ++i) { state->piecelist[i] = NO_PIECE; }
 
         int rank = 7;
         int file = 0;
@@ -130,8 +142,9 @@ void setpos(struct position *state, char *fenstr) {
                 } else if (c > '0' && c <= '9') {
                         file += (c - '0');
                 } else {
-                        U64 sq = 1ull << ((8 * rank) + file);
-                        putpiece(state, c, sq);
+                        int sq = (8 * rank) + file;
+                        U64 sqbb = 1ull << sq;
+                        putpiece(state, c, sq, sqbb);
                         ++file;
                 }
                 ++fenstr;
@@ -193,4 +206,118 @@ void setpos(struct position *state, char *fenstr) {
                 state->plynb += (state->plynb * 10) + (c - '0');
                 ++fenstr;
         }
+}
+
+
+/*
+ * Make Move
+ *
+ * DESCRIPTION:
+ *      Play the specified move by updating the position. This includes
+ *      moving the relevant pieces to the proper locations, removing
+ *      captured pieces from the board, updating the piece list,
+ *      incrementing the halfmove clock (if necessary) and the move count,
+ *      and recording castling rights and en passant targets.
+ */
+void make(U16 move, struct position *state) {
+        assert(state->history.idx < 1024);
+        state->history.list[state->history.idx] = move;
+        ++state->history.idx;
+
+        enum square source = (move >> 6) & 63;
+        assert(source < 64);
+        U64 sourcebb = 1ull << source;
+        assert(sourcebb != NULL_SQ);
+
+        enum square dest = move & 63;
+        assert(dest < 64);
+        U64 destbb = 1ull << dest;
+        assert(destbb != NULL_SQ);
+
+        enum piece attacker = state->piecelist[source];
+        enum piece target = state->piecelist[dest];
+
+        if (attacker == PAWN && abs(source - dest) > 15) {
+                state->eptarget = mid(source, dest);
+                assert(state->eptarget != NULL_SQ);
+        }
+
+        state->boards[state->side] ^= sourcebb;
+        state->boards[attacker] ^= sourcebb;
+        state->boards[OCCUPIED] ^= sourcebb;
+        state->piecelist[source] = 0;
+
+        if (move & PROMOTION) {
+                attacker = ((move >> 12) & 3) + KNIGHT;
+                assert(attacker > 2 && attacker < 7);
+        }
+
+        state->boards[state->side] |= destbb;
+        state->boards[attacker] |= destbb;
+        state->boards[OCCUPIED] |= destbb;
+        state->piecelist[dest] = attacker;
+
+        if (move & EN_PASSANT) {
+                switch (state->side) {
+                case WHITE:
+                        destbb = destbb >> 8;
+                        dest -= 8;
+                        break;
+                case BLACK:
+                        destbb = destbb << 8;
+                        dest += 8;
+                        break;
+                }
+                assert(destbb);
+                assert(dest >=0 && dest < 64);
+                state->boards[OCCUPIED] ^= destbb;
+                state->piecelist[dest] = 0;
+        }
+
+        if (target != NO_PIECE) {
+                state->boards[flip(state->side)] &= (~destbb);
+                state->boards[target] &= (~destbb);
+        }
+
+        if (move & CASTLING) {
+                U64 csource = 0;
+                U64 cdest = 0;
+                switch(dest) {
+                case G1:
+                        csource = 1ull << H1;
+                        cdest = 1ull << F1;
+                        state->rights ^= WHITE_OO;
+                        assert((state->rights & WHITE_OO) == 0);
+                        break;
+                case C1:
+                        csource = 1ull << A1;
+                        cdest = 1ull << D1;
+                        state->rights ^= WHITE_OOO;
+                        assert((state->rights & WHITE_OOO) == 0);
+                        break;
+                case G8:
+                        csource = 1ull << H8;
+                        cdest = 1ull << F8;
+                        state->rights ^= BLACK_OO;
+                        assert((state->rights & BLACK_OO) == 0);
+                        break;
+                case C8:
+                        csource = 1ull << A8;
+                        cdest = 1ull << D8;
+                        state->rights ^= BLACK_OOO;
+                        assert((state->rights & BLACK_OOO) == 0);
+                        break;
+                default:
+                        break;
+                }
+
+                state->boards[ROOK] ^= csource;
+                state->boards[state->side] ^= csource;
+                state->boards[OCCUPIED] ^= sourcebb;
+
+                state->boards[ROOK] |= cdest;
+                state->boards[state->side] |= cdest;
+                state->boards[OCCUPIED] |= destbb;
+        }
+        state->boards[EMPTY] = ~(state->boards[OCCUPIED]);
 }

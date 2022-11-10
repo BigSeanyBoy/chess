@@ -41,7 +41,7 @@ void enpassant(struct position *state) {
 
         U64 pawns = state->boards[PAWN];
         U64 eptbb = 1ull << ept;
-        U16 move = ept | (2 << 14);
+        U16 move = ept | EN_PASSANT;
         int source;
 
         switch (state->side) {
@@ -93,24 +93,24 @@ void castling(struct position *state) {
         case WHITE:
                 if (rights & WHITE_OO && (occupied & WHITE_OO_GAP) == 0) {
                         assert((empty & WHITE_OO_GAP) == 0x60ull);
-                        U16 move = E1 | (G1 << 6) | (3 << 14);
+                        U16 move = E1 | (G1 << 6) | CASTLING;
                         append(move, &(state->moves));
                 }
                 if (rights & WHITE_OOO && (occupied & WHITE_OOO_GAP) == 0) {
                         assert((empty & WHITE_OOO_GAP) == 0xeull);
-                        U16 move = E1 | (C1 << 6) | (3 << 14);
+                        U16 move = E1 | (C1 << 6) | CASTLING;
                         append(move, &(state->moves));
                 }
                 break;
         case BLACK:
                 if (rights & BLACK_OO && (occupied & BLACK_OO_GAP) == 0) {
                         assert((empty & BLACK_OO_GAP) == (0x60ull << 56));
-                        U16 move = E8 | (G8 << 6) | (3 << 14);
+                        U16 move = E8 | (G8 << 6) | CASTLING;
                         append(move, &(state->moves));
                 }
                 if (rights & BLACK_OOO && (occupied & BLACK_OOO_GAP) == 0) {
                         assert((empty & BLACK_OOO_GAP) == (0xeull << 56));
-                        U16 move = E8 | (C8 << 6) | (3 << 14);
+                        U16 move = E8 | (C8 << 6) | CASTLING;
                         append(move, &(state->moves));
                 }
                 break;
@@ -140,7 +140,7 @@ void pawngen(struct position *state) {
         while (pawns != 0) {
                 int source = bitscanreset(&pawns);
                 U64 targets = ptargets(source, state);
-                U16 promo = (targets & RANK_1 || targets & RANK_8) ? 1 : 0;
+                U16 promo = targets & (RANK_1 | RANK_8) ? PROMOTION : 0;
                 while (targets != 0) {
                         int dest = bitscanreset(&targets);
                         U16 move = dest | (source << 6) | promo;

@@ -7,11 +7,11 @@
 
 int main(int argc, char *argv[]) {
 	struct position state;
-	char *fenstr = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
+	char *fenstr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	setpos(&state, fenstr);
 
-	gendriver(&state);
-	printf("found %d moves\n", state.moves.count);
+	U16 move = E4 | (E2 << 6);
+	make(move, &state);
 
 	return 0;
 }

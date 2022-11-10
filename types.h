@@ -67,7 +67,9 @@ enum piece {
 	QUEEN,
 	KING,
 	OCCUPIED,
-	EMPTY
+	EMPTY,
+
+	NO_PIECE
 };
 
 enum square {
