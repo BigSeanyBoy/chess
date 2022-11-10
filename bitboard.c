@@ -278,3 +278,28 @@ U64 ktargets(enum square sq, struct position *state) {
 
 	return targets;
 }
+
+/*
+ * In Check
+ *
+ * DESCRIPTION:
+ * 	Test if the current side's king is in check.
+ */
+int incheck(struct position *state) {
+        U64 king = state->boards[KING] & state->boards[state->side];
+	assert(king != 0);
+        enum square kingsq = __builtin_ctzll(king);
+        U64 enemies = state->boards[flip(state->side)];
+	assert((king & enemies) == 0);
+
+        U64 brays = btargets(kingsq, state);
+        U64 rrays = rtargets(kingsq, state);
+
+        if (brays & (state->boards[BISHOP] & enemies) ||
+            rrays & (state->boards[ROOK] & enemies) ||
+            (brays | rrays) & (state->boards[QUEEN] & enemies) ||
+            ntargets(kingsq, state) & (state->boards[KNIGHT] & enemies)) {
+                return 1;
+        }
+        return 0;
+}

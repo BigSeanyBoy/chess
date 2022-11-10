@@ -194,8 +194,12 @@ void movegen(enum piece ptype,
 }
 
 void gendriver(struct position *state) {
-        if (state->eptarget != NULL_SQ) { enpassant(state); }
-        if (state->rights != NO_CASTLING) { castling(state); }
+        if (state->eptarget != NULL_SQ) {
+                enpassant(state);
+        }
+        if (state->rights != NO_CASTLING && !incheck(state)) {
+                castling(state);
+        }
 
         pawngen(state);
         movegen(KNIGHT, &ntargets, state);

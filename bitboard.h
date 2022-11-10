@@ -38,4 +38,6 @@ U64 rtargets(enum square sq, struct position *state);
 U64 qtargets(enum square sq, struct position *state);
 U64 ktargets(enum square sq, struct position *state);
 
+int incheck(struct position *state);
+
 #endif /* BITBOARD_H_ */
