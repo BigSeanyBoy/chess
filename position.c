@@ -208,6 +208,39 @@ void setpos(struct position *state, char *fenstr) {
         }
 }
 
+/*
+ * Make En Passant
+ *
+ * DESCRIPTION:
+ *      Remove the target pawn from the board during an en passant capture.
+ */
+void makeep(enum square dest, struct position *state) {
+        U64 destbb = 1ull << dest;
+        switch (state->side) {
+        case WHITE:
+                destbb = destbb >> 8;
+                dest -= 8;
+                break;
+        case BLACK:
+                destbb = destbb << 8;
+                dest += 8;
+                break;
+        }
+        assert(destbb);
+        assert(dest >=0 && dest < 64);
+
+        state->boards[flip(state->side)] ^= destbb;
+        state->boards[PAWN] ^= destbb;
+        state->boards[OCCUPIED] ^= destbb;
+        state->piecelist[dest] = NO_PIECE;
+}
+
+/*
+ * Make Castle
+ *
+ * DESCRIPTION:
+ *      Handle the rook movement for a castling move.
+ */
 void makecastle(enum square dest, struct position *state) {
         int csource = NO_PIECE;
         U64 csbb = 0;
@@ -232,8 +265,6 @@ void makecastle(enum square dest, struct position *state) {
         
                 state->rights ^= WHITE_OOO;
                 assert((state->rights & WHITE_OOO) == 0);
-
-                state->piecelist[B1] = NO_PIECE;
                 break;
         case G8:
                 csource = H8;
@@ -252,9 +283,6 @@ void makecastle(enum square dest, struct position *state) {
 
                 state->rights ^= BLACK_OOO;
                 assert((state->rights & BLACK_OOO) == 0);
-
-
-                state->piecelist[B8] = NO_PIECE;
                 break;
         default:
                 break;
@@ -321,20 +349,7 @@ void make(U16 move, struct position *state) {
         state->piecelist[dest] = attacker;
 
         if ((move & MOVETYPE_MASK) == EN_PASSANT) {
-                switch (state->side) {
-                case WHITE:
-                        destbb = destbb >> 8;
-                        dest -= 8;
-                        break;
-                case BLACK:
-                        destbb = destbb << 8;
-                        dest += 8;
-                        break;
-                }
-                assert(destbb);
-                assert(dest >=0 && dest < 64);
-                state->boards[OCCUPIED] ^= destbb;
-                state->piecelist[dest] = 0;
+                makeep(dest, state);
         }
 
         if (target != NO_PIECE) {
@@ -342,7 +357,9 @@ void make(U16 move, struct position *state) {
                 state->boards[target] &= (~destbb);
         }
 
-        if ((move & MOVETYPE_MASK) == CASTLING) { makecastle(dest, state); }
+        if ((move & MOVETYPE_MASK) == CASTLING) {
+                makecastle(dest, state);
+        }
 
         state->boards[EMPTY] = ~(state->boards[OCCUPIED]);
 }
