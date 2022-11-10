@@ -315,6 +315,8 @@ void make(U16 move, struct position *state) {
         state->history.list[state->history.idx] = move;
         ++state->history.idx;
 
+        if (state->side == BLACK) { ++(state->plynb); }
+
         enum square source = (move >> 6) & 63;
         assert(source < 64);
         U64 sourcebb = 1ull << source;
@@ -328,6 +330,12 @@ void make(U16 move, struct position *state) {
         enum piece attacker = state->piecelist[source];
         enum piece target = state->piecelist[dest];
 
+        if (attacker != PAWN && target == NO_PIECE) {
+                ++(state->rule50);
+        } else {
+                state->rule50 = 0;
+        }
+
         if (attacker == PAWN && abs(source - dest) > 15) {
                 state->eptarget = mid(source, dest);
                 assert(state->eptarget != NULL_SQ);
@@ -339,8 +347,8 @@ void make(U16 move, struct position *state) {
         state->piecelist[source] = NO_PIECE;
 
         if ((move & MOVETYPE_MASK) == PROMOTION) {
-                attacker = ((move >> 12) & 3) + KNIGHT;
-                assert(attacker > 2 && attacker < 7);
+                attacker = (move & PROMO_MASK) + KNIGHT;
+                assert(attacker > PAWN && attacker < KING);
         }
 
         state->boards[state->side] |= destbb;
