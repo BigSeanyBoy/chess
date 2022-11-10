@@ -111,27 +111,6 @@ U64 ntargets(enum square sq, struct position *state) {
 }
 
 /*
- * King Moves
- *
- * DESCRIPTION:
- * 	Calculate all king targets in a given position.
- */
-U64 ktargets(enum square sq, struct position *state) {
-	U64 king = 1ull << sq;
-	enum color side = state->side == WHITE ? WHITE : BLACK;
-	U64 allies = state->boards[side];
-
-	U64 targets = 0;
-
-	targets |= west(king) | king | east(king);
-	assert((targets & (~((king >> 1) | king | (king << 1)))) == 0);
-	targets |= north(targets) | south(targets);
-	targets &= (~allies);
-
-	return targets;
-}
-
-/*
  * Bishop Moves
  *
  * DESCRIPtargets
@@ -274,6 +253,27 @@ U64 qtargets(enum square sq, struct position *state) {
 
 	targets |= btargets(sq, state);
 	targets |= rtargets(sq, state);
+
+	return targets;
+}
+
+/*
+ * King Moves
+ *
+ * DESCRIPTION:
+ * 	Calculate all king targets in a given position.
+ */
+U64 ktargets(enum square sq, struct position *state) {
+	U64 king = 1ull << sq;
+	enum color side = state->side == WHITE ? WHITE : BLACK;
+	U64 allies = state->boards[side];
+
+	U64 targets = 0;
+
+	targets |= west(king) | king | east(king);
+	assert((targets & (~((king >> 1) | king | (king << 1)))) == 0);
+	targets |= north(targets) | south(targets);
+	targets &= (~allies);
 
 	return targets;
 }

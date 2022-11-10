@@ -33,10 +33,9 @@ U64 pattack(U64 pawns, U64 enemies, enum color side);
 
 U64 ptargets(U64 pawns, U64 enemies, U64 empty, enum color side);
 U64 ntargets(enum square sq, struct position *state);
-U64 ktargets(enum square sq, struct position *state);
-
 U64 btargets(enum square sq, struct position *state);
 U64 rtargets(enum square sq, struct position *state);
 U64 qtargets(enum square sq, struct position *state);
+U64 ktargets(enum square sq, struct position *state);
 
 #endif /* BITBOARD_H_ */
