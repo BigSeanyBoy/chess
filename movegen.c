@@ -79,6 +79,45 @@ void enpassant(struct position *state) {
 }
 
 /*
+ * Castling
+ *
+ * DESCRIPTION:
+ *      Add any possible castles to the move list.
+ */
+void castling(struct position *state) {
+        enum castling rights = state->rights;
+        U64 occupied = state->boards[OCCUPIED];
+        U64 empty = state->boards[EMPTY];
+
+        switch (state->side) {
+        case WHITE:
+                if (rights & WHITE_OO && (occupied & WHITE_OO_GAP) == 0) {
+                        assert((empty & WHITE_OO_GAP) == 0x60ull);
+                        U16 move = E1 | (G1 << 6) | (3 << 14);
+                        append(move, &(state->moves));
+                }
+                if (rights & WHITE_OOO && (occupied & WHITE_OOO_GAP) == 0) {
+                        assert((empty & WHITE_OOO_GAP) == 0xeull);
+                        U16 move = E1 | (C1 << 6) | (3 << 14);
+                        append(move, &(state->moves));
+                }
+                break;
+        case BLACK:
+                if (rights & BLACK_OO && (occupied & BLACK_OO_GAP) == 0) {
+                        assert((empty & BLACK_OO_GAP) == (0x60ull << 56));
+                        U16 move = E8 | (G8 << 6) | (3 << 14);
+                        append(move, &(state->moves));
+                }
+                if (rights & BLACK_OOO && (occupied & BLACK_OOO_GAP) == 0) {
+                        assert((empty & BLACK_OOO_GAP) == (0xeull << 56));
+                        U16 move = E8 | (C8 << 6) | (3 << 14);
+                        append(move, &(state->moves));
+                }
+                break;
+        }
+}
+
+/*
  * Generate Pawn Moves
  *
  * DESCRIPTION:

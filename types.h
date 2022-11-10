@@ -31,6 +31,12 @@ typedef uint64_t U64;
 #define FILE_G (FILE_A << 6)
 #define FILE_H (FILE_A << 7)
 
+/* squares between kings and rooks */
+#define WHITE_OO_GAP 0x60ull
+#define WHITE_OOO_GAP 0xeull
+#define BLACK_OO_GAP WHITE_OO_GAP << 56
+#define BLACK_OOO_GAP WHITE_OOO_GAP << 56
+
 #define min(A, B) ((A) < (B) ? (A) : (B))
 
 enum movetype {

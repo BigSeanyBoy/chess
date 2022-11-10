@@ -54,14 +54,12 @@ U64 pattack(U64 pawns, U64 enemies, enum color side) {
 
 	if (side == WHITE) {
 		targets |= northeast(pawns) & enemies;
-		assert((targets & ((~enemies) | FILE_A)) == 0);
 		targets |= northwest(pawns) & enemies;
-		assert((targets & ((~enemies) | FILE_H)) == 0);
+		assert((targets & (~enemies)) == 0);
 	} else {
 		targets |= southeast(pawns) & enemies;
-		assert((targets & ((~enemies) | FILE_A)) == 0);
 		targets |= southwest(pawns) & enemies;
-		assert((targets & ((~enemies) | FILE_H)) == 0);
+		assert((targets & (~enemies)) == 0);
 	}
 
 	return targets;
