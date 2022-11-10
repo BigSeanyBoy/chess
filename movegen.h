@@ -17,11 +17,12 @@ int bitscanreset(U64 *bb);
 void append(U16 move, struct movelist *moves);
 
 void enpassant(struct position *state);
-
+void castling(struct position *state);
 void pawngen(struct position *state);
 void movegen(enum piece ptype,
             U64 (*targets)(enum square, struct position *),
             struct position *state);
+
 
 void gendriver(struct position *state);
 

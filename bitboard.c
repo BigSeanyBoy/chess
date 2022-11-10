@@ -73,12 +73,15 @@ U64 pattack(U64 pawns, U64 enemies, enum color side) {
  * DESCRIPTION:
  * 	Calculate all pawn targets in a given position.
  */
-U64 ptargets(U64 pawns, U64 enemies, U64 empty, enum color side) {
+U64 ptargets(enum square sq, struct position *state) {
 	U64 targets = 0;
+	U64 pawn = 1ull << sq;
+	U64 empty = state->boards[EMPTY];
+	U64 enemies = state->boards[flip(state->side)];
 
-	targets |= push(pawns, empty, side);
-	targets |= dblpush(pawns, empty, side);
-	targets |= pattack(pawns, enemies, side);
+	targets |= push(pawn, empty, state->side);
+	targets |= dblpush(pawn, empty, state->side);
+	targets |= pattack(pawn, enemies, state->side);
 
 	return targets;
 }
