@@ -28,20 +28,6 @@ void append(U16 move, struct movelist *moves) {
 }
 
 /*
- * Pawn Promotion
- *
- * DESCRIPTION:
- *      Generate all possible pawn promotions.
- */
-void pawnpromo(U16 move, struct movelist *moves) {
-        assert(move != 0);
-        for (U16 piece = KNIGHT - 3; piece < QUEEN - 3; ++piece) {
-                move |= (piece << 12);
-                append(move, moves);
-        }
-}
-
-/*
  * En Passant
  *
  * DESCRIPTION:
@@ -121,7 +107,6 @@ void pawngen(struct position *state) {
         assert((empty & pawns & enemies) == 0);
 
         if (state->eptarget != NULL_SQ) {
-                /* if legal(move) */
                 enpassant(state);
         }
 
@@ -135,9 +120,11 @@ void pawngen(struct position *state) {
                         U16 move = dest | (source << 6);
                         assert((move & dest) == dest);
                         assert(((move >> 6) & source) == source);
-                        /* if legal(move) */
                         if (promo) {
-                                pawnpromo(move, &(state->moves));
+                                for (U16 piece = 0; piece < 4; ++piece) {
+                                        move |= (piece << 12);
+                                        append(move, &(state->moves));
+                                }
                         } else {
                                 append(move, &(state->moves));
                         }
@@ -177,7 +164,6 @@ void movegen(enum piece ptype,
                         U16 move = dest | (source << 6);
                         assert((move & dest) == dest);
                         assert(((move >> 6) & source) == source);
-                        /* if legal(move) */
                         append(move, &(state->moves));
                 }
         }

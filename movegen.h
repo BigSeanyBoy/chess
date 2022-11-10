@@ -16,7 +16,6 @@
 int bitscanreset(U64 *bb);
 void append(U16 move, struct movelist *moves);
 
-void pawnpromo(U16 move, struct movelist *moves);
 void enpassant(struct position *state);
 
 void pawngen(struct position *state);

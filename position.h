@@ -2,8 +2,8 @@
  * DESCRIPTION:
  *	Information and utilities regarding the state of a chess game. The
  *	position holds information such as piece placement, side to move,
- *	castling rights, and so on. The position also determines the legality
- *	of moves and is responsible for making/unmaking moves.
+ *	castling rights, and so on. The position also responsible for
+ *	making/unmaking moves.
  */
 #ifndef POSITION_H_
 #define POSITION_H_
@@ -48,7 +48,5 @@ struct position {
 
 void putpiece(struct position *state, char c, U64 sq);
 void setpos(struct position *state, char *fenstr);
-
-int legal(U16 move);
 
 #endif /* POSITION_H_ */
