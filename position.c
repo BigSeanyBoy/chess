@@ -208,6 +208,69 @@ void setpos(struct position *state, char *fenstr) {
         }
 }
 
+void makecastle(enum square dest, struct position *state) {
+        int csource = NO_PIECE;
+        U64 csbb = 0;
+        int cdest = NO_PIECE;
+        U64 cdbb = 0;
+
+        switch(dest) {
+        case G1:
+                csource = H1;
+                csbb = 1ull << csource;
+                cdest = F1;
+                cdbb = 1ull << cdest;
+
+                state->rights ^= WHITE_OO;
+                assert((state->rights & WHITE_OO) == 0);
+                break;
+        case C1:
+                csource = A1;
+                csbb = 1ull << csource;
+                cdest = D1;
+                cdbb = 1ull << cdest;
+        
+                state->rights ^= WHITE_OOO;
+                assert((state->rights & WHITE_OOO) == 0);
+
+                state->piecelist[B1] = NO_PIECE;
+                break;
+        case G8:
+                csource = H8;
+                csbb = 1ull << csource;
+                cdest = F8;
+                cdbb = 1ull << cdest;
+
+                state->rights ^= BLACK_OO;
+                assert((state->rights & BLACK_OO) == 0);
+                break;
+        case C8:
+                csource = A8;
+                csbb = 1ull << csource;
+                cdest = D8;
+                cdbb = 1ull << cdest;
+
+                state->rights ^= BLACK_OOO;
+                assert((state->rights & BLACK_OOO) == 0);
+
+
+                state->piecelist[B8] = NO_PIECE;
+                break;
+        default:
+                break;
+        }
+
+        state->boards[ROOK] ^= csbb;
+        state->boards[state->side] ^= csbb;
+        state->boards[OCCUPIED] ^= csbb;
+        state->piecelist[csource] = NO_PIECE;
+
+        state->boards[ROOK] |= cdbb;
+        state->boards[state->side] |= cdbb;
+        state->boards[OCCUPIED] |= cdbb;
+        state->piecelist[cdest] = ROOK;
+}
+
 
 /*
  * Make Move
@@ -227,12 +290,12 @@ void make(U16 move, struct position *state) {
         enum square source = (move >> 6) & 63;
         assert(source < 64);
         U64 sourcebb = 1ull << source;
-        assert(sourcebb != NULL_SQ);
+        assert(sourcebb != 0);
 
         enum square dest = move & 63;
         assert(dest < 64);
         U64 destbb = 1ull << dest;
-        assert(destbb != NULL_SQ);
+        assert(destbb != 0);
 
         enum piece attacker = state->piecelist[source];
         enum piece target = state->piecelist[dest];
@@ -245,9 +308,9 @@ void make(U16 move, struct position *state) {
         state->boards[state->side] ^= sourcebb;
         state->boards[attacker] ^= sourcebb;
         state->boards[OCCUPIED] ^= sourcebb;
-        state->piecelist[source] = 0;
+        state->piecelist[source] = NO_PIECE;
 
-        if (move & PROMOTION) {
+        if ((move & MOVETYPE_MASK) == PROMOTION) {
                 attacker = ((move >> 12) & 3) + KNIGHT;
                 assert(attacker > 2 && attacker < 7);
         }
@@ -257,7 +320,7 @@ void make(U16 move, struct position *state) {
         state->boards[OCCUPIED] |= destbb;
         state->piecelist[dest] = attacker;
 
-        if (move & EN_PASSANT) {
+        if ((move & MOVETYPE_MASK) == EN_PASSANT) {
                 switch (state->side) {
                 case WHITE:
                         destbb = destbb >> 8;
@@ -279,45 +342,7 @@ void make(U16 move, struct position *state) {
                 state->boards[target] &= (~destbb);
         }
 
-        if (move & CASTLING) {
-                U64 csource = 0;
-                U64 cdest = 0;
-                switch(dest) {
-                case G1:
-                        csource = 1ull << H1;
-                        cdest = 1ull << F1;
-                        state->rights ^= WHITE_OO;
-                        assert((state->rights & WHITE_OO) == 0);
-                        break;
-                case C1:
-                        csource = 1ull << A1;
-                        cdest = 1ull << D1;
-                        state->rights ^= WHITE_OOO;
-                        assert((state->rights & WHITE_OOO) == 0);
-                        break;
-                case G8:
-                        csource = 1ull << H8;
-                        cdest = 1ull << F8;
-                        state->rights ^= BLACK_OO;
-                        assert((state->rights & BLACK_OO) == 0);
-                        break;
-                case C8:
-                        csource = 1ull << A8;
-                        cdest = 1ull << D8;
-                        state->rights ^= BLACK_OOO;
-                        assert((state->rights & BLACK_OOO) == 0);
-                        break;
-                default:
-                        break;
-                }
+        if ((move & MOVETYPE_MASK) == CASTLING) { makecastle(dest, state); }
 
-                state->boards[ROOK] ^= csource;
-                state->boards[state->side] ^= csource;
-                state->boards[OCCUPIED] ^= sourcebb;
-
-                state->boards[ROOK] |= cdest;
-                state->boards[state->side] |= cdest;
-                state->boards[OCCUPIED] |= destbb;
-        }
         state->boards[EMPTY] = ~(state->boards[OCCUPIED]);
 }

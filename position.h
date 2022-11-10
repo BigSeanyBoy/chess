@@ -58,6 +58,7 @@ struct position {
 void putpiece(struct position *state, char c, int sq, U64 sqbb);
 void setpos(struct position *state, char *fenstr);
 
+void makecastle(enum square dest, struct position *state);
 void make(U16 move, struct position *state);
 
 #endif /* POSITION_H_ */

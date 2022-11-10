@@ -37,6 +37,9 @@ typedef uint64_t U64;
 #define BLACK_OO_GAP WHITE_OO_GAP << 56
 #define BLACK_OOO_GAP WHITE_OOO_GAP << 56
 
+/* intersectin with move gives type of move */
+#define MOVETYPE_MASK (3ull << 14)
+
 #define min(A, B) ((A) < (B) ? (A) : (B))
 
 enum movetype {
