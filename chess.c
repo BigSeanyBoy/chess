@@ -7,11 +7,19 @@
 
 int main(int argc, char *argv[]) {
 	struct position state;
-	char *fenstr = "rnbqkbnr/ppp1pppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+	char *fenstr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	setpos(&state, fenstr);
 
-	U16 move = E3 | (D4 << 6) | EN_PASSANT;
-	make(move, &state);
+	U16 movelist[256] = {0};
+	gendriver(&state, movelist);
+
+	int i = 0;
+	while (movelist[i] != 0) {
+		++i;
+	}
+	printf("%d\n", i);
+
+	free(state.rays);
 
 	return 0;
 }

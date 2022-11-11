@@ -22,9 +22,9 @@ int bitscanreset(U64 *bb) {
  * DESCRIPTION:
  *      Append a move to the move list and increment the count.
  */
-void append(U16 move, U16 *movelist, int count) {
-        movelist[count] = move;
-        ++count;
+void append(U16 move, U16 *movelist, int *count) {
+        movelist[*count] = move;
+        ++(*count);
 }
 
 /*
@@ -35,7 +35,7 @@ void append(U16 move, U16 *movelist, int count) {
  *      This function should only be called with a valid en passant target
  *      square.
  */
-void enpassant(struct position *state, U16 *movelist, int count) {
+void enpassant(struct position *state, U16 *movelist, int *count) {
         enum square ept = state->eptarget;
         assert((ept >= A1) && (ept <= H8));
 
@@ -84,7 +84,7 @@ void enpassant(struct position *state, U16 *movelist, int count) {
  * DESCRIPTION:
  *      Add any possible castles to the move list.
  */
-void castling(struct position *state, U16 *movelist, int count) {
+void castling(struct position *state, U16 *movelist, int *count) {
         enum castling rights = state->rights;
         U64 occupied = state->boards[OCCUPIED];
         U64 empty = state->boards[EMPTY];
@@ -124,7 +124,7 @@ void castling(struct position *state, U16 *movelist, int count) {
  *      Generate all pawn moves in a given position. This includes pushes,
  *      captures, en passant, and promotions.
  */
-void pawngen(struct position *state, U16 *movelist, int count) {
+void pawngen(struct position *state, U16 *movelist, int *count) {
         U64 pawns = state->boards[PAWN];
         switch (state->side) {
         case WHITE:
@@ -169,7 +169,7 @@ void movegen(enum piece ptype,
             U64 (*targets)(enum square, struct position *),
             struct position *state,
             U16 *movelist,
-            int count) {
+            int *count) {
         U64 piecebb = state->boards[ptype];
         switch(state->side) {
         case WHITE:
@@ -199,16 +199,16 @@ void gendriver(struct position *state, U16 *movelist) {
         int count = 0;
 
         if (state->eptarget != NULL_SQ) {
-                enpassant(state, movelist, count);
+                enpassant(state, movelist, &count);
         }
         if (state->rights != NO_CASTLING && !incheck(state)) {
-                castling(state, movelist, count);
+                castling(state, movelist, &count);
         }
 
-        pawngen(state, movelist, count);
-        movegen(KNIGHT, &ntargets, state, movelist, count);
-        movegen(BISHOP, &btargets, state, movelist, count);
-        movegen(ROOK, &rtargets, state, movelist, count);
-        movegen(QUEEN, &qtargets, state, movelist, count);
-        movegen(KING, &ktargets, state, movelist, count);
+        pawngen(state, movelist, &count);
+        movegen(KNIGHT, &ntargets, state, movelist, &count);
+        movegen(BISHOP, &btargets, state, movelist, &count);
+        movegen(ROOK, &rtargets, state, movelist, &count);
+        movegen(QUEEN, &qtargets, state, movelist, &count);
+        movegen(KING, &ktargets, state, movelist, &count);
 }

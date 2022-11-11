@@ -14,16 +14,16 @@
 #include "position.h"
 
 int bitscanreset(U64 *bb);
-void append(U16 move, U16 *movelist, int count);
+void append(U16 move, U16 *movelist, int *count);
 
-void enpassant(struct position *state, U16 *movelist, int count);
-void castling(struct position *state, U16 *movelist, int count);
-void pawngen(struct position *state, U16 *movelist, int count);
+void enpassant(struct position *state, U16 *movelist, int *count);
+void castling(struct position *state, U16 *movelist, int *count);
+void pawngen(struct position *state, U16 *movelist, int *count);
 void movegen(enum piece ptype,
             U64 (*targets)(enum square, struct position *),
             struct position *state,
             U16 *movelist,
-            int count);
+            int *count);
 
 
 void gendriver(struct position *state, U16 *movelist);
