@@ -26,6 +26,6 @@ void movegen(enum piece ptype,
             int *count);
 
 
-void gendriver(struct position *state, U16 *movelist);
+int gendriver(struct position *state, U16 *movelist);
 
 #endif /* MOVEGEN_H_ */

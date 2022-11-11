@@ -11,13 +11,7 @@ int main(int argc, char *argv[]) {
 	setpos(&state, fenstr);
 
 	U16 movelist[256] = {0};
-	gendriver(&state, movelist);
-
-	int i = 0;
-	while (movelist[i] != 0) {
-		++i;
-	}
-	printf("%d\n", i);
+	printf("%d\n", gendriver(&state, movelist));
 
 	free(state.rays);
 

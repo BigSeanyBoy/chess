@@ -195,7 +195,7 @@ void movegen(enum piece ptype,
         }
 }
 
-void gendriver(struct position *state, U16 *movelist) {
+int gendriver(struct position *state, U16 *movelist) {
         int count = 0;
 
         if (state->eptarget != NULL_SQ) {
@@ -204,11 +204,12 @@ void gendriver(struct position *state, U16 *movelist) {
         if (state->rights != NO_CASTLING && !incheck(state)) {
                 castling(state, movelist, &count);
         }
-
         pawngen(state, movelist, &count);
         movegen(KNIGHT, &ntargets, state, movelist, &count);
         movegen(BISHOP, &btargets, state, movelist, &count);
         movegen(ROOK, &rtargets, state, movelist, &count);
         movegen(QUEEN, &qtargets, state, movelist, &count);
         movegen(KING, &ktargets, state, movelist, &count);
+
+        return count;
 }
