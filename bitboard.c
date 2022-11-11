@@ -126,50 +126,50 @@ U64 btargets(enum square sq, struct position *state) {
 	U64 blockers;
 	U64 targets = 0;
 
-	attack = state->rays.northeast[sq];
+	attack = state->rays->northeast[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = __builtin_ctzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq -= 9; }
-		attack ^= state->rays.northeast[bsq];
+		attack ^= state->rays->northeast[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;
 
-	attack = state->rays.southeast[sq];
+	attack = state->rays->southeast[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = 63 - __builtin_clzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq += 7; }
-		attack ^= state->rays.southeast[bsq];
+		attack ^= state->rays->southeast[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;
 
-	attack = state->rays.southwest[sq];
+	attack = state->rays->southwest[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = 63 - __builtin_clzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq += 9; }
-		attack ^= state->rays.southwest[bsq];
+		attack ^= state->rays->southwest[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;
 
-	attack = state->rays.northwest[sq];
+	attack = state->rays->northwest[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = __builtin_ctzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq -= 7; }
-		attack ^= state->rays.northwest[bsq];
+		attack ^= state->rays->northwest[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;
@@ -192,50 +192,50 @@ U64 rtargets(enum square sq, struct position *state) {
 	U64 blockers;
 	U64 targets = 0;
 
-	attack = state->rays.north[sq];
+	attack = state->rays->north[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = __builtin_ctzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq -= 8; }
-		attack ^= state->rays.north[bsq];
+		attack ^= state->rays->north[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;
 
-	attack = state->rays.east[sq];
+	attack = state->rays->east[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = __builtin_ctzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq -= 1; }
-		attack ^= state->rays.east[bsq];
+		attack ^= state->rays->east[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;
 
-	attack = state->rays.south[sq];
+	attack = state->rays->south[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = 63 - __builtin_clzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq += 8; }
-		attack ^= state->rays.south[bsq];
+		attack ^= state->rays->south[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;
 
-	attack = state->rays.west[sq];
+	attack = state->rays->west[sq];
 	blockers = attack & occupied;
 	if(blockers) {
 		int bsq = 63 - __builtin_clzll(blockers);
 		blockers = 1ull << bsq;
 		assert((blockers & occupied) != 0);
 		if (blockers & (occupied ^ enemies)) { bsq += 1; }
-		attack ^= state->rays.west[bsq];
+		attack ^= state->rays->west[bsq];
 		assert((attack & (occupied ^ enemies)) == 0);
 	}
 	targets |= attack;

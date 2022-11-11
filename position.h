@@ -9,6 +9,7 @@
 #define POSITION_H_
 
 #include <assert.h>
+#include <stdlib.h>
 
 #include "types.h"
 
@@ -32,20 +33,8 @@ struct raylookup {
 void edgedist(int edgedist[], int sq);
 void initrays(struct raylookup *rays);
 
-struct gamelist {
-	U16 list[1024];
-	int idx;
-};
-
-struct movelist {
-	U16 list[256];
-	int count;
-};
-
 struct position {
-	struct raylookup rays;
-	struct gamelist history;
-	struct movelist moves;
+	struct raylookup *rays;
 	enum piece piecelist[64];
 	U64 boards[10];
 	enum color side;

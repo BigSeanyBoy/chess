@@ -120,13 +120,10 @@ void putpiece(struct position *state, char c, int sq, U64 sqbb) {
  *      Initialize a position described by the provided FEN string.
  */
 void setpos(struct position *state, char *fenstr) {
-        initrays(&(state->rays));
-
-        state->history.idx = 0;
-        for (int i = 0; i < 1024; ++i) { (state->history.list)[i] = 0; }
-
-        state->moves.count = 0;
-        for (int i = 0; i < 256; ++i) { (state->moves.list)[i] = 0; }
+        struct raylookup *rays; 
+        rays = (struct raylookup *)malloc(sizeof(struct raylookup));
+        initrays(rays);
+        state->rays = rays;
 
         for (int i = 0; i < 64; ++i) { state->piecelist[i] = NO_PIECE; }
 
@@ -311,10 +308,6 @@ void makecastle(enum square dest, struct position *state) {
  *      and recording castling rights and en passant targets.
  */
 void make(U16 move, struct position *state) {
-        assert(state->history.idx < 1024);
-        state->history.list[state->history.idx] = move;
-        ++state->history.idx;
-
         if (state->side == BLACK) { ++(state->plynb); }
 
         enum square source = (move >> 6) & 63;
