@@ -364,3 +364,29 @@ void make(U16 move, struct position *state) {
 
         state->boards[EMPTY] = ~(state->boards[OCCUPIED]);
 }
+
+/*
+ * Copy
+ *
+ * DESCRIPTION:
+ *      Deep copy positional information from one state to another. The
+ *      raylookup is copied as a pointer since there is no need to recompute
+ *      the rays.
+ */
+void copy(struct position *state, struct position *copy) {
+        copy->rays = state->rays;
+        
+        for (int i = 0; i < 64; ++i) {
+                copy->piecelist[i] = state->piecelist[i];
+        }
+
+        for (int i = 0; i < 10; ++i) {
+                copy->boards[i] = state->boards[i];
+        }
+
+        copy->side = state->side;
+        copy->rights = state->rights;
+        copy->eptarget = state->eptarget;
+        copy->rule50 = state->rule50;
+        copy->plynb = state->plynb;
+}

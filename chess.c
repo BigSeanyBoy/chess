@@ -13,6 +13,9 @@ int main(int argc, char *argv[]) {
 	U16 movelist[256] = {0};
 	printf("%d\n", gendriver(&state, movelist));
 
+	struct position cstate;
+	copy(&state, &cstate);
+
 	free(state.rays);
 
 	return 0;

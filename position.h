@@ -51,4 +51,6 @@ void makeep(enum square dest, struct position *state);
 void makecastle(enum square dest, struct position *state);
 void make(U16 move, struct position *state);
 
+void copy(struct position *state, struct position *copy);
+
 #endif /* POSITION_H_ */
