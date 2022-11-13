@@ -329,9 +329,12 @@ void make(U16 move, struct position *state) {
                 state->rule50 = 0;
         }
 
-        if (attacker == PAWN && abs(source - dest) > 15) {
-                state->eptarget = mid(source, dest);
-                assert(state->eptarget != NULL_SQ);
+        if (attacker == PAWN) {
+                int dist = source - dest;
+                if (abs(dist) == 16) {
+                        state->eptarget = mid(source, dest);
+                        assert(state->eptarget != NULL_SQ);
+                }
         }
 
         state->boards[state->side] ^= sourcebb;

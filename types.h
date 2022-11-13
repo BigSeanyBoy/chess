@@ -60,9 +60,9 @@ enum color {
 enum castling {
 	NO_CASTLING,
 	WHITE_OO,
-	WHITE_OOO,
-	BLACK_OO,
-	BLACK_OOO
+	WHITE_OOO = WHITE_OO << 1,
+	BLACK_OO = WHITE_OO << 2,
+	BLACK_OOO = WHITE_OO << 3
 };
 
 enum piece {
