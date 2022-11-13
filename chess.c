@@ -8,8 +8,8 @@
 U64 perft(struct position *state, int depth) {
 	U16 movelist[256];
 
-	if (depth == 0 && !incheck(state)) {
-		return 1ull;
+	if (depth == 0) {
+		return incheck(state) ? 0ull : 1ull;
 	}
 
 	int count = gendriver(state, movelist);
@@ -18,10 +18,7 @@ U64 perft(struct position *state, int depth) {
 	for (int i = 0; i < count; ++i) {
 		copy(state, &statecopy);
 		make(movelist[i], &statecopy);
-		U64 enemybb = statecopy.boards[flip(statecopy.side)];
-		if ((statecopy.boards[KING] & enemybb) == 0) {
-			return 0ull;
-		}
+		if (incheck(&statecopy)) { continue; }
 		nodes += perft(&statecopy, depth - 1);
 	}
 	
@@ -30,10 +27,10 @@ U64 perft(struct position *state, int depth) {
 
 int main(int argc, char *argv[]) {
 	struct position state;
-	char *fenstr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	char *fenstr = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
 	setpos(&state, fenstr);
 
-	printf("%llu\n", perft(&state, 3));
+	printf("%llu\n", perft(&state, 1));
 
 	free(state.rays);
 

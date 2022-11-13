@@ -363,6 +363,7 @@ void make(U16 move, struct position *state) {
         }
 
         state->boards[EMPTY] = ~(state->boards[OCCUPIED]);
+        state->side = flip(state->side);
 }
 
 /*
