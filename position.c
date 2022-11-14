@@ -179,10 +179,10 @@ void setpos(struct position *state, char *fenstr) {
         assert(*fenstr != ' ');
         if (*fenstr != '-') {
                 assert(*fenstr >= 'a' && *fenstr <= 'z');
-                rank = *fenstr - 'a';
+                file = *fenstr - 'a';
                 ++fenstr;
                 assert(*fenstr >= '1' && *fenstr <= '9');
-                file = *fenstr - '1';
+                rank = *fenstr - '1';
                 state->eptarget = (8 * rank) + file;
         }
         fenstr += 2;
@@ -224,7 +224,7 @@ void makeep(enum square dest, struct position *state) {
                 break;
         }
         assert(destbb);
-        assert(dest >=0 && dest < 64);
+        assert(dest >= 0 && dest < 64);
 
         state->boards[flip(state->side)] ^= destbb;
         state->boards[PAWN] ^= destbb;
@@ -251,8 +251,8 @@ void makecastle(enum square dest, struct position *state) {
                 cdest = F1;
                 cdbb = 1ull << cdest;
 
-                state->rights ^= WHITE_OO;
-                assert((state->rights & WHITE_OO) == 0);
+                state->rights &= ~WHITE_CASTLE;
+                assert((state->rights & WHITE_CASTLE) == 0);
                 break;
         case C1:
                 csource = A1;
@@ -260,8 +260,8 @@ void makecastle(enum square dest, struct position *state) {
                 cdest = D1;
                 cdbb = 1ull << cdest;
         
-                state->rights ^= WHITE_OOO;
-                assert((state->rights & WHITE_OOO) == 0);
+                state->rights &= ~WHITE_CASTLE;
+                assert((state->rights & WHITE_CASTLE) == 0);
                 break;
         case G8:
                 csource = H8;
@@ -269,8 +269,8 @@ void makecastle(enum square dest, struct position *state) {
                 cdest = F8;
                 cdbb = 1ull << cdest;
 
-                state->rights ^= BLACK_OO;
-                assert((state->rights & BLACK_OO) == 0);
+                state->rights &= ~BLACK_CASTLE;
+                assert((state->rights & BLACK_CASTLE) == 0);
                 break;
         case C8:
                 csource = A8;
@@ -278,8 +278,8 @@ void makecastle(enum square dest, struct position *state) {
                 cdest = D8;
                 cdbb = 1ull << cdest;
 
-                state->rights ^= BLACK_OOO;
-                assert((state->rights & BLACK_OOO) == 0);
+                state->rights &= ~BLACK_CASTLE;
+                assert((state->rights & BLACK_CASTLE) == 0);
                 break;
         default:
                 break;
@@ -322,6 +322,7 @@ void make(U16 move, struct position *state) {
 
         enum piece attacker = state->piecelist[source];
         enum piece target = state->piecelist[dest];
+        assert(attacker != NO_PIECE);
 
         if (attacker != PAWN && target == NO_PIECE) {
                 ++(state->rule50);
@@ -329,6 +330,60 @@ void make(U16 move, struct position *state) {
                 state->rule50 = 0;
         }
 
+        if (attacker == KING) {
+                switch (state->side) {
+                case WHITE:
+                        state->rights &= ~WHITE_CASTLE;
+                        break;
+                case BLACK:
+                        state->rights &= ~BLACK_CASTLE;
+                        break;
+                }
+        }
+
+        if (attacker == ROOK) {
+                switch (state->side) {
+                case WHITE:
+                        if (source == H1) {
+                                state->rights &= ~WHITE_OO;
+                        }
+                        if (source == A1) {
+                                state->rights &= ~WHITE_OOO;
+                        }
+                        break;
+                case BLACK:
+                        if (source == H8) {
+                                state->rights &= ~BLACK_OO;
+                        }
+                        if (source == A8) {
+                                state->rights &= ~BLACK_OOO;
+                        }
+                        break;
+                }
+        }
+
+        if (target == ROOK) {
+                switch (state->side) {
+                case BLACK:
+                        if (dest == H1) {
+                                state->rights &= ~WHITE_OO;
+                        }
+                        if (dest == A1) {
+                                state->rights &= ~WHITE_OOO;
+                        }
+                        break;
+                case WHITE:
+                        if (dest == H8) {
+                                state->rights &= ~BLACK_OO;
+                        }
+                        if (dest == A8) {
+                                state->rights &= ~BLACK_OOO;
+                        }
+                        break;
+                }
+        }
+
+        state->eptarget = NULL_SQ;
         if (attacker == PAWN) {
                 int dist = source - dest;
                 if (abs(dist) == 16) {
@@ -342,8 +397,10 @@ void make(U16 move, struct position *state) {
         state->boards[OCCUPIED] ^= sourcebb;
         state->piecelist[source] = NO_PIECE;
 
+        int promo = 0;
         if ((move & MOVETYPE_MASK) == PROMOTION) {
-                attacker = (move & PROMO_MASK) + KNIGHT;
+                promo = 1;
+                attacker = ((move >> 12) & 3ull) + KNIGHT;
                 assert(attacker > PAWN && attacker < KING);
         }
 
@@ -358,7 +415,9 @@ void make(U16 move, struct position *state) {
 
         if (target != NO_PIECE) {
                 state->boards[flip(state->side)] &= (~destbb);
-                state->boards[target] &= (~destbb);
+                if (attacker != target) {
+                        state->boards[target] &= (~destbb);
+                }
         }
 
         if ((move & MOVETYPE_MASK) == CASTLING) {
@@ -366,7 +425,6 @@ void make(U16 move, struct position *state) {
         }
 
         state->boards[EMPTY] = ~(state->boards[OCCUPIED]);
-        state->side = flip(state->side);
 }
 
 /*

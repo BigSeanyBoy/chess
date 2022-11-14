@@ -40,9 +40,6 @@ typedef uint64_t U64;
 /* intersection with move gives type of move */
 #define MOVETYPE_MASK (3ull << 14)
 
-/* intersection with move gives promotion piece type */
-#define PROMO_MASK (3ull << 12)
-
 #define min(A, B) ((A) < (B) ? (A) : (B))
 
 enum movetype {
@@ -62,7 +59,10 @@ enum castling {
 	WHITE_OO,
 	WHITE_OOO = WHITE_OO << 1,
 	BLACK_OO = WHITE_OO << 2,
-	BLACK_OOO = WHITE_OO << 3
+	BLACK_OOO = WHITE_OO << 3,
+
+	WHITE_CASTLE = WHITE_OO | WHITE_OOO,
+	BLACK_CASTLE = BLACK_OO | BLACK_OOO
 };
 
 enum piece {

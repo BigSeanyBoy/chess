@@ -41,7 +41,6 @@ void enpassant(struct position *state, U16 *movelist, int *count) {
 
         U64 pawns = state->boards[PAWN];
         U64 eptbb = 1ull << ept;
-        U16 move = ept | EN_PASSANT;
         int source;
 
         switch (state->side) {
@@ -50,28 +49,28 @@ void enpassant(struct position *state, U16 *movelist, int *count) {
                 if (southeast(eptbb) & pawns) {
                         source = ept - 7;
                         assert(pawns & (1ull << source));
-                        move |= (source << 6);
+                        U16 move = ept | (source << 6) | EN_PASSANT;
                         append(move, movelist, count);
                 }
                 if (southwest(eptbb) & pawns) {
                         source = ept - 9;
                         assert(pawns & (1ull << source));
-                        move |= (source << 6);
+                        U16 move = ept | (source << 6) | EN_PASSANT;
                         append(move, movelist, count);
                 }
                 break;
         case BLACK:
                 pawns &= state->boards[BLACK];
-                if (northwest(eptbb) & pawns) {
+                if (northeast(eptbb) & pawns) {
                         source = ept + 9;
                         assert(pawns & (1ull << source));
-                        move |= (source << 6);
+                        U16 move = ept | (source << 6) | EN_PASSANT;
                         append(move, movelist, count);
                 }
-                if (northeast(eptbb) & pawns) {
+                if (northwest(eptbb) & pawns) {
                         source = ept + 7;
                         assert(pawns & (1ull << source));
-                        move |= (source << 6);
+                        U16 move = ept | (source << 6) | EN_PASSANT;
                         append(move, movelist, count);
                 }
                 break;
@@ -94,24 +93,32 @@ void castling(struct position *state, U16 *movelist, int *count) {
                 if (rights & WHITE_OO && (occupied & WHITE_OO_GAP) == 0) {
                         assert((empty & WHITE_OO_GAP) == 0x60ull);
                         U16 move = G1 | (E1 << 6) | CASTLING;
-                        append(move, movelist, count);
+                        if (!incheck(F1, state) && !incheck(G1, state)) {
+                                append(move, movelist, count);
+                        }
                 }
                 if (rights & WHITE_OOO && (occupied & WHITE_OOO_GAP) == 0) {
                         assert((empty & WHITE_OOO_GAP) == 0xeull);
                         U16 move = C1 | (E1 << 6) | CASTLING;
-                        append(move, movelist, count);
+                        if (!incheck(C1, state) && !incheck(D1, state)) {
+                                append(move, movelist, count);
+                        }
                 }
                 break;
         case BLACK:
                 if (rights & BLACK_OO && (occupied & BLACK_OO_GAP) == 0) {
                         assert((empty & BLACK_OO_GAP) == (0x60ull << 56));
                         U16 move = G8 | (E8 << 6) | CASTLING;
-                        append(move, movelist, count);
+                        if (!incheck(F8, state) && !incheck(G8, state)) {
+                                append(move, movelist, count);
+                        }
                 }
                 if (rights & BLACK_OOO && (occupied & BLACK_OOO_GAP) == 0) {
                         assert((empty & BLACK_OOO_GAP) == (0xeull << 56));
                         U16 move = C8 | (E8 << 6) | CASTLING;
-                        append(move, movelist, count);
+                        if (!incheck(C8, state) && !incheck(D8, state)) {
+                                append(move, movelist, count);
+                        }
                 }
                 break;
         }
@@ -201,7 +208,7 @@ int gendriver(struct position *state, U16 *movelist) {
         if (state->eptarget != NULL_SQ) {
                 enpassant(state, movelist, &count);
         }
-        if (state->rights != NO_CASTLING && !incheck(state)) {
+        if (state->rights != NO_CASTLING && !incheck(NULL_SQ, state)) {
                 castling(state, movelist, &count);
         }
         pawngen(state, movelist, &count);
