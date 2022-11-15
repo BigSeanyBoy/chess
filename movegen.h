@@ -28,4 +28,6 @@ void movegen(enum piece ptype,
 
 int gendriver(struct position *state, U16 *movelist);
 
+U64 perft(struct position *state, int depth);
+
 #endif /* MOVEGEN_H_ */

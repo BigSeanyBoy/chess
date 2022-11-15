@@ -220,3 +220,25 @@ int gendriver(struct position *state, U16 *movelist) {
 
         return count;
 }
+
+U64 perft(struct position *state, int depth) {
+	U16 movelist[256];
+
+	if (depth == 0) {
+		return 1ull;
+	}
+
+	int count = gendriver(state, movelist);
+	struct position statecopy;
+	U64 nodes = 0;
+	for (int i = 0; i < count; ++i) {
+		copy(state, &statecopy);
+		make(movelist[i], &statecopy);
+		if (!incheck(NULL_SQ, &statecopy)) {
+			statecopy.side = flip(statecopy.side);
+			nodes += perft(&statecopy, depth - 1);
+		}
+	}
+	
+	return nodes;
+}
