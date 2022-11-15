@@ -202,6 +202,13 @@ void movegen(enum piece ptype,
         }
 }
 
+/*
+ * Move Generation Driver
+ *
+ * DESCRIPTION:
+ *      Calls all relevant move generation functions to add all pseudo-legal
+ *      moves to the movelist, then returns the count.
+ */
 int gendriver(struct position *state, U16 *movelist) {
         int count = 0;
 
@@ -221,6 +228,14 @@ int gendriver(struct position *state, U16 *movelist) {
         return count;
 }
 
+/*
+ * Peft
+ *
+ * DESCRIPTION:
+ *      Test move generation by generating all moves to a specified depth and
+ *      counting the leaf nodes. If the leaf nodes match a known perft value,
+ *      the move generation for that position is correct.
+ */
 U64 perft(struct position *state, int depth) {
 	U16 movelist[256];
 

@@ -206,6 +206,38 @@ void setpos(struct position *state, char *fenstr) {
 }
 
 /*
+ * Update Castling Rights
+ *
+ * DESCRIPTION:
+ *      Remove castling rights based on whether a king or rook moves from it's
+ *      initial position, or if a rook is captured from it's initial position.
+ */
+void updatecastle(struct position *state, enum square sq) {
+        switch (sq) {
+        case H1:
+                state->rights &= ~WHITE_OO;
+                break;
+        case E1:
+                state->rights &= ~WHITE_CASTLE;
+                break;
+        case A1:
+                state->rights &= ~WHITE_OOO;
+                break;
+        case H8:
+                state->rights &= ~BLACK_OO;
+                break;
+        case E8:
+                state->rights &= ~BLACK_CASTLE;
+                break;
+        case A8:
+                state->rights &= ~BLACK_OOO;
+                break;
+        default:
+                break;
+        }
+}
+
+/*
  * Make En Passant
  *
  * DESCRIPTION:
@@ -330,57 +362,10 @@ void make(U16 move, struct position *state) {
                 state->rule50 = 0;
         }
 
-        if (attacker == KING) {
-                switch (state->side) {
-                case WHITE:
-                        state->rights &= ~WHITE_CASTLE;
-                        break;
-                case BLACK:
-                        state->rights &= ~BLACK_CASTLE;
-                        break;
-                }
-        }
-
-        if (attacker == ROOK) {
-                switch (state->side) {
-                case WHITE:
-                        if (source == H1) {
-                                state->rights &= ~WHITE_OO;
-                        }
-                        if (source == A1) {
-                                state->rights &= ~WHITE_OOO;
-                        }
-                        break;
-                case BLACK:
-                        if (source == H8) {
-                                state->rights &= ~BLACK_OO;
-                        }
-                        if (source == A8) {
-                                state->rights &= ~BLACK_OOO;
-                        }
-                        break;
-                }
-        }
-
-        if (target == ROOK) {
-                switch (state->side) {
-                case BLACK:
-                        if (dest == H1) {
-                                state->rights &= ~WHITE_OO;
-                        }
-                        if (dest == A1) {
-                                state->rights &= ~WHITE_OOO;
-                        }
-                        break;
-                case WHITE:
-                        if (dest == H8) {
-                                state->rights &= ~BLACK_OO;
-                        }
-                        if (dest == A8) {
-                                state->rights &= ~BLACK_OOO;
-                        }
-                        break;
-                }
+        if (state->rights != NO_CASTLING) {
+                if (attacker == KING) { updatecastle(state, source); }
+                if (attacker == ROOK) { updatecastle(state, source); }
+                if (target == ROOK) { updatecastle(state, dest); }
         }
 
         state->eptarget = NULL_SQ;
