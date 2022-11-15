@@ -93,14 +93,14 @@ void castling(struct position *state, U16 *movelist, int *count) {
                 if (rights & WHITE_OO && (occupied & WHITE_OO_GAP) == 0) {
                         assert((empty & WHITE_OO_GAP) == 0x60ull);
                         U16 move = G1 | (E1 << 6) | CASTLING;
-                        if (!incheck(F1, state) && !incheck(G1, state)) {
+                        if (!incheck(state, F1) && !incheck(state, G1)) {
                                 append(move, movelist, count);
                         }
                 }
                 if (rights & WHITE_OOO && (occupied & WHITE_OOO_GAP) == 0) {
                         assert((empty & WHITE_OOO_GAP) == 0xeull);
                         U16 move = C1 | (E1 << 6) | CASTLING;
-                        if (!incheck(C1, state) && !incheck(D1, state)) {
+                        if (!incheck(state, C1) && !incheck(state, D1)) {
                                 append(move, movelist, count);
                         }
                 }
@@ -109,14 +109,14 @@ void castling(struct position *state, U16 *movelist, int *count) {
                 if (rights & BLACK_OO && (occupied & BLACK_OO_GAP) == 0) {
                         assert((empty & BLACK_OO_GAP) == (0x60ull << 56));
                         U16 move = G8 | (E8 << 6) | CASTLING;
-                        if (!incheck(F8, state) && !incheck(G8, state)) {
+                        if (!incheck(state, F8) && !incheck(state, G8)) {
                                 append(move, movelist, count);
                         }
                 }
                 if (rights & BLACK_OOO && (occupied & BLACK_OOO_GAP) == 0) {
                         assert((empty & BLACK_OOO_GAP) == (0xeull << 56));
                         U16 move = C8 | (E8 << 6) | CASTLING;
-                        if (!incheck(C8, state) && !incheck(D8, state)) {
+                        if (!incheck(state, C8) && !incheck(state, D8)) {
                                 append(move, movelist, count);
                         }
                 }
@@ -208,7 +208,7 @@ int gendriver(struct position *state, U16 *movelist) {
         if (state->eptarget != NULL_SQ) {
                 enpassant(state, movelist, &count);
         }
-        if (state->rights != NO_CASTLING && !incheck(NULL_SQ, state)) {
+        if (state->rights != NO_CASTLING && !incheck(state, NULL_SQ)) {
                 castling(state, movelist, &count);
         }
         pawngen(state, movelist, &count);
@@ -234,7 +234,7 @@ U64 perft(struct position *state, int depth) {
 	for (int i = 0; i < count; ++i) {
 		copy(state, &statecopy);
 		make(movelist[i], &statecopy);
-		if (!incheck(NULL_SQ, &statecopy)) {
+		if (!incheck(&statecopy, NULL_SQ)) {
 			statecopy.side = flip(statecopy.side);
 			nodes += perft(&statecopy, depth - 1);
 		}

@@ -285,41 +285,37 @@ U64 ktargets(enum square sq, struct position *state) {
  * DESCRIPTION:
  * 	Test if the current side's king is in check.
  */
-int incheck(enum square kingsq, struct position *state) {
+int incheck(struct position *state, enum square checksq) {
 	U64 king;
-	if (kingsq == NULL_SQ) {
+	if (checksq == NULL_SQ) {
 		king = state->boards[KING] & state->boards[state->side];
-		kingsq = __builtin_ctzll(king);
+		checksq = __builtin_ctzll(king);
 	} else {
-		king = 1ull << kingsq;
+		king = 1ull << checksq;
 	}
 	assert(king != 0);
         U64 enemies = state->boards[flip(state->side)];
 	assert((king & enemies) == 0);
 
-        U64 brays = btargets(kingsq, state);
-        U64 rrays = rtargets(kingsq, state);
+	U64 penemy = state->boards[PAWN] & enemies;
+	U64 nenemy = state->boards[KNIGHT] & enemies;
+	U64 benemy = state->boards[BISHOP] & enemies;
+	U64 renemy = state->boards[ROOK] & enemies;
+	U64 qenemy = state->boards[QUEEN] & enemies;
 
-        if (brays & (state->boards[BISHOP] & enemies) ||
-            rrays & (state->boards[ROOK] & enemies) ||
-            (brays | rrays) & (state->boards[QUEEN] & enemies) ||
-            ntargets(kingsq, state) & (state->boards[KNIGHT] & enemies)) {
-                return 1;
-        }
+	U64 pcheck = pattack(king, penemy, state->side);
+	U64 ncheck = ntargets(checksq, state);
+        U64 bcheck = btargets(checksq, state);
+        U64 rcheck = rtargets(checksq, state);
+	U64 qcheck = bcheck | rcheck;
 
-
-	U64 enemypawns = enemies & state->boards[PAWN];
-	switch (state->side) {
-	case WHITE:
-		if ((northeast(king) | northwest(king)) & enemypawns) {
-			return 1;
-		}
-		break;
-	case BLACK:
-		if ((southeast(king) | southwest(king)) & enemypawns) {
-			return 1;
-		}
-		break;
+        if ((pcheck & penemy) ||
+	    (ncheck & nenemy) ||
+	    (bcheck & benemy) ||
+	    (rcheck & renemy) ||
+	    (qcheck & qenemy)) {
+		return 1;
 	}
+
         return 0;
 }
