@@ -339,7 +339,7 @@ void makecastle(enum square dest, struct position *state) {
  *      incrementing the halfmove clock (if necessary) and the move count,
  *      and recording castling rights and en passant targets.
  */
-void make(U16 move, struct position *state) {
+int make(U16 move, struct position *state) {
         if (state->side == BLACK) { ++(state->plynb); }
 
         enum square source = (move >> 6) & 63;
@@ -410,6 +410,52 @@ void make(U16 move, struct position *state) {
         }
 
         state->boards[EMPTY] = ~(state->boards[OCCUPIED]);
+
+        if (incheck(state, NULL_SQ)) { return 0; }
+
+        state->side = flip(state->side);
+        return 1;
+}
+
+/*
+ * In Check
+ *
+ * DESCRIPTION:
+ * 	Test if the current side's king is in check.
+ */
+int incheck(struct position *state, enum square checksq) {
+	U64 king;
+	if (checksq == NULL_SQ) {
+		king = state->boards[KING] & state->boards[state->side];
+		checksq = __builtin_ctzll(king);
+	} else {
+		king = 1ull << checksq;
+	}
+	assert(king != 0);
+        U64 enemies = state->boards[flip(state->side)];
+	assert((king & enemies) == 0);
+
+	U64 penemy = state->boards[PAWN] & enemies;
+	U64 nenemy = state->boards[KNIGHT] & enemies;
+	U64 benemy = state->boards[BISHOP] & enemies;
+	U64 renemy = state->boards[ROOK] & enemies;
+	U64 qenemy = state->boards[QUEEN] & enemies;
+
+	U64 pcheck = pattack(king, penemy, state->side);
+	U64 ncheck = ntargets(checksq, state);
+        U64 bcheck = btargets(checksq, state);
+        U64 rcheck = rtargets(checksq, state);
+	U64 qcheck = bcheck | rcheck;
+
+        if ((pcheck & penemy) ||
+	    (ncheck & nenemy) ||
+	    (bcheck & benemy) ||
+	    (rcheck & renemy) ||
+	    (qcheck & qenemy)) {
+		return 1;
+	}
+
+        return 0;
 }
 
 /*

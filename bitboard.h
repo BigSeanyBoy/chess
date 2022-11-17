@@ -13,7 +13,6 @@
 #include <assert.h>
 
 #include "types.h"
-#include "position.h"
 
 /* cardinal bitboard shifts */
 #define north(BB) (BB << 8)
@@ -37,7 +36,5 @@ U64 btargets(enum square sq, struct position *state);
 U64 rtargets(enum square sq, struct position *state);
 U64 qtargets(enum square sq, struct position *state);
 U64 ktargets(enum square sq, struct position *state);
-
-int incheck(struct position *state, enum square checksq);
 
 #endif /* BITBOARD_H_ */

@@ -248,9 +248,7 @@ U64 perft(struct position *state, int depth) {
 	U64 nodes = 0;
 	for (int i = 0; i < count; ++i) {
 		copy(state, &statecopy);
-		make(movelist[i], &statecopy);
-		if (!incheck(&statecopy, NULL_SQ)) {
-			statecopy.side = flip(statecopy.side);
+		if (make(movelist[i], &statecopy)) {
 			nodes += perft(&statecopy, depth - 1);
 		}
 	}

@@ -41,6 +41,7 @@ typedef uint64_t U64;
 #define MOVETYPE_MASK (3ull << 14)
 
 #define min(A, B) ((A) < (B) ? (A) : (B))
+#define flip(S) ((S) == WHITE ? BLACK : WHITE)
 
 enum movetype {
 	NORMAL,
@@ -89,6 +90,29 @@ enum square {
 	A8, B8, C8, D8, E8, F8, G8, H8,
 
 	NULL_SQ
+};
+
+struct raylookup {
+	U64 north[64];
+	U64 east[64];
+	U64 south[64];
+	U64 west[64];
+
+	U64 northeast[64];
+	U64 southeast[64];
+	U64 southwest[64];
+	U64 northwest[64];
+};
+
+struct position {
+	struct raylookup *rays;
+	enum piece piecelist[64];
+	U64 boards[10];
+	enum color side;
+	enum castling rights;
+	enum square eptarget;
+	int rule50;
+	int plynb;
 };
 
 #endif /* TYPES_H_ */
