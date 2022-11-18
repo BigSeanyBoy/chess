@@ -9,6 +9,7 @@
 #define POSITION_H_
 
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "types.h"
@@ -20,9 +21,12 @@
 
 void edgedist(int edgedist[], int sq);
 void initrays(struct raylookup *rays);
+void initpos(struct position *state);
+void freepos(struct position *state);
 
 void putpiece(struct position *state, char c, int sq, U64 sqbb);
 void setpos(struct position *state, char *fenstr);
+void printpos(struct position *state);
 
 void updatecastle(struct position *state, enum square sq);
 void makeep(enum square dest, struct position *state);

@@ -70,6 +70,30 @@ void initrays(struct raylookup *rays) {
 }
 
 /*
+ * Inititalize Position
+ *
+ * DESCRIPTION:
+ *      Initialize any position struct members that are not reset or updated
+ *      with a new board position.
+ */
+void initpos(struct position *state) {
+        struct raylookup *rays; 
+        rays = (struct raylookup *)malloc(sizeof(struct raylookup));
+        initrays(rays);
+        state->rays = rays;
+}
+
+/*
+ * Free Position
+ *
+ * DESCRIPTION:
+ *      Free any manually allocated position struct members.
+ */
+void freepos(struct position *state) {
+        free(state->rays);
+}
+
+/*
  * Put Piece
  *
  * DESCRIPTION:
@@ -120,11 +144,6 @@ void putpiece(struct position *state, char c, int sq, U64 sqbb) {
  *      Initialize a position described by the provided FEN string.
  */
 void setpos(struct position *state, char *fenstr) {
-        struct raylookup *rays; 
-        rays = (struct raylookup *)malloc(sizeof(struct raylookup));
-        initrays(rays);
-        state->rays = rays;
-
         for (int i = 0; i < 64; ++i) { state->piecelist[i] = NO_PIECE; }
 
         int rank = 7;
@@ -185,10 +204,13 @@ void setpos(struct position *state, char *fenstr) {
                 rank = *fenstr - '1';
                 state->eptarget = (8 * rank) + file;
         }
-        fenstr += 2;
+        while (*fenstr != ' ' && *fenstr != '\n') { ++fenstr; }
 
         state->rule50 = 0;
-        assert(*fenstr != ' ');
+        state->plynb = 0;
+
+        if (*fenstr == '\n') { return; }
+
         while ((c = *fenstr) != ' ') {
                 assert(*fenstr >= '0' && *fenstr <= '9');
                 state->rule50 += (state->rule50 * 10) + (c - '0');
@@ -196,13 +218,63 @@ void setpos(struct position *state, char *fenstr) {
         }
         ++fenstr;
 
-        state->plynb = 0;
         assert(*fenstr != ' ' && *fenstr != '\0');
-        while((c = *fenstr) != '\0') {
+        while((c = *fenstr)) {
+                if (c == ' ' || c == '\n' || c == '\0') { break; }
                 assert(*fenstr >= '0' && *fenstr <= '9');
                 state->plynb += (state->plynb * 10) + (c - '0');
                 ++fenstr;
         }
+}
+
+/*
+ * Print Position
+ *
+ * DESCRIPTION:
+ *      Print the board based on the given position.
+ */
+void printpos(struct position *state) {
+        printf("\n");
+        for (int r = 7; r >= 0; --r) {
+                printf(" %d | ", r + 1);
+                for (int f = 0; f < 8; ++f) {
+                        int sq = 8 * r + f;
+                        U64 b = 1ull << sq;
+                        U64 wb = state->boards[WHITE];
+
+                        enum piece p = state->piecelist[sq];
+                        enum color pc = wb & b ? WHITE : BLACK;
+
+                        char c;
+                        switch (p) {
+                        case PAWN:
+                                c = pc == WHITE ? 'P' : 'p';
+                                break;
+                        case KNIGHT:
+                                c = pc == WHITE ? 'N' : 'n';
+                                break;
+                        case BISHOP:
+                                c = pc == WHITE ? 'B' : 'b';
+                                break;
+                        case ROOK:
+                                c = pc == WHITE ? 'R' : 'r';
+                                break;
+                        case QUEEN:
+                                c = pc == WHITE ? 'Q' : 'q';
+                                break;
+                        case KING:
+                                c = pc == WHITE ? 'K' : 'k';
+                                break;
+                        default:
+                                c = '.';
+                                break;
+                        }
+
+                        f == 7 ? printf("%c\n", c) : printf("%c ", c);
+                }
+        }
+        printf("     ---------------\n");
+        printf("     a b c d e f g h\n\n");
 }
 
 /*
