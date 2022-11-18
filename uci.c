@@ -14,6 +14,54 @@ void id() {
 }
 
 /*
+ * Parse Moves
+ *
+ * DESCRIPTION:
+ *      Parse and make moves specified when the position is set.
+ */
+void parsemvs(char *line, struct position *state) {
+        int r, f, source, dest;
+        U16 move;
+
+        while (*line == ' ') { ++line; }
+        while (*line != '\n') {
+                f = *line - 'a';
+                r = *(line + 1) - '1';
+                source = 8 * r + f;
+
+                f = *(line + 2) - 'a';
+                r = *(line + 3) - '1';
+                dest = 8 * r + f;
+
+                line += 4;
+                move = dest | (source << 6);
+
+                if (*line != ' ' && *line != '\n') {
+                        char promo[] = "nbrq";
+                        for (int i = 0; i < 4; ++i) {
+                                if (*line == promo[i]) {
+                                        move |= (i << 12) | PROMOTION;
+                                        ++line;
+                                        break;
+                                }
+                        }
+                }
+
+                if (state->eptarget != NULL_SQ && dest == state->eptarget) {
+                        move |= EN_PASSANT;
+                }
+
+                if ((state->rights & WHITE_CASTLE && source == E1) ||
+                    (state->rights & BLACK_CASTLE && source == E8)) {
+                        move |= CASTLING;
+                }
+
+                make(move, state);
+                while (*line == ' ') { ++line; }
+        }
+}
+
+/*
  * Parse Position
  *
  * DESCRIPTION:
@@ -21,10 +69,13 @@ void id() {
  */
 void parsepos(char *line, struct position *state) {
         line += 9;
+        char *cp = line;
 
-        if (!strncmp(line, "startpos", 8)) { setpos(state, STARTFEN); }
-        else if (!strncmp(line, "fen", 3)) { setpos(state, line + 4); }
+        if (!strncmp(cp, "startpos", 8)) { setpos(state, STARTFEN); }
+        else if (!strncmp(cp, "fen", 3)) { setpos(state, cp + 4); }
         else { setpos(state, STARTFEN); }
+
+        if ((cp = strstr(cp, "moves"))) { parsemvs(cp + 6, state); }
 
         printpos(state);
 }

@@ -209,7 +209,7 @@ void setpos(struct position *state, char *fenstr) {
         state->rule50 = 0;
         state->plynb = 0;
 
-        if (*fenstr == '\n') { return; }
+        if (!(*fenstr >= '0' && *fenstr <= '9')) { return; }
 
         while ((c = *fenstr) != ' ') {
                 assert(*fenstr >= '0' && *fenstr <= '9');
