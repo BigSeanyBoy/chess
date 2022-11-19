@@ -91,10 +91,41 @@ void parsego(char *line, struct position *state, struct sinfo *info) {
         char *cp = line;
 
         clrinfo(info);
+        int wturn = state->side == WHITE;
 
-        if ((cp = strstr(line, "depth"))) { info->depth = atoi(cp + 6); }
+        int time = -1;
+        int inc = 0;
+        int depth = -1;
+        int movestogo = 30;
+        int movetime = -1;
 
-        printf("depth: %d\n", info->depth);
+        if ((cp = strstr(line, "wtime")) && wturn) { time = atoi(cp + 6); }
+        if ((cp = strstr(line, "btime")) && !wturn) { time = atoi(cp + 6); }
+        if ((cp = strstr(line, "winc")) && wturn) { inc = atoi(cp + 5); }
+        if ((cp = strstr(line, "binc")) && !wturn) { inc = atoi(cp + 5); }
+        if ((cp = strstr(line, "movestogo"))) { movestogo = atoi(cp + 10); }
+        if ((cp = strstr(line, "depth"))) { depth = atoi(cp + 6); }
+        if ((cp = strstr(line, "movetime"))) { movetime = atoi(cp + 9); }
+
+        if (movetime != -1) {
+                time = movetime;
+                movestogo = 1;
+        }
+
+        info->tstart = gettimems();
+        info->depth = depth;
+
+        if (time != -1) {
+                info->tset = 1;
+                time /= movestogo;
+                time -= 50;
+                info->tstop = info->tstart + time + inc;
+        }
+
+        if (depth == -1) { info->depth = MAXDEPTH; }
+
+        printf("time: %d, start: %llu, stop: %llu, depth: %d, timeset: %d\n",
+               time, info->tstart, info->tstop, info->depth, info->tset);
 
         if (!strncmp(line, "perft", 5)) {
                 perft(state, info, info->depth);
