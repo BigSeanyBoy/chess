@@ -80,6 +80,22 @@ void parsepos(char *line, struct position *state) {
         printpos(state);
 }
 
+void parsego(char *line, struct position *state, struct sinfo *info) {
+        line += 3;
+        char *cp = line;
+
+        clrinfo(info);
+
+        if ((cp = strstr(line, "depth"))) { info->depth = atoi(cp + 6); }
+
+        printf("depth: %d\n", info->depth);
+
+        if (!strncmp(line, "perft", 5)) {
+                perft(state, info, info->depth);
+                printf("\nnodes searched: %llu\n", info->nodes);
+        }
+}
+
 /*
  * UCI Loop
  *
@@ -92,6 +108,8 @@ void uci() {
         char line[MAXBUF];
 
         struct position state;
+        struct sinfo info;
+
         initpos(&state);
 
         for (;;) {
@@ -104,6 +122,7 @@ void uci() {
                 if (!strncmp(line, "uci", 3)) { id(); }
                 else if (!strncmp(line, "isready", 7)) { printf("readyok\n"); }
                 else if (!strncmp(line, "position", 8)) { parsepos(line, &state); }
+                else if (!strncmp(line, "go", 2)) { parsego(line, &state, &info); }
                 else if (!strncmp(line, "quit", 4)) { break; }
         }
 

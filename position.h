@@ -26,6 +26,7 @@ void freepos(struct position *state);
 
 void putpiece(struct position *state, char c, int sq, U64 sqbb);
 void setpos(struct position *state, char *fenstr);
+void printmv(U16 move);
 void printpos(struct position *state);
 
 void updatecastle(struct position *state, enum square sq);

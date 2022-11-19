@@ -115,4 +115,9 @@ struct position {
 	int plynb;
 };
 
+struct sinfo {
+        int depth;
+	U64 nodes;
+};
+
 #endif /* TYPES_H_ */

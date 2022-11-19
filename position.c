@@ -227,6 +227,21 @@ void setpos(struct position *state, char *fenstr) {
         }
 }
 
+void printmv(U16 move) {
+        int source = (move >> 6) & 63;
+        int dest = move & 63;
+
+        printf("%c%c", 'a' + (source % 8), (source / 8) + '1');
+        printf("%c%c", 'a' + (dest % 8), (dest / 8) + '1');
+
+        if ((move & MOVETYPE_MASK) == PROMOTION) {
+                char promo[] = "nbrq";
+                for (int i = 0; i < 4; ++i) {
+                        if (((move >> 12) & i) == i) { printf("%c", promo[i]); }
+                }
+        }
+}
+
 /*
  * Print Position
  *

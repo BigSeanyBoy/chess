@@ -4,10 +4,10 @@ CFLAGS = -g -I./ -I./tests -Wall
 CC = clang $(CFLAGS)
 
 ODIR = obj
-_OBJ = chess.o bitboard.o position.o movegen.o uci.o
+_OBJ = chess.o bitboard.o position.o movegen.o uci.o search.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-all: chess.o bitboard.o position.o movegen.o uci.o $(TARGET)
+all: chess.o bitboard.o position.o movegen.o uci.o search.o $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CC) -o $(TARGET) $(OBJ)
@@ -26,3 +26,6 @@ movegen.o:
 
 uci.o:
 	$(CC) -c -o obj/uci.o uci.c
+
+search.o:
+	$(CC) -c -o obj/search.o search.c
