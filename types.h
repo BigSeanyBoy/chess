@@ -7,6 +7,7 @@
 #define TYPES_H_
 
 #include <stdint.h>
+#include <sys/time.h>
 
 typedef uint16_t U16;
 typedef uint64_t U64;
@@ -118,6 +119,13 @@ struct position {
 struct sinfo {
         int depth;
 	U64 nodes;
+
+	int tset;
+	int tstart;
+	int tstop;
+
+	int stop;
+	int quit;
 };
 
 #endif /* TYPES_H_ */

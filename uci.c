@@ -115,6 +115,7 @@ void uci() {
         for (;;) {
                 memset(&line, 0, MAXBUF);
                 fflush(stdout);
+                clrinfo(&info);
 
                 if (!fgets(line, MAXBUF, stdin)) { continue; }
                 if (line[0] == '\n') { continue; }
@@ -124,6 +125,8 @@ void uci() {
                 else if (!strncmp(line, "position", 8)) { parsepos(line, &state); }
                 else if (!strncmp(line, "go", 2)) { parsego(line, &state, &info); }
                 else if (!strncmp(line, "quit", 4)) { break; }
+
+                if (info.quit) { break; }
         }
 
         freepos(&state);

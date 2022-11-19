@@ -227,38 +227,3 @@ int gendriver(struct position *state, U16 *movelist) {
 
         return count;
 }
-
-/*
- * Peft
- *
- * DESCRIPTION:
- *      Test move generation by generating all moves to a specified depth and
- *      counting the leaf nodes. If the leaf nodes match a known perft value,
- *      the move generation for that position is correct.
- */
-U64 perft(struct position *state, struct sinfo *info, int depth) {
-	U16 movelist[256];
-
-	if (depth == 0) {
-                info->nodes += 1;
-		return 1ull;
-	}
-
-	int count = gendriver(state, movelist);
-	struct position statecopy;
-        U64 n;
-	U64 nodes = 0;
-	for (int i = 0; i < count; ++i) {
-		copy(state, &statecopy);
-		if (make(movelist[i], &statecopy)) {
-                        n = perft(&statecopy, info, depth - 1);
-                        if (depth == info->depth) {
-                                printmv(movelist[i]);
-                                printf(" %llu\n", n);
-                        }
-                        nodes += n;
-		}
-	}
-	
-	return nodes;
-}
