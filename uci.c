@@ -80,6 +80,12 @@ void parsepos(char *line, struct position *state) {
         printpos(state);
 }
 
+/*
+ * Parse Go
+ *
+ * DESCRIPTION:
+ *      Begin thinking with the specified constraints.
+ */
 void parsego(char *line, struct position *state, struct sinfo *info) {
         line += 3;
         char *cp = line;
@@ -120,11 +126,12 @@ void uci() {
                 if (!fgets(line, MAXBUF, stdin)) { continue; }
                 if (line[0] == '\n') { continue; }
 
-                if (!strncmp(line, "uci", 3)) { id(); }
-                else if (!strncmp(line, "isready", 7)) { printf("readyok\n"); }
+                if (!strncmp(line, "isready", 7)) { printf("readyok\n"); }
                 else if (!strncmp(line, "position", 8)) { parsepos(line, &state); }
+                else if (!strncmp(line, "ucinewgame", 10)) { parsepos(STARTFEN, &state); }
                 else if (!strncmp(line, "go", 2)) { parsego(line, &state, &info); }
-                else if (!strncmp(line, "quit", 4)) { break; }
+                else if (!strncmp(line, "quit", 4)) { info.quit = 1; }
+                else if (!strncmp(line, "uci", 3)) { id(); }
 
                 if (info.quit) { break; }
         }
