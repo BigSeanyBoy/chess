@@ -7,7 +7,7 @@
  *      Identifies the engine to the requesting entity.
  */
 void id() {
-        printf("id name Omni-Gnome\n");
+        printf("id name Omni-Gnome 1.0\n");
         printf("id author Sean Hammell\n");
         /* send any options */
         printf("uciok\n");
@@ -130,6 +130,8 @@ void parsego(char *line, struct position *state, struct sinfo *info) {
         if (!strncmp(line, "perft", 5)) {
                 perft(state, info, info->depth);
                 printf("\nnodes searched: %llu\n", info->nodes);
+        } else {
+                search(state, info);
         }
 }
 
@@ -148,6 +150,7 @@ void uci() {
         struct sinfo info;
 
         initpos(&state);
+        srand(time(NULL));
 
         for (;;) {
                 memset(&line, 0, MAXBUF);

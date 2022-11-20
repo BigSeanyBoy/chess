@@ -26,4 +26,8 @@ void checkstop(struct sinfo *info);
 
 U64 perft(struct position *state, struct sinfo *info, int depth);
 
+U16 randsearch(struct position *state);
+
+void search(struct position *state, struct sinfo *info);
+
 #endif /* SEARCH_H_ */

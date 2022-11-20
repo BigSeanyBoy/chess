@@ -124,3 +124,37 @@ U64 perft(struct position *state, struct sinfo *info, int depth) {
 	
 	return nodes;
 }
+
+/*
+ * Random Search
+ *
+ * DESCRIPTION:
+ *      Return a random legal move in the given position.
+ */
+U16 randsearch(struct position *state) {
+        U16 movelist[256];
+        U16 move;
+
+        int count = gendriver(state, movelist);
+        struct position scopy;
+        for (;;) {
+                copy(state, &scopy);
+                move = movelist[rand() % count];
+                if (make(move, &scopy)) { break; }
+        }
+
+        return move;
+}
+
+/*
+ * Search
+ *
+ * DESCRIPTION:
+ *      Handle search at the top level. Controls iterative deepening and keeps
+ *      track of the best move found so far.
+ */
+void search(struct position *state, struct sinfo *info) {
+        printf("bestmove ");
+        printmv(randsearch(state));
+        printf("\n");
+}
