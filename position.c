@@ -527,18 +527,21 @@ int incheck(struct position *state, enum square checksq) {
 	U64 benemy = state->boards[BISHOP] & enemies;
 	U64 renemy = state->boards[ROOK] & enemies;
 	U64 qenemy = state->boards[QUEEN] & enemies;
+        U64 kenemy = state->boards[KING] & enemies;
 
 	U64 pcheck = pattack(king, penemy, state->side);
 	U64 ncheck = ntargets(checksq, state);
         U64 bcheck = btargets(checksq, state);
         U64 rcheck = rtargets(checksq, state);
 	U64 qcheck = bcheck | rcheck;
+        U64 kcheck = ktargets(checksq, state);
 
         if ((pcheck & penemy) ||
 	    (ncheck & nenemy) ||
 	    (bcheck & benemy) ||
 	    (rcheck & renemy) ||
-	    (qcheck & qenemy)) {
+	    (qcheck & qenemy) ||
+            (kcheck & kenemy)) {
 		return 1;
 	}
 

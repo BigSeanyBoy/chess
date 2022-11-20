@@ -147,6 +147,46 @@ U16 randsearch(struct position *state) {
 }
 
 /*
+ * Negamax
+ *
+ * DESCRIPTION:
+ *      Search all possible variations to the specified depth and evaluate the
+ *      position at the leaf node, then return the best score for the current
+ *      player.
+ */
+int negamax(struct position *state, struct sinfo *info, int depth) {
+        U16 movelist[256];
+
+	if (depth == 0) {
+                ++info->nodes;
+		return evaluate(state);
+	}
+
+        checkstop(info);
+        if (info->stop) { return evaluate(state); }
+
+	int count = gendriver(state, movelist);
+        if (count == 0) { return -MATED; }
+        assert(count > 0);
+
+	struct position scopy;
+        int score;
+        int max = -(MATED + 1);
+
+	for (int i = 0; i < count; ++i) {
+		copy(state, &scopy);
+		if (make(movelist[i], &scopy)) {
+                        score = -negamax(&scopy, info, depth - 1);
+                        if (score > max) {
+                                max = score;
+                        }
+		}
+	}
+	
+	return max;
+}
+
+/*
  * Search
  *
  * DESCRIPTION:
@@ -154,7 +194,39 @@ U16 randsearch(struct position *state) {
  *      track of the best move found so far.
  */
 void search(struct position *state, struct sinfo *info) {
+        U16 bestmove = 0;
+
+        for (int d = 0; d < info->depth; ++d) {
+                checkstop(info);
+                if (info->stop) { break; }
+
+                U16 movelist[256];
+                int count = gendriver(state, movelist);
+                struct position scopy;
+
+                int score;
+                int max = -(MATED + 1);
+
+                for (int i = 0; i < count; ++i) {
+                        copy(state, &scopy);
+                        if (make(movelist[i], &scopy)) {
+                                score = -negamax(&scopy, info, d);
+                                if (score > max) {
+                                        max = score;
+                                        if (!info->stop) {
+                                                bestmove = movelist[i];
+                                        }
+                                }
+                        }
+                }
+                /* Search should never be called in checkmate */
+                assert(bestmove != 0);
+
+                printf("info depth %d time %llu nodes %llu\n",
+                       d + 1, gettimems() - info->tstart, info->nodes);
+        }
+
         printf("bestmove ");
-        printmv(randsearch(state));
+        printmv(bestmove);
         printf("\n");
 }

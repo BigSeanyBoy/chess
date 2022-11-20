@@ -7,6 +7,7 @@
 #ifndef SEARCH_H_
 #define SEARCH_H_
 
+#include "stdio.h"
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -14,6 +15,7 @@
 #include "types.h"
 #include "position.h"
 #include "movegen.h"
+#include "eval.h"
 
 U64 gettimems();
 
@@ -27,6 +29,7 @@ void checkstop(struct sinfo *info);
 U64 perft(struct position *state, struct sinfo *info, int depth);
 
 U16 randsearch(struct position *state);
+int negamax(struct position *state, struct sinfo *info, int depth);
 
 void search(struct position *state, struct sinfo *info);
 
