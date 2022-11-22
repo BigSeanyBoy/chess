@@ -184,7 +184,7 @@ int negamax(struct position *state, struct sinfo *info, int depth) {
 	}
 
         if (legal == 0) {
-                if (incheck(state, NULL_SQ)) { return MATE; }
+                if (incheck(state, NULL_SQ)) { return MATE - depth; }
                 else { return DRAW; }
         }
 	
@@ -227,7 +227,9 @@ void search(struct position *state, struct sinfo *info) {
                 if (info->stop) { break; }
 
                 bestmove = prov;
-                printf("info depth %d time %llu nodes %llu\n",
+                printf("info pv ");
+                printmv(bestmove);
+                printf(" depth %d time %llu nodes %llu\n",
                         d, gettimems() - info->tstart, info->nodes);
         }
 
