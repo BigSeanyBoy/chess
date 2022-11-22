@@ -166,22 +166,27 @@ int negamax(struct position *state, struct sinfo *info, int depth) {
         if (info->stop) { return evaluate(state); }
 
 	int count = gendriver(state, movelist);
-        if (count == 0) { return -MATED; }
-        assert(count > 0);
+        int legal = 0;
 
 	struct position scopy;
         int score;
-        int max = -(MATED + 1);
+        int max = 2 * MATE;
 
 	for (int i = 0; i < count; ++i) {
 		copy(state, &scopy);
 		if (make(movelist[i], &scopy)) {
+                        ++legal;
                         score = -negamax(&scopy, info, depth - 1);
                         if (score > max) {
                                 max = score;
                         }
 		}
 	}
+
+        if (legal == 0) {
+                if (incheck(state, NULL_SQ)) { return MATE; }
+                else { return DRAW; }
+        }
 	
 	return max;
 }
@@ -196,34 +201,34 @@ int negamax(struct position *state, struct sinfo *info, int depth) {
 void search(struct position *state, struct sinfo *info) {
         U16 bestmove = 0;
 
-        for (int d = 0; d < info->depth; ++d) {
-                checkstop(info);
-                if (info->stop) { break; }
-
+        for (int d = 1; d <= info->depth; ++d) {
                 U16 movelist[256];
                 int count = gendriver(state, movelist);
                 struct position scopy;
 
                 int score;
-                int max = -(MATED + 1);
+                int max = 2 * MATE;
+                U16 prov = 0;
 
                 for (int i = 0; i < count; ++i) {
                         copy(state, &scopy);
                         if (make(movelist[i], &scopy)) {
-                                score = -negamax(&scopy, info, d);
+                                score = -negamax(&scopy, info, d - 1);
                                 if (score > max) {
                                         max = score;
-                                        if (!info->stop) {
-                                                bestmove = movelist[i];
-                                        }
+                                        prov = movelist[i];
                                 }
                         }
                 }
                 /* Search should never be called in checkmate */
-                assert(bestmove != 0);
+                assert(prov != 0);
 
+                checkstop(info);
+                if (info->stop) { break; }
+
+                bestmove = prov;
                 printf("info depth %d time %llu nodes %llu\n",
-                       d + 1, gettimems() - info->tstart, info->nodes);
+                        d, gettimems() - info->tstart, info->nodes);
         }
 
         printf("bestmove ");

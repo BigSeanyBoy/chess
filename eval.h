@@ -14,7 +14,8 @@
 
 #define popcount(x) __builtin_popcountll(x)
 
-#define MATED 30000
+#define MATE -30000
+#define DRAW 0
 
 enum values {
         PVAL = 100,
