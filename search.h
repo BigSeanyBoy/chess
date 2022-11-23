@@ -17,6 +17,10 @@
 #include "movegen.h"
 #include "eval.h"
 
+#define MAXDEPTH 20
+#define NEGINF (MATE * 2)
+#define INF    (-MATE * 2)
+
 U64 gettimems();
 
 void clrinfo(struct sinfo *info);
@@ -30,6 +34,8 @@ U64 perft(struct position *state, struct sinfo *info, int depth);
 
 U16 randsearch(struct position *state);
 int negamax(struct position *state, struct sinfo *info, int depth);
+int alphabeta(struct position *state, struct sinfo *info, int depth,
+              int alpha, int beta);
 
 void search(struct position *state, struct sinfo *info);
 

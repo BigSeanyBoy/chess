@@ -41,9 +41,6 @@ typedef uint64_t U64;
 /* intersection with move gives type of move */
 #define MOVETYPE_MASK (3ull << 14)
 
-/* maximum search depth */
-#define MAXDEPTH 20
-
 #define min(A, B) ((A) < (B) ? (A) : (B))
 #define flip(S) ((S) == WHITE ? BLACK : WHITE)
 

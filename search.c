@@ -147,16 +147,15 @@ U16 randsearch(struct position *state) {
 }
 
 /*
- * Negamax
+ * Alpha-Beta
  *
  * DESCRIPTION:
  *      Search all possible variations to the specified depth and evaluate the
- *      position at the leaf node, then return the best score for the current
- *      player.
+ *      position at the leaf node. Prune nodes that fall outside of the bounds,
+ *      alpha and beta. Return the best score for the current player.
  */
-int negamax(struct position *state, struct sinfo *info, int depth) {
-        U16 movelist[256];
-
+int alphabeta(struct position *state, struct sinfo *info, int depth,
+              int alpha, int beta) {
 	if (depth == 0) {
                 ++info->nodes;
 		return evaluate(state);
@@ -165,21 +164,21 @@ int negamax(struct position *state, struct sinfo *info, int depth) {
         checkstop(info);
         if (info->stop) { return evaluate(state); }
 
+        U16 movelist[256];
 	int count = gendriver(state, movelist);
         int legal = 0;
 
 	struct position scopy;
         int score;
-        int max = 2 * MATE;
 
 	for (int i = 0; i < count; ++i) {
 		copy(state, &scopy);
 		if (make(movelist[i], &scopy)) {
                         ++legal;
-                        score = -negamax(&scopy, info, depth - 1);
-                        if (score > max) {
-                                max = score;
-                        }
+                        score = -alphabeta(&scopy, info, depth - 1, -beta, 
+                                           -alpha);
+                        if (score >= beta) { return beta; }
+                        if (score > alpha) { alpha = score; }
 		}
 	}
 
@@ -188,7 +187,7 @@ int negamax(struct position *state, struct sinfo *info, int depth) {
                 else { return DRAW; }
         }
 	
-	return max;
+	return alpha;
 }
 
 /*
@@ -207,15 +206,17 @@ void search(struct position *state, struct sinfo *info) {
                 struct position scopy;
 
                 int score;
-                int max = 2 * MATE;
+                int alpha = NEGINF;
+                int beta = INF;
                 U16 prov = 0;
 
                 for (int i = 0; i < count; ++i) {
                         copy(state, &scopy);
                         if (make(movelist[i], &scopy)) {
-                                score = -negamax(&scopy, info, d - 1);
-                                if (score > max) {
-                                        max = score;
+                                score = -alphabeta(&scopy, info, d - 1, -beta,
+                                                   -alpha);
+                                if (score > alpha) {
+                                        alpha = score;
                                         prov = movelist[i];
                                 }
                         }
