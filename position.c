@@ -237,7 +237,7 @@ void printmv(U16 move) {
         if ((move & MOVETYPE_MASK) == PROMOTION) {
                 char promo[] = "nbrq";
                 for (int i = 0; i < 4; ++i) {
-                        if (((move >> 12) & i) == i) { printf("%c", promo[i]); }
+                        if (((move >> 12) & 3) == i) { printf("%c", promo[i]); }
                 }
         }
 }
