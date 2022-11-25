@@ -11,6 +11,8 @@
 #include <assert.h>
 
 #include "types.h"
+#include "position.h"
+#include "movegen.h"
 
 #define popcount(x) __builtin_popcountll(x)
 
@@ -19,14 +21,11 @@
 
 enum values {
         PVAL = 100,
-        NVAL = 300,
-        BVAL = 320,
+        NVAL = 320,
+        BVAL = 330,
         RVAL = 500,
         QVAL = 900,
-        KVAL = 10000
 };
-
-int material(struct position *state);
 
 int evaluate(struct position *state);
 
