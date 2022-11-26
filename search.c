@@ -164,6 +164,8 @@ int alphabeta(struct position *state, struct sinfo *info, int depth,
         checkstop(info);
         if (info->stop) { return evaluate(state); }
 
+        if (state->rule50 == 100) { return DRAW; }
+
         U16 movelist[256];
 	int count = gendriver(state, movelist);
         int legal = 0;
