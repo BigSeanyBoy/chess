@@ -152,12 +152,12 @@ U16 randsearch(struct position *state) {
  * DESCRIPTION:
  *      Search all possible variations to the specified depth and evaluate the
  *      position at the leaf node. Prune nodes that fall outside of the bounds,
- *      alpha and beta. Return the best score for the current player.
+ *      alpha and beta. Internal iterative deepening is used to find the best
+ *      move at 1/4 the current depth, allowing for significantly more pruning.
  */
 int alphabeta(struct position *state, struct sinfo *info, int depth,
               int alpha, int beta) {
 	if (depth == 0) {
-                ++info->nodes;
 		return evaluate(state);
 	}
 
@@ -170,10 +170,30 @@ int alphabeta(struct position *state, struct sinfo *info, int depth,
 
 	struct position scopy;
         int score;
+        
+        if (depth > 1) {
+                int iid_alpha = alpha;
+                for (int i = 0; i < count; ++i) {
+                        copy(state, &scopy);
+                        if (make(movelist[i], &scopy)) {
+                                ++info->nodes;
+                                ++legal;
+                                score = -alphabeta(&scopy, info, depth / 4, -beta,
+                                                   -alpha);
+                                if (score > iid_alpha) {
+                                        iid_alpha = score;
+                                        U16 tmp = movelist[0];
+                                        movelist[0] = movelist[i];
+                                        movelist[i] = tmp;
+                                }
+                        }
+                }
+        }
 
 	for (int i = 0; i < count; ++i) {
 		copy(state, &scopy);
 		if (make(movelist[i], &scopy)) {
+                        ++info->nodes;
                         ++legal;
                         score = -alphabeta(&scopy, info, depth - 1, -beta, 
                                            -alpha);

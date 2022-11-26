@@ -4,8 +4,9 @@
  * Evaluate
  *
  * DESCRIPTOIN:
- *      Driver for evaluation as a whole. Calls specific evaluation functions
- *      and return the final score.
+ *      Evaluates the position based on material and mobility. Mobility is
+ *      calculated as the number of pseudo-legal moves for each side. If either
+ *      side is in check, we do not factor mobility into the score.
  */
 int evaluate(struct position *state) {
         U64 allies = state->boards[state->side];
@@ -30,7 +31,7 @@ int evaluate(struct position *state) {
         assert((ar & er) == 0);
         assert((aq & eq) == 0);
 
-         int score = 0;
+        int score = 0;
 
         score += PVAL * (popcount(ap) - popcount(ep));
         score += NVAL * (popcount(an) - popcount(en));
@@ -38,30 +39,22 @@ int evaluate(struct position *state) {
         score += RVAL * (popcount(ar) - popcount(er));
         score += QVAL * (popcount(aq) - popcount(eq));
 
-        U16 movelist[256];
-        int count = gendriver(state, movelist);
-
         struct position scopy;
-        int amob = 0;
-        for (int i = 0; i < count; ++i) {
-                copy(state, &scopy);
-                if (make(movelist[i], &scopy)) { ++amob; }
-        }
-
         copy(state, &scopy);
         scopy.side = flip(scopy.side);
-        count = gendriver(&scopy, movelist);
 
-        struct position sfcopy;
-        int emob = 0;
-        for (int i = 0; i < count; ++i) {
-                copy(&scopy, &sfcopy);
-                if (make(movelist[i], &sfcopy)) { ++emob; }
-        }
+        if (incheck(state, NULL_SQ)) { return score - 50; }
+        if (incheck(&scopy, NULL_SQ)) { return score + 50; }
 
-        score += 10 * (amob - emob);
+        U16 movelist[256];
+        int mobility = 0;
 
-        score += 50 * incheck(&scopy, NULL_SQ);
+        mobility += gendriver(state, movelist);
+        mobility -= gendriver(&scopy, movelist);
+
+        mobility *= 10;
+        
+        score += mobility;
 
         return score;
 }
