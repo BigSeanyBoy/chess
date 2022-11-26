@@ -42,6 +42,7 @@ int evaluate(struct position *state) {
         struct position scopy;
         copy(state, &scopy);
         scopy.side = flip(scopy.side);
+        scopy.eptarget = NULL_SQ;
 
         if (incheck(state, NULL_SQ)) { return score - 50; }
         if (incheck(&scopy, NULL_SQ)) { return score + 50; }
