@@ -126,6 +126,72 @@ U64 perft(struct position *state, struct sinfo *info, int depth) {
 }
 
 /*
+ * Quiescence Search
+ *
+ * DESCRIPTION:
+ *      Extend the search until a quiet position is reached, then evaluate.
+ *      after a 2-ply extension, only evaluate recaptures to avoid search
+ *      explosion. Quiescence search allows alpha-beta to stabalize.
+ */
+int quiesce(struct position *state, struct sinfo *info, int depth,
+            int alpha, int beta, U16 move) {
+        int standpat = evaluate(state);
+        if (standpat >= beta) { return beta; }
+        if (standpat < alpha - 975) { return alpha; }
+        if (standpat > alpha) { alpha = standpat; }
+
+        checkstop(info);
+        if (info->stop) { return evaluate(state); }
+
+        if (state->rule50 == 100) { return DRAW; }
+
+        U16 movelist[256];
+	int count = gendriver(state, movelist);
+        int legal = 0;
+
+	struct position scopy;
+        int score;
+        int source;
+        int dest;
+        int quiet;
+        int isep;
+
+	for (int i = 0; i < count; ++i) {
+		copy(state, &scopy);
+		if (make(movelist[i], &scopy)) {
+                        ++info->nodes;
+                        ++legal;
+
+                        source = (movelist[i] >> 6) & 63;
+                        dest = movelist[i] & 63;
+
+                        quiet = state->piecelist[dest] == NO_PIECE;
+                        isep = (movelist[i] & MOVETYPE_MASK) == EN_PASSANT;
+                        if (quiet && !isep) { continue; }
+
+                        enum piece agg = state->piecelist[source];
+                        enum piece tar = state->piecelist[dest];
+                        if (tar - agg < 0) { continue; }
+
+                        int lmdest = move & 63;
+                        if (depth < -2 && dest != lmdest) { continue; }
+
+                        score = -quiesce(&scopy, info, depth -1, -beta,
+                                         -alpha, movelist[i]);
+                        if (score >= beta) { return beta; }
+                        if (score > alpha) { alpha = score; }
+		}
+	}
+
+        if (legal == 0) {
+                if (incheck(state, NULL_SQ)) { return MATE; }
+                else { return DRAW; }
+        }
+	
+	return alpha;
+}
+
+/*
  * Alpha-Beta
  *
  * DESCRIPTION:
@@ -137,7 +203,7 @@ U64 perft(struct position *state, struct sinfo *info, int depth) {
 int alphabeta(struct position *state, struct sinfo *info, int depth,
               int alpha, int beta) {
 	if (depth == 0) {
-		return evaluate(state);
+		return quiesce(state, info, depth - 1, alpha, beta, 0);
 	}
 
         checkstop(info);

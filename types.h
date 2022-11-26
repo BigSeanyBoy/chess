@@ -12,7 +12,6 @@
 typedef uint16_t U16;
 typedef uint64_t U64;
 
-/* rank constants */
 #define RANK_1 0xFFull
 #define RANK_2 (RANK_1 << 8)
 #define RANK_3 (RANK_1 << 16)
@@ -22,7 +21,6 @@ typedef uint64_t U64;
 #define RANK_7 (RANK_1 << 48)
 #define RANK_8 (RANK_1 << 56)
 
-/* file constants */
 #define FILE_A 0x0101010101010101ull
 #define FILE_B (FILE_A << 1)
 #define FILE_C (FILE_A << 2)
@@ -32,13 +30,11 @@ typedef uint64_t U64;
 #define FILE_G (FILE_A << 6)
 #define FILE_H (FILE_A << 7)
 
-/* squares between kings and rooks */
 #define WHITE_OO_GAP 0x60ull
 #define WHITE_OOO_GAP 0xeull
 #define BLACK_OO_GAP WHITE_OO_GAP << 56
 #define BLACK_OOO_GAP WHITE_OOO_GAP << 56
 
-/* intersection with move gives type of move */
 #define MOVETYPE_MASK (3ull << 14)
 
 #define min(A, B) ((A) < (B) ? (A) : (B))
