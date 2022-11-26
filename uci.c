@@ -122,10 +122,9 @@ void parsego(char *line, struct position *state, struct sinfo *info) {
 
         if (depth == -1) { info->depth = MAXDEPTH; }
 
-        printf("time: %d, start: %llu, stop: %llu, depth: %d, timeset: %d\n",
-               time, info->tstart, info->tstop, info->depth, info->tset);
-
         if (!strncmp(line, "perft", 5)) {
+                printf("time: %d, start: %llu, stop: %llu, depth: %d, timeset: %d\n",
+                       time, info->tstart, info->tstop, info->depth, info->tset);
                 perft(state, info, info->depth);
                 printf("\nnodes searched: %llu\n", info->nodes);
         } else {
