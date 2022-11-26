@@ -76,8 +76,6 @@ void parsepos(char *line, struct position *state) {
         else { setpos(state, STARTFEN); }
 
         if ((cp = strstr(cp, "moves"))) { parsemvs(cp + 6, state); }
-
-        printpos(state);
 }
 
 /*

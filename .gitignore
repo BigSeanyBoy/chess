@@ -3,3 +3,4 @@ chess
 obj/
 .vscode/
 results/
+lichess-bot/
