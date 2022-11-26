@@ -32,8 +32,6 @@ void checkstop(struct sinfo *info);
 
 U64 perft(struct position *state, struct sinfo *info, int depth);
 
-U16 randsearch(struct position *state);
-int negamax(struct position *state, struct sinfo *info, int depth);
 int alphabeta(struct position *state, struct sinfo *info, int depth,
               int alpha, int beta);
 

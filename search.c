@@ -126,27 +126,6 @@ U64 perft(struct position *state, struct sinfo *info, int depth) {
 }
 
 /*
- * Random Search
- *
- * DESCRIPTION:
- *      Return a random legal move in the given position.
- */
-U16 randsearch(struct position *state) {
-        U16 movelist[256];
-        U16 move;
-
-        int count = gendriver(state, movelist);
-        struct position scopy;
-        for (;;) {
-                copy(state, &scopy);
-                move = movelist[rand() % count];
-                if (make(move, &scopy)) { break; }
-        }
-
-        return move;
-}
-
-/*
  * Alpha-Beta
  *
  * DESCRIPTION:
