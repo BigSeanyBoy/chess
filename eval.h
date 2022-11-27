@@ -12,6 +12,7 @@
 
 #include "types.h"
 #include "position.h"
+#include "bitboard.h"
 #include "movegen.h"
 
 #define popcount(x) __builtin_popcountll(x)
@@ -21,12 +22,13 @@
 
 enum values {
         PVAL = 100,
-        NVAL = 320,
-        BVAL = 330,
+        NVAL = 300,
+        BVAL = 320,
         RVAL = 500,
         QVAL = 900,
 };
 
+int pawns(struct position *state, U64 ap, U64 ep);
 int evaluate(struct position *state);
 
 #endif /* EVAL_H_ */

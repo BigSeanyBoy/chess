@@ -1,6 +1,56 @@
 #include "eval.h"
 
 /*
+ * Pawn Structure
+ *
+ * DESCIRPTION:
+ *      Penalize doubled, isolated, and blocked pawns.
+ */
+int pawns(struct position *state, U64 ap, U64 ep) {
+        int doubled = 0;
+        int isolated = 0;
+        int blocked = 0;
+        int score = 0;
+
+        for (int i = 0; i < 8; ++i) {
+                U64 apfile = ap & (FILE_A << i);
+                U64 epfile = ep & (FILE_A << i);
+                assert((apfile & epfile) == 0);
+
+                int apopfile = popcount(apfile);
+                int epopfile = popcount(epfile);
+
+                if (apopfile > 1) { ++doubled; }
+                if (epopfile > 1) { --doubled; }
+
+                U64 rfile = FILE_A << (i + 1);
+                U64 lfile = FILE_A << (i - 1);
+                if (i == 0) {
+                        if (!(ap & rfile)) { ++isolated; }
+                        if (!(ep & rfile)) { --isolated; }
+                } else if (i == 7) {
+                        if (!(ap & lfile)) { ++isolated; }
+                        if (!(ep & lfile)) { --isolated; }
+                } else {
+                        if (!(ap & rfile) && !(ap & lfile)) { ++isolated; }
+                        if (!(ep & rfile) && !(ep & lfile)) { --isolated; }
+                }
+        }
+
+        U64 apop = popcount(ap);
+        U64 epop = popcount(ep);
+
+        U64 aptar = push(ap, state->boards[EMPTY], state->side);
+        U64 eptar = push(ep, state->boards[EMPTY], flip(state->side));
+
+        blocked += apop - popcount(aptar);
+        blocked -= epop - popcount(eptar);
+
+        score = doubled + isolated + blocked;
+        return score * -50;
+}
+
+/*
  * Evaluate
  *
  * DESCRIPTOIN:
@@ -34,6 +84,8 @@ int evaluate(struct position *state) {
         int score = 0;
 
         score += PVAL * (popcount(ap) - popcount(ep));
+        score += pawns(state, ap, ep);
+
         score += NVAL * (popcount(an) - popcount(en));
         score += BVAL * (popcount(ab) - popcount(eb));
         score += RVAL * (popcount(ar) - popcount(er));
