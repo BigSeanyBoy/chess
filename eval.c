@@ -44,6 +44,9 @@ int evaluate(struct position *state) {
         scopy.side = flip(scopy.side);
         scopy.eptarget = NULL_SQ;
 
+        if (incheck(state, NULL_SQ)) { return score -= 50; }
+        if (incheck(&scopy, NULL_SQ)) { return score += 50; }
+
         U16 movelist[256];
         int mobility = 0;
 
