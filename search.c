@@ -126,6 +126,26 @@ U64 perft(struct position *state, struct sinfo *info, int depth) {
 }
 
 /*
+ * Repetition Draw
+ *
+ * DESCRIPTION:
+ *      Check if the current position has appeared 3 times before in the
+ *      current game. If so, it is a draw.
+ */
+int isrepetition(struct position *state) {
+        int nbrep = 0;
+        for (int i = state->hisply - state->rule50; i < state->hisply; ++i) {
+                for (int j = 0; j < 64; ++j) {
+                        if (state->history[i][j] != state->piecelist[j]) { break; }
+                        if (j == 63) { ++nbrep; }
+                }
+                if (nbrep == 2) { return 1; }
+        }
+
+        return 0;
+}
+
+/*
  * Quiescence Search
  *
  * DESCRIPTION:
@@ -143,7 +163,7 @@ int quiesce(struct position *state, struct sinfo *info, int depth,
         checkstop(info);
         if (info->stop) { return evaluate(state); }
 
-        if (state->rule50 == 100) { return DRAW; }
+        if (state->rule50 == 100 || isrepetition(state)) { return DRAW; }
 
         U16 movelist[256];
 	int count = gendriver(state, movelist);
@@ -209,7 +229,7 @@ int alphabeta(struct position *state, struct sinfo *info, int depth,
         checkstop(info);
         if (info->stop) { return evaluate(state); }
 
-        if (state->rule50 == 100) { return DRAW; }
+        if (state->rule50 == 100 || isrepetition(state)) { return DRAW; }
 
         U16 movelist[256];
 	int count = gendriver(state, movelist);

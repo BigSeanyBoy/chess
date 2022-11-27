@@ -103,6 +103,7 @@ struct raylookup {
 
 struct position {
 	struct raylookup *rays;
+	enum piece history[1024][64];
 	enum piece piecelist[64];
 	U64 boards[10];
 	enum color side;
@@ -110,6 +111,7 @@ struct position {
 	enum square eptarget;
 	int rule50;
 	int plynb;
+	int hisply;
 };
 
 struct sinfo {

@@ -147,7 +147,6 @@ void uci() {
         struct sinfo info;
 
         initpos(&state);
-        srand(time(NULL));
 
         for (;;) {
                 memset(&line, 0, MAXBUF);

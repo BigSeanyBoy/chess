@@ -32,6 +32,8 @@ void checkstop(struct sinfo *info);
 
 U64 perft(struct position *state, struct sinfo *info, int depth);
 
+int isrepetition(struct position *state);
+
 int quiesce(struct position *state, struct sinfo *info, int depth,
             int alpha, int beta, U16 move);
 int alphabeta(struct position *state, struct sinfo *info, int depth,

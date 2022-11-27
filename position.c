@@ -144,6 +144,7 @@ void putpiece(struct position *state, char c, int sq, U64 sqbb) {
  *      Initialize a position described by the provided FEN string.
  */
 void setpos(struct position *state, char *fenstr) {
+        state->hisply = 0;
         for (int i = 0; i < 64; ++i) { state->piecelist[i] = NO_PIECE; }
 
         int rank = 7;
@@ -500,6 +501,11 @@ int make(U16 move, struct position *state) {
 
         if (incheck(state, NULL_SQ)) { return 0; }
 
+        for (int i = 0; i < 64; ++i) {
+                state->history[state->hisply][i] = state->piecelist[i];
+        }
+        ++state->hisply;
+
         state->side = flip(state->side);
         return 1;
 }
@@ -558,6 +564,12 @@ int incheck(struct position *state, enum square checksq) {
  */
 void copy(struct position *state, struct position *copy) {
         copy->rays = state->rays;
+
+        for (int i = state->hisply - state->rule50; i < state->hisply; ++i) {
+                for (int j = 0; j < 64; ++j) {
+                        copy->history[i][j] = state->history[i][j];
+                }
+        }
         
         for (int i = 0; i < 64; ++i) {
                 copy->piecelist[i] = state->piecelist[i];
@@ -572,4 +584,5 @@ void copy(struct position *state, struct position *copy) {
         copy->eptarget = state->eptarget;
         copy->rule50 = state->rule50;
         copy->plynb = state->plynb;
+        copy->hisply = state->hisply;
 }
