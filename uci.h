@@ -2,6 +2,10 @@
  * DESCRIPTION:
  *      Compatibility with the Universal Chess Interface, allowing the engine
  *      to communicate with other chess-playing entities.
+ * 
+ *      This code is based on the UCI implementations in Vice by Bluefever
+ *      Software (https://www.youtube.com/@BlueFeverSoft) and Olithink by
+ *      Oliver Brausch (https://github.com/olithink/OliThink).
  */
 #ifndef UCI_H_
 #define UCI_H_
