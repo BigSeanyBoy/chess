@@ -501,9 +501,9 @@ int make(U16 move, struct position *state) {
 
         if (incheck(state, NULL_SQ)) { return 0; }
 
-        for (int i = 0; i < 64; ++i) {
-                state->history[state->hisply][i] = state->piecelist[i];
-        }
+        state->history[state->hisply][WHITE] = state->boards[WHITE];
+        state->history[state->hisply][BLACK] = state->boards[BLACK];
+        state->history[state->hisply][PAWN] = state->boards[PAWN];
         ++state->hisply;
 
         state->side = flip(state->side);
@@ -566,7 +566,7 @@ void copy(struct position *state, struct position *copy) {
         copy->rays = state->rays;
 
         for (int i = state->hisply - state->rule50; i < state->hisply; ++i) {
-                for (int j = 0; j < 64; ++j) {
+                for (int j = 0; j < 3; ++j) {
                         copy->history[i][j] = state->history[i][j];
                 }
         }

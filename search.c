@@ -135,9 +135,9 @@ U64 perft(struct position *state, struct sinfo *info, int depth) {
 int isrepetition(struct position *state) {
         int nbrep = 0;
         for (int i = state->hisply - state->rule50; i < state->hisply; ++i) {
-                for (int j = 0; j < 64; ++j) {
-                        if (state->history[i][j] != state->piecelist[j]) { break; }
-                        if (j == 63) { ++nbrep; }
+                for (int j = 0; j < 3; ++j) {
+                        if (state->history[i][j] != state->boards[j]) { break; }
+                        if (j == 2) { ++nbrep; }
                 }
                 if (nbrep == 2) { return 1; }
         }
